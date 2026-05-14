@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>New Register — Bangladesh Citizen Card</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .register-wrapper {
+      min-height: calc(100vh - 60px - 120px);
+      background: var(--white);
+      padding: 48px 24px 60px;
+    }
+    .register-title-box {
+      display: block;
+      width: fit-content;
+      margin: 0 auto 40px;
+      background: #e0e4e2;
+      border-radius: 14px;
+      padding: 14px 60px;
+    }
+    .register-title-box h2 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      text-align: center;
+    }
+    .register-form {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .register-form .form-group { margin-bottom: 0; }
+    .register-form .form-group label {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+      display: block;
+    }
+    .register-form .form-group input,
+    .register-form .form-group select {
+      width: 100%;
+      padding: 18px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: 'DM Sans', sans-serif;
+      color: #999;
+      background: #e0e4e2;
+      outline: none;
+      transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .register-form .form-group input:focus,
+    .register-form .form-group select:focus {
+      background: #d4dbd7;
+      box-shadow: 0 0 0 3px rgba(46,107,94,0.12);
+      color: var(--text-dark);
+    }
+    .register-form .form-group input::placeholder { color: #aab8b2; }
+    .select-wrapper { position: relative; }
+    .select-wrapper select { cursor: pointer; color: #aab8b2; }
+    .select-wrapper select.selected { color: var(--text-dark); }
+    .select-wrapper select option { color: var(--text-dark); }
+    .select-arrow {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #888;
+      font-size: 1rem;
+    }
+    .register-form .form-group input.error,
+    .register-form .form-group select.error {
+      box-shadow: 0 0 0 2.5px #e74c3c;
+      background: #fdf0ee;
+    }
+    .error-msg {
+      font-size: 0.82rem;
+      color: #e74c3c;
+      margin-top: 6px;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+    .register-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+    .btn-next {
+      background: var(--green-dark);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      padding: 14px 48px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-next:hover {
+      background: var(--green-mid);
+      transform: translateY(-1px);
+    }
+    .success-box {
+      display: none;
+      max-width: 600px;
+      margin: 0 auto;
+      background: #eafaf3;
+      border: 1.5px solid #2ecc71;
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+    }
+    .success-box .success-icon { font-size: 3rem; margin-bottom: 12px; }
+    .success-box h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: #27ae60;
+      margin-bottom: 10px;
+    }
+    .success-box p {
+      color: var(--text-mid);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+    .success-box .btn-home {
+      display: inline-block;
+      margin-top: 20px;
+      background: var(--green-dark);
+      color: var(--white);
+      padding: 11px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    .success-box .btn-home:hover { background: var(--green-mid); }
+    @media (max-width: 600px) {
+      .register-title-box { padding: 12px 32px; }
+      .register-title-box h2 { font-size: 1.4rem; }
+      .btn-next { width: 100%; }
+      .register-actions { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38" width="38" height="38">
+      <circle cx="19" cy="19" r="18" fill="#006a4e" stroke="#c9a84c" stroke-width="2"/>
+      <circle cx="19" cy="19" r="7" fill="#f42a41"/>
+    </svg>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="#">Download Smart Card</a></li>
+  </ul>
+  <div class="nav-right">🌐 English ▾</div>
+</nav>
+
+<!-- REGISTER FORM -->
+<div class="register-wrapper">
+  <div class="register-title-box">
+    <h2>New Register</h2>
+  </div>
+
+  <div class="register-form" id="registerForm">
+
+    <div class="form-group">
+      <label for="nid">NID Number</label>
+      <input type="text" id="nid" placeholder="NID Number" maxlength="17"
+        oninput="clearError(this)"/>
+      <span class="error-msg" id="nid-err">⚠️ NID Number দিন।</span>
+    </div>
+
+    <div class="form-group">
+      <label for="fullname">Full Name</label>
+      <input type="text" id="fullname" placeholder="Full Name"
+        oninput="clearError(this)"/>
+      <span class="error-msg" id="fullname-err">⚠️ Full Name দিন।</span>
+    </div>
+
+    <div class="form-group">
+      <label for="dob">Date Of Birth</label>
+      <input type="text" id="dob" placeholder="DD/MM/YYYY" maxlength="10"
+        oninput="formatDate(this); clearError(this)"/>
+      <span class="error-msg" id="dob-err">⚠️ সঠিক Date of Birth দিন। (DD/MM/YYYY)</span>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" placeholder="01XXXXXXXXX" maxlength="11"
+        oninput="clearError(this)"/>
+      <span class="error-msg" id="phone-err">⚠️ সঠিক Phone Number দিন। (01XXXXXXXXX)</span>
+    </div>
+
+    <div class="form-group">
+      <label for="cardType">Select Your Card</label>
+      <div class="select-wrapper">
+        <select id="cardType" onchange="clearError(this); this.classList.add('selected')">
+          <option value="" disabled selected>Select Your Card</option>
+          <option value="family">Family</option>
+          <option value="business">Business</option>
+          <option value="student">Student</option>
+          <option value="vehicle">Vehicle</option>
+          <option value="agriculture">Agriculture</option>
+        </select>
+        <span class="select-arrow">▾</span>
+      </div>
+      <span class="error-msg" id="cardType-err">⚠️ Card Type select করুন।</span>
+    </div>
+
+    <div class="register-actions">
+      <button class="btn-next" onclick="handleNext()">Next</button>
+    </div>
+
+  </div>
+
+  <!-- Success -->
+  <div class="success-box" id="successBox">
+    <div class="success-icon">✅</div>
+    <h3>Registration Successful!</h3>
+    <p>আপনার তথ্য সফলভাবে জমা হয়েছে।<br/>আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।</p>
+    <a href="index.html" class="btn-home">← Back to Home</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <div class="footer-logo">🇧🇩</div>
+    <div class="footer-brand">
+      People's Republic of Bangladesh
+      <small>Bangladesh Citizen Card System</small>
+    </div>
+  </div>
+  <div class="footer-right">
+    Email: <a href="mailto:info@smartcard.gov.bd">info@smartcard.gov.bd</a><br/>
+    Helpline: 105, +88 01708-501261<br/>
+    Contact time:<br/>
+    Sunday–Thursday, 9:00 am – 5:00 pm
+  </div>
+</footer>
+
+<script src="register.js"></script>
+</body>
+</html>
