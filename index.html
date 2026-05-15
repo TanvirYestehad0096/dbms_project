@@ -152,6 +152,8 @@
             Helpline: 105, +88 01708-501261<br />
             Contact time:<br />
             Sunday–Thursday, 9:00 am – 5:00 pm
+            <br /><br />
+            <a href="admin-login.html" style="color:rgba(255,255,255,0.25); font-size:0.72rem;">🛡️ Admin</a>
         </div>
     </footer>
 
@@ -160,7 +162,6 @@
         <div class="modal-box">
             <button class="modal-close" onclick="closeForgotModal()">✕</button>
 
-            <!-- Step 1: Phone -->
             <div class="modal-steps active" id="fp-step1">
                 <h3>🔑 Forget Password</h3>
                 <p>Registered phone number দিন। OTP পাঠানো হবে।</p>
@@ -172,7 +173,6 @@
                 <button class="modal-btn" onclick="fpSendOtp()">Send OTP →</button>
             </div>
 
-            <!-- Step 2: OTP -->
             <div class="modal-steps" id="fp-step2">
                 <h3>📱 OTP Verification</h3>
                 <p id="fp-otp-desc">আপনার phone-এ OTP পাঠানো হয়েছে।</p>
@@ -187,7 +187,6 @@
                 <button class="modal-btn" onclick="fpVerifyOtp()">Verify OTP →</button>
             </div>
 
-            <!-- Step 3: New Password -->
             <div class="modal-steps" id="fp-step3">
                 <h3>🔒 New Password</h3>
                 <p>নতুন password দিন।</p>
@@ -204,7 +203,6 @@
                 <button class="modal-btn" onclick="fpResetPassword()">Reset Password →</button>
             </div>
 
-            <!-- Step 4: Done -->
             <div class="modal-steps" id="fp-step4">
                 <div class="fp-success">
                     <div class="fp-success-icon">✅</div>
