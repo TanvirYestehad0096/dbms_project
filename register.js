@@ -97,3 +97,25 @@ function handleNext() {
     window.location.href = 'index.html';
   }, 3000);
 }
+/* ---- Card Picker (Multiple) ---- */
+const selectedCards = new Set();
+
+function selectCard(value, el) {
+  if (selectedCards.has(value)) {
+    // আবার click করলে deselect
+    selectedCards.delete(value);
+    el.classList.remove('selected');
+  } else {
+    // select করো
+    selectedCards.add(value);
+    el.classList.add('selected');
+  }
+
+  // hidden input এ comma দিয়ে সব value রাখো
+  document.getElementById('cardType').value = [...selectedCards].join(',');
+
+  // error সরাও
+  if (selectedCards.size > 0) {
+    document.getElementById('cardType-err').classList.remove('show');
+  }
+}
