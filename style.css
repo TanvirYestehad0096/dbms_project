@@ -766,3 +766,134 @@ footer {
   color: var(--text-muted);
   margin-bottom: 0;
 }
+/* ---------- FORGET PASSWORD MODAL ---------- */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-box {
+  background: var(--white);
+  border-radius: 18px;
+  padding: 36px 32px 28px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 16px 56px rgba(0, 0, 0, 0.20);
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: #aaa;
+  transition: color 0.2s;
+}
+
+.modal-close:hover { color: #e74c3c; }
+
+.modal-box h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+
+.modal-box p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.modal-steps { display: none; }
+.modal-steps.active { display: block; }
+
+.modal-btn {
+  width: 100%;
+  background: var(--green-dark);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.2s;
+}
+
+.modal-btn:hover { background: var(--green-mid); }
+
+.otp-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.otp-box {
+  width: 56px !important;
+  height: 56px;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  border: 1.5px solid var(--border) !important;
+  border-radius: 10px !important;
+  background: #f0f4f3 !important;
+  padding: 0 !important;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.otp-box:focus {
+  border-color: var(--green-mid) !important;
+  box-shadow: 0 0 0 3px rgba(46, 107, 94, 0.12) !important;
+}
+
+.fp-demo-hint {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--green-mid);
+  margin-bottom: 10px;
+}
+
+.fp-err {
+  display: none;
+  font-size: 0.82rem;
+  color: #e74c3c;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.fp-err.show { display: block; }
+
+.fp-success { text-align: center; padding: 12px 0; }
+.fp-success-icon { font-size: 2.8rem; }
+
+.fp-success h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  color: #27ae60;
+  margin: 10px 0 6px;
+}
+
+.fp-success p {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 0;
+}
