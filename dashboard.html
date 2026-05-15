@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Bangladesh Citizen Card</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .dashboard-wrap {
+      display: flex;
+      min-height: calc(100vh - 60px);
+      background: #f0f4f2;
+    }
+
+    /* ---- SIDEBAR ---- */
+    .sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      background: var(--green-dark);
+      display: flex;
+      flex-direction: column;
+      padding: 32px 0 24px;
+      position: sticky;
+      top: 60px;
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+    }
+
+    .sidebar-user {
+      text-align: center;
+      padding: 0 20px 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 16px;
+    }
+
+    .sidebar-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold) 0%, #f0a500 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem;
+      margin: 0 auto 12px;
+      border: 3px solid rgba(255,255,255,0.2);
+    }
+
+    .sidebar-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem; color: var(--white); margin-bottom: 3px;
+    }
+
+    .sidebar-nid { font-size: 0.75rem; color: rgba(255,255,255,0.5); letter-spacing: 0.05em; }
+
+    .sidebar-nav {
+      flex: 1; padding: 0 12px;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+
+    .sidebar-nav a {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; border-radius: 10px;
+      text-decoration: none; color: rgba(255,255,255,0.65);
+      font-size: 0.9rem; font-weight: 500;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+    }
+
+    .sidebar-nav a:hover { background: rgba(255,255,255,0.10); color: var(--white); }
+    .sidebar-nav a.active { background: rgba(201,168,76,0.18); color: var(--gold-light); }
+
+    .nav-icon { font-size: 1.1rem; width: 20px; text-align: center; }
+
+    .notif-badge {
+      margin-left: auto;
+      background: #e74c3c; color: #fff;
+      font-size: 0.7rem; padding: 1px 7px;
+      border-radius: 10px;
+    }
+
+    .sidebar-bottom {
+      padding: 16px 12px 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .sidebar-bottom a {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; border-radius: 10px;
+      text-decoration: none; color: rgba(255,255,255,0.5);
+      font-size: 0.88rem; transition: color 0.2s;
+    }
+    .sidebar-bottom a:hover { color: #e74c3c; }
+
+    /* ---- MAIN ---- */
+    .dashboard-main { flex: 1; padding: 36px 32px; overflow-y: auto; }
+
+    .dash-greeting { margin-bottom: 32px; }
+    .dash-greeting h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; color: var(--text-dark); margin-bottom: 4px;
+    }
+    .dash-greeting p { color: var(--text-muted); font-size: 0.92rem; }
+
+    /* ---- STAT CARDS ---- */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px; margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--white); border-radius: 14px;
+      padding: 20px 22px; box-shadow: var(--shadow);
+      border-left: 4px solid transparent;
+      animation: fadeInUp 0.5s ease both;
+    }
+    .stat-card:nth-child(1) { border-color: var(--green-mid); animation-delay: 0.05s; }
+    .stat-card:nth-child(2) { border-color: var(--gold);      animation-delay: 0.12s; }
+    .stat-card:nth-child(3) { border-color: #3498db;          animation-delay: 0.19s; }
+    .stat-card:nth-child(4) { border-color: #e67e22;          animation-delay: 0.26s; }
+
+    .stat-label {
+      font-size: 0.75rem; font-weight: 600;
+      color: var(--text-muted); text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 8px;
+    }
+    .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem; color: var(--text-dark); line-height: 1;
+    }
+    .stat-sub { font-size: 0.77rem; color: var(--text-muted); margin-top: 4px; }
+
+    /* ---- SECTION TITLE ---- */
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem; color: var(--text-dark);
+      margin-bottom: 16px; padding-bottom: 8px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    /* ---- CARDS GRID ---- */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 18px; margin-bottom: 28px;
+    }
+
+    .card-item {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 20px; box-shadow: var(--shadow);
+      display: flex; flex-direction: column; gap: 10px;
+      animation: fadeInUp 0.5s ease both;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card-item:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(26,60,52,0.13); }
+
+    .card-item-top { display: flex; align-items: center; justify-content: space-between; }
+
+    .card-type-badge {
+      font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 3px 10px; border-radius: 20px;
+      background: rgba(46,107,94,0.1); color: var(--green-mid);
+    }
+
+    .card-status { font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+    .status-approved   { background: #eafaf3; color: #27ae60; }
+    .status-pending    { background: #fef9e7; color: #e67e22; }
+    .status-processing { background: #eaf2fb; color: #3498db; }
+
+    .card-item-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text-dark); }
+    .card-item-nid  { font-size: 0.8rem; color: var(--text-muted); }
+
+    .card-item-actions { display: flex; gap: 8px; margin-top: 4px; }
+
+    .btn-card-action {
+      flex: 1; padding: 8px 0; border-radius: 8px; border: none;
+      font-size: 0.82rem; font-weight: 600;
+      font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.2s;
+    }
+    .btn-download { background: var(--green-dark); color: var(--white); }
+    .btn-download:hover { background: var(--green-mid); }
+    .btn-view { background: #eef2f1; color: var(--text-mid); }
+    .btn-view:hover { background: var(--border); }
+
+    /* ---- NOTIFICATIONS ---- */
+    .notif-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+
+    .notif-item {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 14px 18px;
+      display: flex; align-items: flex-start; gap: 14px;
+      box-shadow: 0 2px 8px rgba(26,60,52,0.05);
+      animation: fadeInUp 0.5s ease both;
+    }
+
+    .notif-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+    .dot-green { background: #27ae60; }
+    .dot-gold  { background: var(--gold); }
+    .dot-blue  { background: #3498db; }
+    .dot-gray  { background: #bbb; }
+
+    .notif-text { font-size: 0.88rem; color: var(--text-mid); line-height: 1.5; }
+    .notif-time { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* ---- PROFILE ---- */
+    .profile-card {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 16px; padding: 28px; box-shadow: var(--shadow);
+      margin-bottom: 28px;
+      display: grid; grid-template-columns: auto 1fr;
+      gap: 28px; align-items: start;
+    }
+
+    .profile-avatar-lg {
+      width: 90px; height: 90px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green-mid), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem; flex-shrink: 0;
+    }
+
+    .profile-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .profile-field label {
+      display: block; font-size: 0.74rem; font-weight: 600;
+      color: var(--text-muted); text-transform: uppercase;
+      letter-spacing: 0.07em; margin-bottom: 4px;
+    }
+    .profile-field span { font-size: 0.95rem; color: var(--text-dark); font-weight: 500; }
+
+    /* ---- PANEL SYSTEM ---- */
+    .dash-panel { display: none; }
+    .dash-panel.active { display: block; }
+
+    /* ---- APPLY BTN ---- */
+    .btn-apply {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--green-dark); color: #fff;
+      padding: 12px 28px; border-radius: 10px;
+      text-decoration: none; font-weight: 600; font-size: 0.92rem;
+      transition: background 0.2s; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    }
+    .btn-apply:hover { background: var(--green-mid); }
+
+    /* ---- SETTINGS BOX ---- */
+    .settings-box {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 22px; box-shadow: var(--shadow);
+      margin-bottom: 14px; max-width: 520px;
+    }
+    .settings-box h4 { font-size: 1rem; font-weight: 600; color: var(--text-dark); margin-bottom: 4px; }
+    .settings-box p  { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px; }
+
+    .settings-danger {
+      background: #fdf0ee; border: 1.5px solid #f5c6c0;
+      border-radius: 14px; padding: 22px; max-width: 520px;
+    }
+    .settings-danger h4 { font-size: 1rem; font-weight: 600; color: #c0392b; margin-bottom: 4px; }
+    .settings-danger p  { font-size: 0.85rem; color: #999; margin-bottom: 14px; }
+    .btn-danger {
+      background: #e74c3c; color: #fff; border: none;
+      border-radius: 8px; padding: 10px 24px;
+      font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer;
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 768px) {
+      .dashboard-wrap { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; position: static; padding: 12px; }
+      .sidebar-user { display: none; }
+      .sidebar-nav { flex-direction: row; flex-wrap: wrap; gap: 4px; padding: 0; }
+      .sidebar-nav a { padding: 8px 12px; font-size: 0.8rem; }
+      .sidebar-bottom { display: none; }
+      .dashboard-main { padding: 20px 16px; }
+      .profile-card { grid-template-columns: 1fr; }
+      .profile-info-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38" width="38" height="38">
+      <circle cx="19" cy="19" r="18" fill="#006a4e" stroke="#c9a84c" stroke-width="2"/>
+      <circle cx="19" cy="19" r="7" fill="#f42a41"/>
+    </svg>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="#">Download Smart Card</a></li>
+  </ul>
+  <div class="nav-right">🌐 English ▾</div>
+</nav>
+
+<div class="dashboard-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-user">
+      <div class="sidebar-avatar">👤</div>
+      <div class="sidebar-name">Md. Rahim Uddin</div>
+      <div class="sidebar-nid">NID: 1234567890</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="active" onclick="showPanel('overview', this)">
+        <span class="nav-icon">🏠</span> Overview
+      </a>
+      <a onclick="showPanel('mycards', this)">
+        <span class="nav-icon">🪪</span> My Cards
+      </a>
+      <a onclick="showPanel('download', this)">
+        <span class="nav-icon">⬇️</span> Download Card
+      </a>
+      <a onclick="showPanel('notifications', this)">
+        <span class="nav-icon">🔔</span> Notifications
+        <span class="notif-badge">3</span>
+      </a>
+      <a onclick="showPanel('profile', this)">
+        <span class="nav-icon">👤</span> Profile
+      </a>
+      <a onclick="showPanel('settings', this)">
+        <span class="nav-icon">⚙️</span> Settings
+      </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <a href="index.html">
+        <span class="nav-icon">🚪</span> Logout
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="dashboard-main">
+
+    <!-- OVERVIEW -->
+    <div class="dash-panel active" id="panel-overview">
+      <div class="dash-greeting">
+        <h2>স্বাগতম, Rahim! 👋</h2>
+        <p>আপনার Bangladesh Citizen Card dashboard-এ আপনাকে স্বাগত জানাই।</p>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-label">Total Cards</div>
+          <div class="stat-value">3</div>
+          <div class="stat-sub">Registered cards</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Approved</div>
+          <div class="stat-value">2</div>
+          <div class="stat-sub">Ready to download</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending</div>
+          <div class="stat-value">1</div>
+          <div class="stat-sub">Under review</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Notifications</div>
+          <div class="stat-value">3</div>
+          <div class="stat-sub">Unread messages</div>
+        </div>
+      </div>
+
+      <div class="section-title">Recent Cards</div>
+      <div class="cards-grid">
+        <div class="card-item">
+          <div class="card-item-top">
+            <span class="card-type-badge">Family</span>
+            <span class="card-status status-approved">✅ Approved</span>
+          </div>
+          <div class="card-item-name">Md. Rahim Uddin</div>
+          <div class="card-item-nid">NID: 1234567890</div>
+          <div class="card-item-actions">
+            <button class="btn-card-action btn-download" onclick="alert('Card download শুরু হচ্ছে...')">⬇ Download</button>
+            <button class="btn-card-action btn-view" onclick="showPanel('mycards', null)">View</button>
+          </div>
+        </div>
+        <div class="card-item">
+          <div class="card-item-top">
+            <span class="card-type-badge">Student</span>
+            <span class="card-status status-pending">⏳ Pending</span>
+          </div>
+          <div class="card-item-name">Md. Rahim Uddin</div>
+          <div class="card-item-nid">NID: 1234567890</div>
+          <div class="card-item-actions">
+            <button class="btn-card-action btn-download" disabled style="opacity:0.4;cursor:not-allowed;">⬇ Download</button>
+            <button class="btn-card-action btn-view" onclick="showPanel('mycards', null)">View</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">Recent Notifications</div>
+      <div class="notif-list">
+        <div class="notif-item">
+          <div class="notif-dot dot-green"></div>
+          <div>
+            <div class="notif-text">আপনার <strong>Family Card</strong> অনুমোদন হয়েছে। এখনই download করুন।</div>
+            <div class="notif-time">আজ, সকাল ১০:৩২</div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-dot dot-gold"></div>
+          <div>
+            <div class="notif-text"><strong>Student Card</strong> আবেদন প্রক্রিয়াধীন। ২-৩ কার্যদিবস লাগতে পারে।</div>
+            <div class="notif-time">গতকাল, বিকাল ৩:১৫</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY CARDS -->
+    <div class="dash-panel" id="panel-mycards">
+      <div class="dash-greeting">
+        <h2>My Cards</h2>
+        <p>আপনার সব registered card এখানে।</p>
+      </div>
+      <div class="cards-grid">
+        <div class="card-item">
+          <div class="card-item-top">
+            <span class="card-type-badge">Family</span>
+            <span class="card-status status-approved">✅ Approved</span>
+          </div>
+          <div class="card-item-name">Md. Rahim Uddin</div>
+          <div class="card-item-nid">NID: 1234567890 &nbsp;|&nbsp; Applied: 01 Jan 2025</div>
+          <div class="card-item-actions">
+            <button class="btn-card-action btn-download" onclick="alert('Downloading...')">⬇ Download</button>
+            <button class="btn-card-action btn-view" onclick="alert('Details loading...')">Details</button>
+          </div>
+        </div>
+        <div class="card-item">
+          <div class="card-item-top">
+            <span class="card-type-badge">Business</span>
+            <span class="card-status status-approved">✅ Approved</span>
+          </div>
+          <div class="card-item-name">Md. Rahim Uddin</div>
+          <div class="card-item-nid">NID: 1234567890 &nbsp;|&nbsp; Applied: 15 Feb 2025</div>
+          <div class="card-item-actions">
+            <button class="btn-card-action btn-download" onclick="alert('Downloading...')">⬇ Download</button>
+            <button class="btn-card-action btn-view" onclick="alert('Details loading...')">Details</button>
+          </div>
+        </div>
+        <div class="card-item">
+          <div class="card-item-top">
+            <span class="card-type-badge">Student</span>
+            <span class="card-status status-pending">⏳ Pending</span>
+          </div>
+          <div class="card-item-name">Md. Rahim Uddin</div>
+          <div class="card-item-nid">NID: 1234567890 &nbsp;|&nbsp; Applied: 10 May 2025</div>
+          <div class="card-item-actions">
+            <button class="btn-card-action btn-download" disabled style="opacity:0.4;cursor:not-allowed;">⬇ Download</button>
+            <button class="btn-card-action btn-view" onclick="alert('Details loading...')">Details</button>
+          </div>
+        </div>
+      </div>
+      <a href="register.html" class="btn-apply">＋ Apply New Card</a>
+    </div>
+
+    <!-- DOWNLOAD -->
+    <div class="dash-panel" id="panel-download">
+      <div class="dash-greeting">
+        <h2>Download Card</h2>
+        <p>Approved card গুলো এখান থেকে download করুন।</p>
+      </div>
+      <div class="cards-grid">
+        <div class="card-item">
+          <div class="card-item-top">
+            <span class="card-type-badge">Family</span>
+            <span class="card-status status-approved">✅ Ready</span>
+          </div>
+          <div class="card-item-name">Md. Rahim Uddin</div>
+          <div class="card-item-nid">NID: 1234567890</div>
+          <div class="card-item-actions">
+            <button class="btn-card-action btn-download" onclick="alert('Family Card downloading...')">⬇ Download PDF</button>
+          </div>
+        </div>
+        <div class="card-item">
+          <div class="card-item-top">
+            <span class="card-type-badge">Business</span>
+            <span class="card-status status-approved">✅ Ready</span>
+          </div>
+          <div class="card-item-name">Md. Rahim Uddin</div>
+          <div class="card-item-nid">NID: 1234567890</div>
+          <div class="card-item-actions">
+            <button class="btn-card-action btn-download" onclick="alert('Business Card downloading...')">⬇ Download PDF</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="dash-panel" id="panel-notifications">
+      <div class="dash-greeting">
+        <h2>Notifications</h2>
+        <p>আপনার সব আপডেট এখানে।</p>
+      </div>
+      <div class="notif-list">
+        <div class="notif-item">
+          <div class="notif-dot dot-green"></div>
+          <div>
+            <div class="notif-text">আপনার <strong>Family Card</strong> অনুমোদন হয়েছে। এখনই download করুন।</div>
+            <div class="notif-time">আজ, সকাল ১০:৩২</div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-dot dot-green"></div>
+          <div>
+            <div class="notif-text">আপনার <strong>Business Card</strong> অনুমোদন হয়েছে।</div>
+            <div class="notif-time">আজ, সকাল ৯:০৫</div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-dot dot-gold"></div>
+          <div>
+            <div class="notif-text"><strong>Student Card</strong> আবেদন প্রক্রিয়াধীন। ২-৩ কার্যদিবস লাগতে পারে।</div>
+            <div class="notif-time">গতকাল, বিকাল ৩:১৫</div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-dot dot-blue"></div>
+          <div>
+            <div class="notif-text">আপনার account সফলভাবে তৈরি হয়েছে।</div>
+            <div class="notif-time">০১ জানুয়ারি ২০২৫</div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-dot dot-gray"></div>
+          <div>
+            <div class="notif-text">System maintenance: ১৫ মে রাত ১২টা থেকে ভোর ৩টা পর্যন্ত সাময়িক বন্ধ থাকবে।</div>
+            <div class="notif-time">১৩ মে ২০২৫</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="dash-panel" id="panel-profile">
+      <div class="dash-greeting">
+        <h2>My Profile</h2>
+        <p>আপনার ব্যক্তিগত তথ্য।</p>
+      </div>
+      <div class="profile-card">
+        <div class="profile-avatar-lg">👤</div>
+        <div class="profile-info-grid">
+          <div class="profile-field">
+            <label>Full Name</label>
+            <span>Md. Rahim Uddin</span>
+          </div>
+          <div class="profile-field">
+            <label>NID Number</label>
+            <span>1234567890</span>
+          </div>
+          <div class="profile-field">
+            <label>Date of Birth</label>
+            <span>15/06/1990</span>
+          </div>
+          <div class="profile-field">
+            <label>Phone Number</label>
+            <span>01712345678</span>
+          </div>
+          <div class="profile-field">
+            <label>Division</label>
+            <span>Dhaka</span>
+          </div>
+          <div class="profile-field">
+            <label>Account Status</label>
+            <span style="color:#27ae60; font-weight:600;">✅ Active</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn-login" onclick="alert('Profile edit feature শীঘ্রই আসছে!')">✏️ Edit Profile</button>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="dash-panel" id="panel-settings">
+      <div class="dash-greeting">
+        <h2>Settings</h2>
+        <p>আপনার account settings পরিবর্তন করুন।</p>
+      </div>
+
+      <div class="settings-box">
+        <h4>🔒 Change Password</h4>
+        <p>নতুন password set করুন।</p>
+        <div class="form-group">
+          <label>Current Password</label>
+          <input type="password" placeholder="Current Password" />
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <input type="password" placeholder="New Password" />
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Confirm New Password</label>
+          <input type="password" placeholder="Confirm Password" />
+        </div>
+        <button class="btn-login" style="margin-top:16px;" onclick="alert('Password পরিবর্তন হয়েছে!')">Save Password</button>
+      </div>
+
+      <div class="settings-box">
+        <h4>📱 Update Phone Number</h4>
+        <p>নতুন phone number যোগ করুন।</p>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>New Phone Number</label>
+          <input type="tel" placeholder="01XXXXXXXXX" />
+        </div>
+        <button class="btn-login" style="margin-top:16px;" onclick="alert('Phone number আপডেট হয়েছে!')">Update</button>
+      </div>
+
+      <div class="settings-danger">
+        <h4>🗑️ Delete Account</h4>
+        <p>এই কাজটি undo করা যাবে না।</p>
+        <button class="btn-danger" onclick="if(confirm('আপনি কি সত্যিই account delete করতে চান?')) alert('Request পাঠানো হয়েছে।')">Delete Account</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <div class="footer-logo">🇧🇩</div>
+    <div class="footer-brand">
+      People's Republic of Bangladesh
+      <small>Bangladesh Citizen Card System</small>
+    </div>
+  </div>
+  <div class="footer-right">
+    Email: <a href="mailto:info@smartcard.gov.bd">info@smartcard.gov.bd</a><br/>
+    Helpline: 105, +88 01708-501261
+  </div>
+</footer>
+
+<script>
+  function showPanel(id, linkEl) {
+    document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    if (linkEl) linkEl.classList.add('active');
+  }
+</script>
+
+</body>
+</html>

@@ -6,61 +6,159 @@
 
 /* ---------- FAQ ACCORDION ---------- */
 
-/**
- * Toggles a FAQ item open or closed.
- * Only one item can be open at a time.
- * @param {HTMLElement} item - The clicked .faq-item element
- */
-function toggleFaq(item) {
-  const isOpen = item.classList.contains('open');
-
-  // Close all items first
-  document.querySelectorAll('.faq-item').forEach(el => {
-    el.classList.remove('open');
-  });
-
-  // If it was closed, open it
-  if (!isOpen) {
-    item.classList.add('open');
-  }
-}
-
-// Attach click listeners to all FAQ items
 document.querySelectorAll('.faq-item').forEach(item => {
-  item.querySelector('.faq-header').addEventListener('click', () => {
-    toggleFaq(item);
-  });
+    item.querySelector('.faq-header').addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+    });
 });
 
 
-/* ---------- LOGIN FORM VALIDATION ---------- */
+/* ---------- LOGIN FORM ---------- */
 
 const loginBtn = document.querySelector('.btn-login');
 
 if (loginBtn) {
-  loginBtn.addEventListener('click', () => {
-    const nid      = document.querySelector('input[type="text"]').value.trim();
-    const password = document.querySelector('input[type="password"]').value.trim();
+    loginBtn.addEventListener('click', () => {
+        const nid      = document.getElementById('login-nid').value.trim();
+        const password = document.getElementById('login-password').value.trim();
 
-    if (!nid || !password) {
-      alert('⚠️ Please enter your NID/Username and Password.');
-      return;
-    }
+        if (!nid || !password) {
+            alert('⚠️ NID/Username এবং Password দিন।');
+            return;
+        }
 
-    // Placeholder: replace with real API call
-    alert('✅ Login submitted! (Connect to your backend API here)');
-  });
+        // সফল — dashboard এ যাও
+        window.location.href = 'dashboard.html';
+    });
 }
 
 
-/* ---------- SMOOTH SCROLL (optional) ---------- */
+/* ---------- FORGET PASSWORD MODAL ---------- */
+
+const forgotLink = document.getElementById('forgotLink');
+if (forgotLink) {
+    forgotLink.addEventListener('click', e => {
+        e.preventDefault();
+        openForgotModal();
+    });
+}
+
+function openForgotModal() {
+    // সব step বন্ধ করে step 1 খোলো
+    document.querySelectorAll('.modal-steps').forEach(el => el.classList.remove('active'));
+    document.getElementById('fp-step1').classList.add('active');
+
+    // সব input clear
+    ['fp-phone', 'fp-newpass', 'fp-confirm'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+    ['otp1','otp2','otp3','otp4'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+
+    // সব error লুকাও
+    document.querySelectorAll('.fp-err').forEach(el => el.classList.remove('show'));
+
+    document.getElementById('forgotModal').classList.add('active');
+}
+
+function closeForgotModal() {
+    document.getElementById('forgotModal').classList.remove('active');
+}
+
+// Overlay এ click করলে modal বন্ধ
+document.getElementById('forgotModal').addEventListener('click', function(e) {
+    if (e.target === this) closeForgotModal();
+});
+
+function fpGoStep(stepId) {
+    document.querySelectorAll('.modal-steps').forEach(el => el.classList.remove('active'));
+    document.getElementById(stepId).classList.add('active');
+}
+
+// Step 1 — OTP পাঠাও
+function fpSendOtp() {
+    const phone   = document.getElementById('fp-phone').value.trim();
+    const phoneErr = document.getElementById('fp-phone-err');
+
+    if (!phone) {
+        phoneErr.classList.add('show');
+        return;
+    }
+    phoneErr.classList.remove('show');
+
+    document.getElementById('fp-otp-desc').textContent = phone + ' নম্বরে OTP পাঠানো হয়েছে।';
+    fpGoStep('fp-step2');
+    document.getElementById('otp1').focus();
+}
+
+// OTP box — পরের box এ যাও
+function otpNext(el, nextId) {
+    if (el.value && nextId) {
+        document.getElementById(nextId).focus();
+    }
+}
+
+// Step 2 — OTP verify
+function fpVerifyOtp() {
+    const otp    = ['otp1','otp2','otp3','otp4'].map(id => document.getElementById(id).value).join('');
+    const otpErr = document.getElementById('fp-otp-err');
+
+    if (otp.length < 4) {
+        otpErr.textContent = '⚠️ ৪-digit OTP দিন।';
+        otpErr.classList.add('show');
+        return;
+    }
+    if (otp !== '1234') { // Backend দিয়ে replace করো
+        otpErr.textContent = '⚠️ OTP সঠিক নয়। আবার চেষ্টা করুন।';
+        otpErr.classList.add('show');
+        return;
+    }
+    otpErr.classList.remove('show');
+    fpGoStep('fp-step3');
+}
+
+// Step 3 — Password reset
+function fpResetPassword() {
+    const np    = document.getElementById('fp-newpass').value.trim();
+    const cf    = document.getElementById('fp-confirm').value.trim();
+    const npErr = document.getElementById('fp-newpass-err');
+    const cfErr = document.getElementById('fp-confirm-err');
+
+    npErr.classList.remove('show');
+    cfErr.classList.remove('show');
+
+    if (!np) {
+        npErr.textContent = '⚠️ Password দিন।';
+        npErr.classList.add('show');
+        return;
+    }
+    if (np.length < 6) {
+        npErr.textContent = '⚠️ কমপক্ষে ৬ character দিন।';
+        npErr.classList.add('show');
+        return;
+    }
+    if (np !== cf) {
+        cfErr.classList.add('show');
+        return;
+    }
+
+    fpGoStep('fp-step4');
+}
+
+
+/* ---------- SMOOTH SCROLL ---------- */
 
 document.querySelectorAll('a[href^="#"]').forEach(link => {
-  link.addEventListener('click', e => {
-    const target = document.querySelector(link.getAttribute('href'));
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
-  });
+    link.addEventListener('click', e => {
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
 });
