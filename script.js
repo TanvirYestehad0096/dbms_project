@@ -162,3 +162,12 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
         }
     });
 });
+/* ---------- DOWNLOAD SMART CARD LINK ---------- */
+const downloadLink = document.getElementById('downloadLink');
+if (downloadLink) {
+    downloadLink.addEventListener('click', e => {
+        e.preventDefault();
+        // Login section এ scroll করবে
+        document.querySelector('.section-account').scrollIntoView({ behavior: 'smooth' });
+    });
+}
