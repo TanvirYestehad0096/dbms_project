@@ -58,41 +58,31 @@ function handleNext() {
   if (!fullname) { showError('fullname'); valid = false; }
   if (!dob || dob.length < 10) { showError('dob'); valid = false; }
   if (!phone || !/^01[0-9]{9}$/.test(phone)) { showError('phone'); valid = false; }
-  if (!cardType) { showError('cardType'); valid = false; }
+  if (!cardType) { document.getElementById('cardType-err').classList.add('show'); valid = false; }
   if (!password) { showError('password'); valid = false; }
-  if (password !== confirmPassword) { showError('confirmPassword'); valid = false; }
+  if (!confirmPassword || password !== confirmPassword) {
+    showError('confirmPassword');
+    valid = false;
+  }
 
   if (!valid) return;
 
-  // যেকোনো data দিলেই success
-  document.getElementById('registerForm').style.display = 'none';
-  document.getElementById('successBox').style.display = 'block';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  setTimeout(() => {
-    window.location.href = 'index.html';
-  }, 3000);
-  // ---- LocalStorage এ save করো ----
   const users = JSON.parse(localStorage.getItem('users') || '[]');
-
-  // NID already exists check
   const exists = users.find(u => u.nid === nid);
   if (exists) {
     showError('nid');
-    document.getElementById('nid-err').textContent = '⚠️ এই NID দিয়ে আগেই register করা আছে।';
+    const nidErr = document.getElementById('nid-err');
+    if (nidErr) nidErr.textContent = '⚠️ এই NID দিয়ে আগেই register করা আছে।';
     return;
   }
 
-  // নতুন user save
   users.push({ nid, fullname, dob, phone, cardType, password });
   localStorage.setItem('users', JSON.stringify(users));
 
-  // ---- Success দেখাও তারপর Login এ যাও ----
   document.getElementById('registerForm').style.display = 'none';
   document.getElementById('successBox').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  // ৩ সেকেন্ড পর login page এ যাবে
   setTimeout(() => {
     window.location.href = 'index.html';
   }, 3000);

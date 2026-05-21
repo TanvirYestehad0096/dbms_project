@@ -16,6 +16,7 @@
     /* ---- SIDEBAR ---- */
     .sidebar {
       width: 240px;
+      min-width: 240px;
       flex-shrink: 0;
       background: var(--green-dark);
       display: flex;
@@ -49,7 +50,11 @@
       font-size: 1rem; color: var(--white); margin-bottom: 3px;
     }
 
-    .sidebar-nid { font-size: 0.75rem; color: rgba(255,255,255,0.5); letter-spacing: 0.05em; }
+    .sidebar-nid {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.05em;
+    }
 
     .sidebar-nav {
       flex: 1; padding: 0 12px;
@@ -59,23 +64,16 @@
     .sidebar-nav a {
       display: flex; align-items: center; gap: 12px;
       padding: 12px 16px; border-radius: 10px;
-      text-decoration: none; color: rgba(255,255,255,0.65);
+      text-decoration: none; color: rgba(255,255,255,0.7);
       font-size: 0.9rem; font-weight: 500;
       transition: background 0.2s, color 0.2s;
       cursor: pointer;
     }
 
-    .sidebar-nav a:hover { background: rgba(255,255,255,0.10); color: var(--white); }
-    .sidebar-nav a.active { background: rgba(201,168,76,0.18); color: var(--gold-light); }
+    .sidebar-nav a:hover { background: rgba(255,255,255,0.10); color: #fff; }
+    .sidebar-nav a.active { background: rgba(201,168,76,0.20); color: var(--gold-light); }
 
-    .nav-icon { font-size: 1.1rem; width: 20px; text-align: center; }
-
-    .notif-badge {
-      margin-left: auto;
-      background: #e74c3c; color: #fff;
-      font-size: 0.7rem; padding: 1px 7px;
-      border-radius: 10px;
-    }
+    .nav-icon { font-size: 1.1rem; width: 20px; text-align: center; flex-shrink: 0; }
 
     .sidebar-bottom {
       padding: 16px 12px 0;
@@ -86,14 +84,14 @@
       display: flex; align-items: center; gap: 12px;
       padding: 12px 16px; border-radius: 10px;
       text-decoration: none; color: rgba(255,255,255,0.5);
-      font-size: 0.88rem; transition: color 0.2s;
+      font-size: 0.88rem; transition: color 0.2s; cursor: pointer;
     }
     .sidebar-bottom a:hover { color: #e74c3c; }
 
     /* ---- MAIN ---- */
-    .dashboard-main { flex: 1; padding: 36px 32px; overflow-y: auto; }
+    .dashboard-main { flex: 1; padding: 36px 32px; overflow-y: auto; min-width: 0; }
 
-    .dash-greeting { margin-bottom: 32px; }
+    .dash-greeting { margin-bottom: 28px; }
     .dash-greeting h2 {
       font-family: 'Playfair Display', serif;
       font-size: 1.8rem; color: var(--text-dark); margin-bottom: 4px;
@@ -104,19 +102,17 @@
     .stat-row {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 16px; margin-bottom: 32px;
+      gap: 16px; margin-bottom: 28px;
     }
 
     .stat-card {
       background: var(--white); border-radius: 14px;
       padding: 20px 22px; box-shadow: var(--shadow);
       border-left: 4px solid transparent;
-      animation: fadeInUp 0.5s ease both;
     }
-    .stat-card:nth-child(1) { border-color: var(--green-mid); animation-delay: 0.05s; }
-    .stat-card:nth-child(2) { border-color: var(--gold);      animation-delay: 0.12s; }
-    .stat-card:nth-child(3) { border-color: #3498db;          animation-delay: 0.19s; }
-    .stat-card:nth-child(4) { border-color: #e67e22;          animation-delay: 0.26s; }
+    .stat-card:nth-child(1) { border-color: var(--green-mid); }
+    .stat-card:nth-child(2) { border-color: var(--gold); }
+    .stat-card:nth-child(3) { border-color: #3498db; }
 
     .stat-label {
       font-size: 0.75rem; font-weight: 600;
@@ -148,7 +144,6 @@
       background: var(--white); border: 1.5px solid var(--border);
       border-radius: 14px; padding: 20px; box-shadow: var(--shadow);
       display: flex; flex-direction: column; gap: 10px;
-      animation: fadeInUp 0.5s ease both;
       transition: transform 0.2s, box-shadow 0.2s;
     }
     .card-item:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(26,60,52,0.13); }
@@ -163,13 +158,11 @@
     }
 
     .card-status { font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
-    .status-approved   { background: #eafaf3; color: #27ae60; }
-    .status-pending    { background: #fef9e7; color: #e67e22; }
-    .status-processing { background: #eaf2fb; color: #3498db; }
+    .status-approved { background: #eafaf3; color: #27ae60; }
+    .status-pending  { background: #fef9e7; color: #e67e22; }
 
     .card-item-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text-dark); }
     .card-item-nid  { font-size: 0.8rem; color: var(--text-muted); }
-
     .card-item-actions { display: flex; gap: 8px; margin-top: 4px; }
 
     .btn-card-action {
@@ -182,25 +175,18 @@
     .btn-view { background: #eef2f1; color: var(--text-mid); }
     .btn-view:hover { background: var(--border); }
 
-    /* ---- NOTIFICATIONS ---- */
-    .notif-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
-
-    .notif-item {
-      background: var(--white); border: 1.5px solid var(--border);
-      border-radius: 12px; padding: 14px 18px;
-      display: flex; align-items: flex-start; gap: 14px;
-      box-shadow: 0 2px 8px rgba(26,60,52,0.05);
-      animation: fadeInUp 0.5s ease both;
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      background: var(--white);
+      border: 1.5px dashed var(--border);
+      border-radius: 14px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
     }
-
-    .notif-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
-    .dot-green { background: #27ae60; }
-    .dot-gold  { background: var(--gold); }
-    .dot-blue  { background: #3498db; }
-    .dot-gray  { background: #bbb; }
-
-    .notif-text { font-size: 0.88rem; color: var(--text-mid); line-height: 1.5; }
-    .notif-time { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+    .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .empty-state p { font-size: 0.92rem; margin-bottom: 16px; }
 
     /* ---- PROFILE ---- */
     .profile-card {
@@ -231,17 +217,15 @@
     .dash-panel { display: none; }
     .dash-panel.active { display: block; }
 
-    /* ---- APPLY BTN ---- */
     .btn-apply {
       display: inline-flex; align-items: center; gap: 8px;
       background: var(--green-dark); color: #fff;
       padding: 12px 28px; border-radius: 10px;
       text-decoration: none; font-weight: 600; font-size: 0.92rem;
-      transition: background 0.2s; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: background 0.2s;
     }
     .btn-apply:hover { background: var(--green-mid); }
 
-    /* ---- SETTINGS BOX ---- */
     .settings-box {
       background: var(--white); border: 1.5px solid var(--border);
       border-radius: 14px; padding: 22px; box-shadow: var(--shadow);
@@ -262,14 +246,10 @@
       font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer;
     }
 
-    /* ---- RESPONSIVE ---- */
     @media (max-width: 768px) {
       .dashboard-wrap { flex-direction: column; }
-      .sidebar { width: 100%; height: auto; position: static; padding: 12px; }
-      .sidebar-user { display: none; }
-      .sidebar-nav { flex-direction: row; flex-wrap: wrap; gap: 4px; padding: 0; }
-      .sidebar-nav a { padding: 8px 12px; font-size: 0.8rem; }
-      .sidebar-bottom { display: none; }
+      .sidebar { width: 100%; min-width: unset; height: auto; position: static; padding: 16px 12px; }
+      .sidebar-nav { flex-direction: column; }
       .dashboard-main { padding: 20px 16px; }
       .profile-card { grid-template-columns: 1fr; }
       .profile-info-grid { grid-template-columns: 1fr; }
@@ -299,8 +279,8 @@
   <aside class="sidebar">
     <div class="sidebar-user">
       <div class="sidebar-avatar">👤</div>
-      <div class="sidebar-name">Md. Rahim Uddin</div>
-      <div class="sidebar-nid">NID: 1234567890</div>
+      <div class="sidebar-name" id="sidebarName">—</div>
+      <div class="sidebar-nid" id="sidebarNid">NID: —</div>
     </div>
 
     <nav class="sidebar-nav">
@@ -313,10 +293,6 @@
       <a onclick="showPanel('download', this)">
         <span class="nav-icon">⬇️</span> Download Card
       </a>
-      <a onclick="showPanel('notifications', this)">
-        <span class="nav-icon">🔔</span> Notifications
-        <span class="notif-badge">3</span>
-      </a>
       <a onclick="showPanel('profile', this)">
         <span class="nav-icon">👤</span> Profile
       </a>
@@ -326,7 +302,7 @@
     </nav>
 
     <div class="sidebar-bottom">
-      <a href="index.html">
+      <a onclick="logout()">
         <span class="nav-icon">🚪</span> Logout
       </a>
     </div>
@@ -338,124 +314,39 @@
     <!-- OVERVIEW -->
     <div class="dash-panel active" id="panel-overview">
       <div class="dash-greeting">
-        <h2>স্বাগতম, Rahim! 👋</h2>
+        <h2>স্বাগতম, <span id="greetingName">—</span>! 👋</h2>
         <p>আপনার Bangladesh Citizen Card dashboard-এ আপনাকে স্বাগত জানাই।</p>
       </div>
 
       <div class="stat-row">
         <div class="stat-card">
           <div class="stat-label">Total Cards</div>
-          <div class="stat-value">3</div>
+          <div class="stat-value" id="statTotal">0</div>
           <div class="stat-sub">Registered cards</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Approved</div>
-          <div class="stat-value">2</div>
-          <div class="stat-sub">Ready to download</div>
+          <div class="stat-label">Status</div>
+          <div class="stat-value" style="font-size:1.2rem; color:#e67e22;">⏳</div>
+          <div class="stat-sub">Pending review</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Pending</div>
-          <div class="stat-value">1</div>
-          <div class="stat-sub">Under review</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Notifications</div>
-          <div class="stat-value">3</div>
-          <div class="stat-sub">Unread messages</div>
+          <div class="stat-label">Account</div>
+          <div class="stat-value" style="font-size:1.2rem; color:#27ae60;">✅</div>
+          <div class="stat-sub">Active</div>
         </div>
       </div>
 
-      <div class="section-title">Recent Cards</div>
-      <div class="cards-grid">
-        <div class="card-item">
-          <div class="card-item-top">
-            <span class="card-type-badge">Family</span>
-            <span class="card-status status-approved">✅ Approved</span>
-          </div>
-          <div class="card-item-name">Md. Rahim Uddin</div>
-          <div class="card-item-nid">NID: 1234567890</div>
-          <div class="card-item-actions">
-            <button class="btn-card-action btn-download" onclick="alert('Card download শুরু হচ্ছে...')">⬇ Download</button>
-            <button class="btn-card-action btn-view" onclick="showPanel('mycards', null)">View</button>
-          </div>
-        </div>
-        <div class="card-item">
-          <div class="card-item-top">
-            <span class="card-type-badge">Student</span>
-            <span class="card-status status-pending">⏳ Pending</span>
-          </div>
-          <div class="card-item-name">Md. Rahim Uddin</div>
-          <div class="card-item-nid">NID: 1234567890</div>
-          <div class="card-item-actions">
-            <button class="btn-card-action btn-download" disabled style="opacity:0.4;cursor:not-allowed;">⬇ Download</button>
-            <button class="btn-card-action btn-view" onclick="showPanel('mycards', null)">View</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="section-title">Recent Notifications</div>
-      <div class="notif-list">
-        <div class="notif-item">
-          <div class="notif-dot dot-green"></div>
-          <div>
-            <div class="notif-text">আপনার <strong>Family Card</strong> অনুমোদন হয়েছে। এখনই download করুন।</div>
-            <div class="notif-time">আজ, সকাল ১০:৩২</div>
-          </div>
-        </div>
-        <div class="notif-item">
-          <div class="notif-dot dot-gold"></div>
-          <div>
-            <div class="notif-text"><strong>Student Card</strong> আবেদন প্রক্রিয়াধীন। ২-৩ কার্যদিবস লাগতে পারে।</div>
-            <div class="notif-time">গতকাল, বিকাল ৩:১৫</div>
-          </div>
-        </div>
-      </div>
+      <div class="section-title">My Card</div>
+      <div id="overviewCardArea"></div>
     </div>
 
     <!-- MY CARDS -->
     <div class="dash-panel" id="panel-mycards">
       <div class="dash-greeting">
         <h2>My Cards</h2>
-        <p>আপনার সব registered card এখানে।</p>
+        <p>আপনার registered card এখানে।</p>
       </div>
-      <div class="cards-grid">
-        <div class="card-item">
-          <div class="card-item-top">
-            <span class="card-type-badge">Family</span>
-            <span class="card-status status-approved">✅ Approved</span>
-          </div>
-          <div class="card-item-name">Md. Rahim Uddin</div>
-          <div class="card-item-nid">NID: 1234567890 &nbsp;|&nbsp; Applied: 01 Jan 2025</div>
-          <div class="card-item-actions">
-            <button class="btn-card-action btn-download" onclick="alert('Downloading...')">⬇ Download</button>
-            <button class="btn-card-action btn-view" onclick="alert('Details loading...')">Details</button>
-          </div>
-        </div>
-        <div class="card-item">
-          <div class="card-item-top">
-            <span class="card-type-badge">Business</span>
-            <span class="card-status status-approved">✅ Approved</span>
-          </div>
-          <div class="card-item-name">Md. Rahim Uddin</div>
-          <div class="card-item-nid">NID: 1234567890 &nbsp;|&nbsp; Applied: 15 Feb 2025</div>
-          <div class="card-item-actions">
-            <button class="btn-card-action btn-download" onclick="alert('Downloading...')">⬇ Download</button>
-            <button class="btn-card-action btn-view" onclick="alert('Details loading...')">Details</button>
-          </div>
-        </div>
-        <div class="card-item">
-          <div class="card-item-top">
-            <span class="card-type-badge">Student</span>
-            <span class="card-status status-pending">⏳ Pending</span>
-          </div>
-          <div class="card-item-name">Md. Rahim Uddin</div>
-          <div class="card-item-nid">NID: 1234567890 &nbsp;|&nbsp; Applied: 10 May 2025</div>
-          <div class="card-item-actions">
-            <button class="btn-card-action btn-download" disabled style="opacity:0.4;cursor:not-allowed;">⬇ Download</button>
-            <button class="btn-card-action btn-view" onclick="alert('Details loading...')">Details</button>
-          </div>
-        </div>
-      </div>
+      <div id="myCardsArea"></div>
       <a href="register.html" class="btn-apply">＋ Apply New Card</a>
     </div>
 
@@ -463,77 +354,9 @@
     <div class="dash-panel" id="panel-download">
       <div class="dash-greeting">
         <h2>Download Card</h2>
-        <p>Approved card গুলো এখান থেকে download করুন।</p>
+        <p>আপনার card download করুন।</p>
       </div>
-      <div class="cards-grid">
-        <div class="card-item">
-          <div class="card-item-top">
-            <span class="card-type-badge">Family</span>
-            <span class="card-status status-approved">✅ Ready</span>
-          </div>
-          <div class="card-item-name">Md. Rahim Uddin</div>
-          <div class="card-item-nid">NID: 1234567890</div>
-          <div class="card-item-actions">
-            <button class="btn-card-action btn-download" onclick="alert('Family Card downloading...')">⬇ Download PDF</button>
-          </div>
-        </div>
-        <div class="card-item">
-          <div class="card-item-top">
-            <span class="card-type-badge">Business</span>
-            <span class="card-status status-approved">✅ Ready</span>
-          </div>
-          <div class="card-item-name">Md. Rahim Uddin</div>
-          <div class="card-item-nid">NID: 1234567890</div>
-          <div class="card-item-actions">
-            <button class="btn-card-action btn-download" onclick="alert('Business Card downloading...')">⬇ Download PDF</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- NOTIFICATIONS -->
-    <div class="dash-panel" id="panel-notifications">
-      <div class="dash-greeting">
-        <h2>Notifications</h2>
-        <p>আপনার সব আপডেট এখানে।</p>
-      </div>
-      <div class="notif-list">
-        <div class="notif-item">
-          <div class="notif-dot dot-green"></div>
-          <div>
-            <div class="notif-text">আপনার <strong>Family Card</strong> অনুমোদন হয়েছে। এখনই download করুন।</div>
-            <div class="notif-time">আজ, সকাল ১০:৩২</div>
-          </div>
-        </div>
-        <div class="notif-item">
-          <div class="notif-dot dot-green"></div>
-          <div>
-            <div class="notif-text">আপনার <strong>Business Card</strong> অনুমোদন হয়েছে।</div>
-            <div class="notif-time">আজ, সকাল ৯:০৫</div>
-          </div>
-        </div>
-        <div class="notif-item">
-          <div class="notif-dot dot-gold"></div>
-          <div>
-            <div class="notif-text"><strong>Student Card</strong> আবেদন প্রক্রিয়াধীন। ২-৩ কার্যদিবস লাগতে পারে।</div>
-            <div class="notif-time">গতকাল, বিকাল ৩:১৫</div>
-          </div>
-        </div>
-        <div class="notif-item">
-          <div class="notif-dot dot-blue"></div>
-          <div>
-            <div class="notif-text">আপনার account সফলভাবে তৈরি হয়েছে।</div>
-            <div class="notif-time">০১ জানুয়ারি ২০২৫</div>
-          </div>
-        </div>
-        <div class="notif-item">
-          <div class="notif-dot dot-gray"></div>
-          <div>
-            <div class="notif-text">System maintenance: ১৫ মে রাত ১২টা থেকে ভোর ৩টা পর্যন্ত সাময়িক বন্ধ থাকবে।</div>
-            <div class="notif-time">১৩ মে ২০২৫</div>
-          </div>
-        </div>
-      </div>
+      <div id="downloadArea"></div>
     </div>
 
     <!-- PROFILE -->
@@ -547,23 +370,23 @@
         <div class="profile-info-grid">
           <div class="profile-field">
             <label>Full Name</label>
-            <span>Md. Rahim Uddin</span>
+            <span id="profileFullname">—</span>
           </div>
           <div class="profile-field">
             <label>NID Number</label>
-            <span>1234567890</span>
+            <span id="profileNid">—</span>
           </div>
           <div class="profile-field">
             <label>Date of Birth</label>
-            <span>15/06/1990</span>
+            <span id="profileDob">—</span>
           </div>
           <div class="profile-field">
             <label>Phone Number</label>
-            <span>01712345678</span>
+            <span id="profilePhone">—</span>
           </div>
           <div class="profile-field">
-            <label>Division</label>
-            <span>Dhaka</span>
+            <label>Card Type</label>
+            <span id="profileCard">—</span>
           </div>
           <div class="profile-field">
             <label>Account Status</label>
@@ -571,7 +394,6 @@
           </div>
         </div>
       </div>
-      <button class="btn-login" onclick="alert('Profile edit feature শীঘ্রই আসছে!')">✏️ Edit Profile</button>
     </div>
 
     <!-- SETTINGS -->
@@ -586,33 +408,23 @@
         <p>নতুন password set করুন।</p>
         <div class="form-group">
           <label>Current Password</label>
-          <input type="password" placeholder="Current Password" />
+          <input type="password" id="currentPass" placeholder="Current Password" />
         </div>
         <div class="form-group">
           <label>New Password</label>
-          <input type="password" placeholder="New Password" />
+          <input type="password" id="newPass" placeholder="New Password" />
         </div>
         <div class="form-group" style="margin-bottom:0;">
           <label>Confirm New Password</label>
-          <input type="password" placeholder="Confirm Password" />
+          <input type="password" id="confirmPass" placeholder="Confirm Password" />
         </div>
-        <button class="btn-login" style="margin-top:16px;" onclick="alert('Password পরিবর্তন হয়েছে!')">Save Password</button>
-      </div>
-
-      <div class="settings-box">
-        <h4>📱 Update Phone Number</h4>
-        <p>নতুন phone number যোগ করুন।</p>
-        <div class="form-group" style="margin-bottom:0;">
-          <label>New Phone Number</label>
-          <input type="tel" placeholder="01XXXXXXXXX" />
-        </div>
-        <button class="btn-login" style="margin-top:16px;" onclick="alert('Phone number আপডেট হয়েছে!')">Update</button>
+        <button class="btn-login" style="margin-top:16px;" onclick="changePassword()">Save Password</button>
       </div>
 
       <div class="settings-danger">
         <h4>🗑️ Delete Account</h4>
         <p>এই কাজটি undo করা যাবে না।</p>
-        <button class="btn-danger" onclick="if(confirm('আপনি কি সত্যিই account delete করতে চান?')) alert('Request পাঠানো হয়েছে।')">Delete Account</button>
+        <button class="btn-danger" onclick="deleteAccount()">Delete Account</button>
       </div>
     </div>
 
@@ -635,11 +447,115 @@
 </footer>
 
 <script>
+  let currentUser = null;
+
+  /* ---- PANEL SWITCH ---- */
   function showPanel(id, linkEl) {
     document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
     document.getElementById('panel-' + id).classList.add('active');
     if (linkEl) linkEl.classList.add('active');
+  }
+
+  /* ---- LOGOUT ---- */
+  function logout() {
+    localStorage.removeItem('loggedInUser');
+    window.location.href = 'index.html';
+  }
+
+  /* ---- CARD HTML ---- */
+  function cardHTML(user, showDownload) {
+    return `
+      <div class="card-item">
+        <div class="card-item-top">
+          <span class="card-type-badge">${user.cardType}</span>
+          <span class="card-status status-pending">⏳ Pending</span>
+        </div>
+        <div class="card-item-name">${user.fullname}</div>
+        <div class="card-item-nid">NID: ${user.nid}</div>
+        ${showDownload ? `
+        <div class="card-item-actions">
+          <button class="btn-card-action btn-download" onclick="alert('Card download শুরু হচ্ছে...')">⬇ Download</button>
+        </div>` : ''}
+      </div>
+    `;
+  }
+
+  /* ---- LOAD USER DATA ---- */
+  document.addEventListener('DOMContentLoaded', () => {
+    const loggedIn = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+    if (!loggedIn) { window.location.href = 'index.html'; return; }
+
+    // Fresh data from users list
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    currentUser = users.find(u => u.nid === loggedIn.nid) || loggedIn;
+
+    const name  = currentUser.fullname || '—';
+    const nid   = currentUser.nid || '—';
+    const dob   = currentUser.dob || '—';
+    const phone = currentUser.phone || '—';
+    const card  = currentUser.cardType || '—';
+
+    // Sidebar
+    document.getElementById('sidebarName').textContent = name;
+    document.getElementById('sidebarNid').textContent  = 'NID: ' + nid;
+
+    // Greeting
+    document.getElementById('greetingName').textContent = name.split(' ')[0] || name;
+
+    // Stats
+    document.getElementById('statTotal').textContent = '1';
+
+    // Overview card
+    document.getElementById('overviewCardArea').innerHTML = `<div class="cards-grid">${cardHTML(currentUser, false)}</div>`;
+
+    // My Cards
+    document.getElementById('myCardsArea').innerHTML = `<div class="cards-grid">${cardHTML(currentUser, false)}</div>`;
+
+    // Download
+    document.getElementById('downloadArea').innerHTML = `<div class="cards-grid">${cardHTML(currentUser, true)}</div>`;
+
+    // Profile
+    document.getElementById('profileFullname').textContent = name;
+    document.getElementById('profileNid').textContent      = nid;
+    document.getElementById('profileDob').textContent      = dob;
+    document.getElementById('profilePhone').textContent    = phone;
+    document.getElementById('profileCard').textContent     = card;
+  });
+
+  /* ---- CHANGE PASSWORD ---- */
+  function changePassword() {
+    const current = document.getElementById('currentPass').value.trim();
+    const newP    = document.getElementById('newPass').value.trim();
+    const confirm = document.getElementById('confirmPass').value.trim();
+
+    if (!current || !newP || !confirm) { alert('⚠️ সব field পূরণ করুন।'); return; }
+    if (current !== currentUser.password) { alert('⚠️ Current Password ভুল।'); return; }
+    if (newP.length < 6) { alert('⚠️ কমপক্ষে ৬ character দিন।'); return; }
+    if (newP !== confirm) { alert('⚠️ Password মিলছে না।'); return; }
+
+    // Update in localStorage
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const idx   = users.findIndex(u => u.nid === currentUser.nid);
+    if (idx !== -1) { users[idx].password = newP; localStorage.setItem('users', JSON.stringify(users)); }
+    currentUser.password = newP;
+    localStorage.setItem('loggedInUser', JSON.stringify(currentUser));
+
+    alert('✅ Password সফলভাবে পরিবর্তন হয়েছে!');
+    document.getElementById('currentPass').value = '';
+    document.getElementById('newPass').value     = '';
+    document.getElementById('confirmPass').value = '';
+  }
+
+  /* ---- DELETE ACCOUNT ---- */
+  function deleteAccount() {
+    if (!confirm('আপনি কি সত্যিই account delete করতে চান?')) return;
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const updated = users.filter(u => u.nid !== currentUser.nid);
+    localStorage.setItem('users', JSON.stringify(updated));
+    localStorage.removeItem('loggedInUser');
+    alert('Account delete হয়েছে।');
+    window.location.href = 'index.html';
   }
 </script>
 
