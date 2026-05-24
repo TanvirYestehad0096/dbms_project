@@ -43,7 +43,7 @@ function togglePass(id, btn) {
 }
 
 /* ---- Next Button ---- */
-function handleNext() {
+async function handleNext() {
   const nid = document.getElementById('nid').value.trim();
   const fullname = document.getElementById('fullname').value.trim();
   const dob = document.getElementById('dob').value.trim();
@@ -67,25 +67,29 @@ function handleNext() {
 
   if (!valid) return;
 
-  const users = JSON.parse(localStorage.getItem('users') || '[]');
-  const exists = users.find(u => u.nid === nid);
-  if (exists) {
-    showError('nid');
-    const nidErr = document.getElementById('nid-err');
-    if (nidErr) nidErr.textContent = '⚠️ এই NID দিয়ে আগেই register করা আছে।';
-    return;
+  // Date format convert করো DD/MM/YYYY → YYYY-MM-DD
+  const dobParts = dob.split('/');
+  const dobFormatted = `${dobParts[2]}-${dobParts[1]}-${dobParts[0]}`;
+
+  const res = await registerUser({
+    nid_number: nid,
+    full_name: fullname,
+    date_of_birth: dobFormatted,
+    phone: phone,
+    password: password,
+    card_types: [...selectedCards]
+  });
+
+  if (res.success) {
+    document.getElementById('registerForm').style.display = 'none';
+    document.getElementById('successBox').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 3000);
+  } else {
+    alert('❌ ' + res.message);
   }
-
-  users.push({ nid, fullname, dob, phone, cardType, password });
-  localStorage.setItem('users', JSON.stringify(users));
-
-  document.getElementById('registerForm').style.display = 'none';
-  document.getElementById('successBox').style.display = 'block';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  setTimeout(() => {
-    window.location.href = 'index.html';
-  }, 3000);
 }
 /* ---- Card Picker (Multiple) ---- */
 const selectedCards = new Set();

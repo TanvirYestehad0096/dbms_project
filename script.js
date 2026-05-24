@@ -20,8 +20,8 @@ document.querySelectorAll('.faq-item').forEach(item => {
 const loginBtn = document.querySelector('.btn-login');
 
 if (loginBtn) {
-    loginBtn.addEventListener('click', () => {
-        const nid      = document.getElementById('loginNid').value.trim();
+    loginBtn.addEventListener('click', async () => {
+        const nid = document.getElementById('loginNid').value.trim();
         const password = document.getElementById('loginPassword').value.trim();
 
         if (!nid || !password) {
@@ -29,27 +29,18 @@ if (loginBtn) {
             return;
         }
 
-        // Admin check
-        if (nid === 'admin' && password === 'admin123') {
-            window.location.href = 'admin.html';
-            return;
-        }
+        const res = await loginUser(nid, password);
 
-        // localStorage এ registered user check
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        const user  = users.find(u => u.nid === nid && u.password === password);
-
-        if (user) {
-            // Logged in user info save করো
-            localStorage.setItem('loggedInUser', JSON.stringify(user));
+        if (res.success) {
+            localStorage.setItem('token', res.token);
+            localStorage.setItem('loggedInUser', JSON.stringify(res.user));
+            alert('✅ Login সফল! স্বাগতম ' + res.user.full_name);
             window.location.href = 'dashboard.html';
         } else {
-            alert('⚠️ NID বা Password ভুল। আগে Register করুন।');
+            alert('⚠️ ' + res.message);
         }
     });
 }
-
-
 /* ---------- DOWNLOAD SMART CARD LINK ---------- */
 
 const downloadLink = document.getElementById('downloadLink');
@@ -78,7 +69,7 @@ function openForgotModal() {
         const el = document.getElementById(id);
         if (el) el.value = '';
     });
-    ['otp1','otp2','otp3','otp4'].forEach(id => {
+    ['otp1', 'otp2', 'otp3', 'otp4'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
     });
@@ -90,7 +81,7 @@ function closeForgotModal() {
     document.getElementById('forgotModal').classList.remove('active');
 }
 
-document.getElementById('forgotModal').addEventListener('click', function(e) {
+document.getElementById('forgotModal').addEventListener('click', function (e) {
     if (e.target === this) closeForgotModal();
 });
 
@@ -100,7 +91,7 @@ function fpGoStep(stepId) {
 }
 
 function fpSendOtp() {
-    const phone    = document.getElementById('fp-phone').value.trim();
+    const phone = document.getElementById('fp-phone').value.trim();
     const phoneErr = document.getElementById('fp-phone-err');
     if (!phone) { phoneErr.classList.add('show'); return; }
     phoneErr.classList.remove('show');
@@ -114,7 +105,7 @@ function otpNext(el, nextId) {
 }
 
 function fpVerifyOtp() {
-    const otp    = ['otp1','otp2','otp3','otp4'].map(id => document.getElementById(id).value).join('');
+    const otp = ['otp1', 'otp2', 'otp3', 'otp4'].map(id => document.getElementById(id).value).join('');
     const otpErr = document.getElementById('fp-otp-err');
     if (otp.length < 4) { otpErr.textContent = '⚠️ ৪-digit OTP দিন।'; otpErr.classList.add('show'); return; }
     if (otp !== '1234') { otpErr.textContent = '⚠️ OTP সঠিক নয়।'; otpErr.classList.add('show'); return; }
@@ -123,8 +114,8 @@ function fpVerifyOtp() {
 }
 
 function fpResetPassword() {
-    const np    = document.getElementById('fp-newpass').value.trim();
-    const cf    = document.getElementById('fp-confirm').value.trim();
+    const np = document.getElementById('fp-newpass').value.trim();
+    const cf = document.getElementById('fp-confirm').value.trim();
     const npErr = document.getElementById('fp-newpass-err');
     const cfErr = document.getElementById('fp-confirm-err');
     npErr.classList.remove('show');
