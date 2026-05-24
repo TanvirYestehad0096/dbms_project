@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Login — Bangladesh Citizen Card</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css"/>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
   <style>
     .admin-login-page {
       min-height: 100vh;
@@ -23,8 +26,8 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse at 20% 20%, rgba(201,168,76,0.15) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 80%, rgba(58,138,116,0.20) 0%, transparent 50%);
+        radial-gradient(ellipse at 20% 20%, rgba(201, 168, 76, 0.15) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 80%, rgba(58, 138, 116, 0.20) 0%, transparent 50%);
       pointer-events: none;
     }
 
@@ -34,7 +37,7 @@
       padding: 40px 36px 32px;
       width: 100%;
       max-width: 420px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
       position: relative;
       z-index: 1;
     }
@@ -68,7 +71,9 @@
       color: var(--text-muted);
     }
 
-    .admin-login-box .form-group { margin-bottom: 20px; }
+    .admin-login-box .form-group {
+      margin-bottom: 20px;
+    }
 
     .admin-login-box .form-group label {
       display: block;
@@ -94,12 +99,12 @@
 
     .admin-login-box .form-group input:focus {
       border-color: var(--green-mid);
-      box-shadow: 0 0 0 3px rgba(46,107,94,0.12);
+      box-shadow: 0 0 0 3px rgba(46, 107, 94, 0.12);
     }
 
     .admin-login-box .form-group input.error {
       border-color: #e74c3c;
-      box-shadow: 0 0 0 3px rgba(231,76,60,0.10);
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.10);
     }
 
     .err-msg {
@@ -108,7 +113,10 @@
       margin-top: 5px;
       display: none;
     }
-    .err-msg.show { display: block; }
+
+    .err-msg.show {
+      display: block;
+    }
 
     .btn-admin-login {
       width: 100%;
@@ -143,7 +151,9 @@
       font-weight: 600;
     }
 
-    .back-link a:hover { text-decoration: underline; }
+    .back-link a:hover {
+      text-decoration: underline;
+    }
 
     .demo-hint {
       background: #f0f9f5;
@@ -157,87 +167,93 @@
     }
   </style>
 </head>
+
 <body>
 
-<div class="admin-login-page">
-  <div class="admin-login-box">
+  <div class="admin-login-page">
+    <div class="admin-login-box">
 
-    <div class="admin-login-header">
-      <div class="admin-icon">🛡️</div>
-      <h2>Admin Panel</h2>
-      <p>Bangladesh Citizen Card System</p>
+      <div class="admin-login-header">
+        <div class="admin-icon">🛡️</div>
+        <h2>Admin Panel</h2>
+        <p>Bangladesh Citizen Card System</p>
+      </div>
+
+      <div class="demo-hint">
+        Demo — Username: <strong>admin</strong> &nbsp;|&nbsp; Password: <strong>admin123</strong>
+      </div>
+
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="admin-username" placeholder="Username" />
+        <span class="err-msg" id="username-err">⚠️ Username দিন।</span>
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="admin-password" placeholder="Password" />
+        <span class="err-msg" id="password-err">⚠️ Password দিন।</span>
+      </div>
+
+      <span class="err-msg show" id="wrong-err" style="display:none; margin-bottom:12px; text-align:center;">⚠️ Username
+        বা Password ভুল।</span>
+
+      <button class="btn-admin-login" onclick="adminLogin()">Login →</button>
+
+      <div class="back-link">
+        ← <a href="index.html">Back to Home</a>
+      </div>
+
     </div>
-
-    <div class="demo-hint">
-      Demo — Username: <strong>admin</strong> &nbsp;|&nbsp; Password: <strong>admin123</strong>
-    </div>
-
-    <div class="form-group">
-      <label>Username</label>
-      <input type="text" id="admin-username" placeholder="Username" />
-      <span class="err-msg" id="username-err">⚠️ Username দিন।</span>
-    </div>
-
-    <div class="form-group">
-      <label>Password</label>
-      <input type="password" id="admin-password" placeholder="Password" />
-      <span class="err-msg" id="password-err">⚠️ Password দিন।</span>
-    </div>
-
-    <span class="err-msg show" id="wrong-err" style="display:none; margin-bottom:12px; text-align:center;">⚠️ Username বা Password ভুল।</span>
-
-    <button class="btn-admin-login" onclick="adminLogin()">Login →</button>
-
-    <div class="back-link">
-      ← <a href="index.html">Back to Home</a>
-    </div>
-
   </div>
-</div>
 
-<script>
-  function adminLogin() {
-    const username = document.getElementById('admin-username').value.trim();
-    const password = document.getElementById('admin-password').value.trim();
-    const usernameErr = document.getElementById('username-err');
-    const passwordErr = document.getElementById('password-err');
-    const wrongErr    = document.getElementById('wrong-err');
+  <script>
+    async function adminLogin() {
+      const username = document.getElementById('admin-username').value.trim();
+      const password = document.getElementById('admin-password').value.trim();
+      const usernameErr = document.getElementById('username-err');
+      const passwordErr = document.getElementById('password-err');
+      const wrongErr = document.getElementById('wrong-err');
 
-    // reset
-    usernameErr.classList.remove('show');
-    passwordErr.classList.remove('show');
-    wrongErr.style.display = 'none';
-    document.getElementById('admin-username').classList.remove('error');
-    document.getElementById('admin-password').classList.remove('error');
+      // reset
+      usernameErr.classList.remove('show');
+      passwordErr.classList.remove('show');
+      wrongErr.style.display = 'none';
+      document.getElementById('admin-username').classList.remove('error');
+      document.getElementById('admin-password').classList.remove('error');
 
-    let valid = true;
-    if (!username) {
-      usernameErr.classList.add('show');
-      document.getElementById('admin-username').classList.add('error');
-      valid = false;
+      let valid = true;
+      if (!username) {
+        usernameErr.classList.add('show');
+        document.getElementById('admin-username').classList.add('error');
+        valid = false;
+      }
+      if (!password) {
+        passwordErr.classList.add('show');
+        document.getElementById('admin-password').classList.add('error');
+        valid = false;
+      }
+      if (!valid) return;
+
+      // Fixed admin credentials
+      const res = await adminLogin(username, password);
+      if (res.success) {
+        localStorage.setItem('adminToken', res.token);
+        window.location.href = 'admin.html';
+      } else {
+        wrongErr.style.display = 'block';
+        document.getElementById('admin-username').classList.add('error');
+        document.getElementById('admin-password').classList.add('error');
+      }
     }
-    if (!password) {
-      passwordErr.classList.add('show');
-      document.getElementById('admin-password').classList.add('error');
-      valid = false;
-    }
-    if (!valid) return;
 
-    // Fixed admin credentials
-    if (username === 'admin' && password === 'admin123') {
-      window.location.href = 'admin.html';
-    } else {
-      wrongErr.style.display = 'block';
-      document.getElementById('admin-username').classList.add('error');
-      document.getElementById('admin-password').classList.add('error');
-    }
-  }
+    // Enter key support
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') adminLogin();
+    });
+  </script>
 
-  // Enter key support
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Enter') adminLogin();
-  });
-</script>
-
+  <script src="api.js"></script>
 </body>
+
 </html>
