@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard — Bangladesh Citizen Card</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css"/>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
   <style>
     .dashboard-wrap {
       display: flex;
@@ -31,105 +34,178 @@
     .sidebar-user {
       text-align: center;
       padding: 0 20px 28px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       margin-bottom: 16px;
     }
 
     .sidebar-avatar {
-      width: 72px; height: 72px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--gold) 0%, #f0a500 100%);
-      display: flex; align-items: center; justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 1.8rem;
       margin: 0 auto 12px;
-      border: 3px solid rgba(255,255,255,0.2);
+      border: 3px solid rgba(255, 255, 255, 0.2);
     }
 
     .sidebar-name {
       font-family: 'Playfair Display', serif;
-      font-size: 1rem; color: var(--white); margin-bottom: 3px;
+      font-size: 1rem;
+      color: var(--white);
+      margin-bottom: 3px;
     }
 
     .sidebar-nid {
       font-size: 0.75rem;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255, 255, 255, 0.5);
       letter-spacing: 0.05em;
     }
 
     .sidebar-nav {
-      flex: 1; padding: 0 12px;
-      display: flex; flex-direction: column; gap: 4px;
+      flex: 1;
+      padding: 0 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
     .sidebar-nav a {
-      display: flex; align-items: center; gap: 12px;
-      padding: 12px 16px; border-radius: 10px;
-      text-decoration: none; color: rgba(255,255,255,0.7);
-      font-size: 0.9rem; font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      font-weight: 500;
       transition: background 0.2s, color 0.2s;
       cursor: pointer;
     }
 
-    .sidebar-nav a:hover { background: rgba(255,255,255,0.10); color: #fff; }
-    .sidebar-nav a.active { background: rgba(201,168,76,0.20); color: var(--gold-light); }
+    .sidebar-nav a:hover {
+      background: rgba(255, 255, 255, 0.10);
+      color: #fff;
+    }
 
-    .nav-icon { font-size: 1.1rem; width: 20px; text-align: center; flex-shrink: 0; }
+    .sidebar-nav a.active {
+      background: rgba(201, 168, 76, 0.20);
+      color: var(--gold-light);
+    }
+
+    .nav-icon {
+      font-size: 1.1rem;
+      width: 20px;
+      text-align: center;
+      flex-shrink: 0;
+    }
 
     .sidebar-bottom {
       padding: 16px 12px 0;
-      border-top: 1px solid rgba(255,255,255,0.1);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .sidebar-bottom a {
-      display: flex; align-items: center; gap: 12px;
-      padding: 12px 16px; border-radius: 10px;
-      text-decoration: none; color: rgba(255,255,255,0.5);
-      font-size: 0.88rem; transition: color 0.2s; cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.88rem;
+      transition: color 0.2s;
+      cursor: pointer;
     }
-    .sidebar-bottom a:hover { color: #e74c3c; }
+
+    .sidebar-bottom a:hover {
+      color: #e74c3c;
+    }
 
     /* ---- MAIN ---- */
-    .dashboard-main { flex: 1; padding: 36px 32px; overflow-y: auto; min-width: 0; }
+    .dashboard-main {
+      flex: 1;
+      padding: 36px 32px;
+      overflow-y: auto;
+      min-width: 0;
+    }
 
-    .dash-greeting { margin-bottom: 28px; }
+    .dash-greeting {
+      margin-bottom: 28px;
+    }
+
     .dash-greeting h2 {
       font-family: 'Playfair Display', serif;
-      font-size: 1.8rem; color: var(--text-dark); margin-bottom: 4px;
+      font-size: 1.8rem;
+      color: var(--text-dark);
+      margin-bottom: 4px;
     }
-    .dash-greeting p { color: var(--text-muted); font-size: 0.92rem; }
+
+    .dash-greeting p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
 
     /* ---- STAT CARDS ---- */
     .stat-row {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 16px; margin-bottom: 28px;
+      gap: 16px;
+      margin-bottom: 28px;
     }
 
     .stat-card {
-      background: var(--white); border-radius: 14px;
-      padding: 20px 22px; box-shadow: var(--shadow);
+      background: var(--white);
+      border-radius: 14px;
+      padding: 20px 22px;
+      box-shadow: var(--shadow);
       border-left: 4px solid transparent;
     }
-    .stat-card:nth-child(1) { border-color: var(--green-mid); }
-    .stat-card:nth-child(2) { border-color: var(--gold); }
-    .stat-card:nth-child(3) { border-color: #3498db; }
+
+    .stat-card:nth-child(1) {
+      border-color: var(--green-mid);
+    }
+
+    .stat-card:nth-child(2) {
+      border-color: var(--gold);
+    }
+
+    .stat-card:nth-child(3) {
+      border-color: #3498db;
+    }
 
     .stat-label {
-      font-size: 0.75rem; font-weight: 600;
-      color: var(--text-muted); text-transform: uppercase;
-      letter-spacing: 0.08em; margin-bottom: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
     }
+
     .stat-value {
       font-family: 'Playfair Display', serif;
-      font-size: 1.9rem; color: var(--text-dark); line-height: 1;
+      font-size: 1.9rem;
+      color: var(--text-dark);
+      line-height: 1;
     }
-    .stat-sub { font-size: 0.77rem; color: var(--text-muted); margin-top: 4px; }
+
+    .stat-sub {
+      font-size: 0.77rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
 
     /* ---- SECTION TITLE ---- */
     .section-title {
       font-family: 'Playfair Display', serif;
-      font-size: 1.2rem; color: var(--text-dark);
-      margin-bottom: 16px; padding-bottom: 8px;
+      font-size: 1.2rem;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
       border-bottom: 2px solid var(--border);
     }
 
@@ -137,43 +213,107 @@
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 18px; margin-bottom: 28px;
+      gap: 18px;
+      margin-bottom: 28px;
     }
 
     .card-item {
-      background: var(--white); border: 1.5px solid var(--border);
-      border-radius: 14px; padding: 20px; box-shadow: var(--shadow);
-      display: flex; flex-direction: column; gap: 10px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
       transition: transform 0.2s, box-shadow 0.2s;
     }
-    .card-item:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(26,60,52,0.13); }
 
-    .card-item-top { display: flex; align-items: center; justify-content: space-between; }
+    .card-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(26, 60, 52, 0.13);
+    }
+
+    .card-item-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
     .card-type-badge {
-      font-size: 0.7rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.1em;
-      padding: 3px 10px; border-radius: 20px;
-      background: rgba(46,107,94,0.1); color: var(--green-mid);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(46, 107, 94, 0.1);
+      color: var(--green-mid);
     }
 
-    .card-status { font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
-    .status-approved { background: #eafaf3; color: #27ae60; }
-    .status-pending  { background: #fef9e7; color: #e67e22; }
+    .card-status {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
 
-    .card-item-name { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--text-dark); }
-    .card-item-nid  { font-size: 0.8rem; color: var(--text-muted); }
-    .card-item-actions { display: flex; gap: 8px; margin-top: 4px; }
+    .status-approved {
+      background: #eafaf3;
+      color: #27ae60;
+    }
+
+    .status-pending {
+      background: #fef9e7;
+      color: #e67e22;
+    }
+
+    .card-item-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--text-dark);
+    }
+
+    .card-item-nid {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .card-item-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
 
     .btn-card-action {
-      flex: 1; padding: 8px 0; border-radius: 8px; border: none;
-      font-size: 0.82rem; font-weight: 600;
-      font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.2s;
+      flex: 1;
+      padding: 8px 0;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s;
     }
-    .btn-download { background: var(--green-dark); color: var(--white); }
-    .btn-download:hover { background: var(--green-mid); }
-    .btn-view { background: #eef2f1; color: var(--text-mid); }
-    .btn-view:hover { background: var(--border); }
+
+    .btn-download {
+      background: var(--green-dark);
+      color: var(--white);
+    }
+
+    .btn-download:hover {
+      background: var(--green-mid);
+    }
+
+    .btn-view {
+      background: #eef2f1;
+      color: var(--text-mid);
+    }
+
+    .btn-view:hover {
+      background: var(--border);
+    }
 
     /* Empty state */
     .empty-state {
@@ -185,379 +325,508 @@
       color: var(--text-muted);
       margin-bottom: 28px;
     }
-    .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
-    .empty-state p { font-size: 0.92rem; margin-bottom: 16px; }
+
+    .empty-state .empty-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+
+    .empty-state p {
+      font-size: 0.92rem;
+      margin-bottom: 16px;
+    }
 
     /* ---- PROFILE ---- */
     .profile-card {
-      background: var(--white); border: 1.5px solid var(--border);
-      border-radius: 16px; padding: 28px; box-shadow: var(--shadow);
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: var(--shadow);
       margin-bottom: 28px;
-      display: grid; grid-template-columns: auto 1fr;
-      gap: 28px; align-items: start;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 28px;
+      align-items: start;
     }
 
     .profile-avatar-lg {
-      width: 90px; height: 90px; border-radius: 50%;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
       background: linear-gradient(135deg, var(--green-mid), var(--gold));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2.2rem; flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      flex-shrink: 0;
     }
 
-    .profile-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .profile-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
 
     .profile-field label {
-      display: block; font-size: 0.74rem; font-weight: 600;
-      color: var(--text-muted); text-transform: uppercase;
-      letter-spacing: 0.07em; margin-bottom: 4px;
+      display: block;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 4px;
     }
-    .profile-field span { font-size: 0.95rem; color: var(--text-dark); font-weight: 500; }
+
+    .profile-field span {
+      font-size: 0.95rem;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
 
     /* ---- PANEL SYSTEM ---- */
-    .dash-panel { display: none; }
-    .dash-panel.active { display: block; }
+    .dash-panel {
+      display: none;
+    }
+
+    .dash-panel.active {
+      display: block;
+    }
 
     .btn-apply {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--green-dark); color: #fff;
-      padding: 12px 28px; border-radius: 10px;
-      text-decoration: none; font-weight: 600; font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green-dark);
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
       transition: background 0.2s;
     }
-    .btn-apply:hover { background: var(--green-mid); }
+
+    .btn-apply:hover {
+      background: var(--green-mid);
+    }
 
     .settings-box {
-      background: var(--white); border: 1.5px solid var(--border);
-      border-radius: 14px; padding: 22px; box-shadow: var(--shadow);
-      margin-bottom: 14px; max-width: 520px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+      max-width: 520px;
     }
-    .settings-box h4 { font-size: 1rem; font-weight: 600; color: var(--text-dark); margin-bottom: 4px; }
-    .settings-box p  { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px; }
+
+    .settings-box h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .settings-box p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
 
     .settings-danger {
-      background: #fdf0ee; border: 1.5px solid #f5c6c0;
-      border-radius: 14px; padding: 22px; max-width: 520px;
+      background: #fdf0ee;
+      border: 1.5px solid #f5c6c0;
+      border-radius: 14px;
+      padding: 22px;
+      max-width: 520px;
     }
-    .settings-danger h4 { font-size: 1rem; font-weight: 600; color: #c0392b; margin-bottom: 4px; }
-    .settings-danger p  { font-size: 0.85rem; color: #999; margin-bottom: 14px; }
+
+    .settings-danger h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #c0392b;
+      margin-bottom: 4px;
+    }
+
+    .settings-danger p {
+      font-size: 0.85rem;
+      color: #999;
+      margin-bottom: 14px;
+    }
+
     .btn-danger {
-      background: #e74c3c; color: #fff; border: none;
-      border-radius: 8px; padding: 10px 24px;
-      font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 24px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
     }
 
     @media (max-width: 768px) {
-      .dashboard-wrap { flex-direction: column; }
-      .sidebar { width: 100%; min-width: unset; height: auto; position: static; padding: 16px 12px; }
-      .sidebar-nav { flex-direction: column; }
-      .dashboard-main { padding: 20px 16px; }
-      .profile-card { grid-template-columns: 1fr; }
-      .profile-info-grid { grid-template-columns: 1fr; }
+      .dashboard-wrap {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        min-width: unset;
+        height: auto;
+        position: static;
+        padding: 16px 12px;
+      }
+
+      .sidebar-nav {
+        flex-direction: column;
+      }
+
+      .dashboard-main {
+        padding: 20px 16px;
+      }
+
+      .profile-card {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-info-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
 
-<!-- NAVBAR -->
-<nav>
-  <div class="nav-logo">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38" width="38" height="38">
-      <circle cx="19" cy="19" r="18" fill="#006a4e" stroke="#c9a84c" stroke-width="2"/>
-      <circle cx="19" cy="19" r="7" fill="#f42a41"/>
-    </svg>
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38" width="38" height="38">
+        <circle cx="19" cy="19" r="18" fill="#006a4e" stroke="#c9a84c" stroke-width="2" />
+        <circle cx="19" cy="19" r="7" fill="#f42a41" />
+      </svg>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#" onclick="showPanel('download', null); return false;">Download Smart Card</a></li>
+    </ul>
+    <div class="nav-right">🌐 English ▾</div>
+  </nav>
+
+  <div class="dashboard-wrap">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">👤</div>
+        <div class="sidebar-name" id="sidebarName">—</div>
+        <div class="sidebar-nid" id="sidebarNid">NID: —</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a class="active" onclick="showPanel('overview', this)">
+          <span class="nav-icon">🏠</span> Overview
+        </a>
+        <a onclick="showPanel('mycards', this)">
+          <span class="nav-icon">🪪</span> My Cards
+        </a>
+        <a onclick="showPanel('download', this)">
+          <span class="nav-icon">⬇️</span> Download Card
+        </a>
+        <a onclick="showPanel('profile', this)">
+          <span class="nav-icon">👤</span> Profile
+        </a>
+        <a onclick="showPanel('settings', this)">
+          <span class="nav-icon">⚙️</span> Settings
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <a onclick="logout()">
+          <span class="nav-icon">🚪</span> Logout
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="dashboard-main">
+
+      <!-- OVERVIEW -->
+      <div class="dash-panel active" id="panel-overview">
+        <div class="dash-greeting">
+          <h2>স্বাগতম, <span id="greetingName">—</span>! 👋</h2>
+          <p>আপনার Bangladesh Citizen Card dashboard-এ আপনাকে স্বাগত জানাই।</p>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-card">
+            <div class="stat-label">Total Cards</div>
+            <div class="stat-value" id="statTotal">0</div>
+            <div class="stat-sub">Registered cards</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Status</div>
+            <div class="stat-value" style="font-size:1.2rem; color:#e67e22;">⏳</div>
+            <div class="stat-sub">Pending review</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Account</div>
+            <div class="stat-value" style="font-size:1.2rem; color:#27ae60;">✅</div>
+            <div class="stat-sub">Active</div>
+          </div>
+        </div>
+
+        <div class="section-title">My Card</div>
+        <div id="overviewCardArea"></div>
+      </div>
+
+      <!-- MY CARDS -->
+      <div class="dash-panel" id="panel-mycards">
+        <div class="dash-greeting">
+          <h2>My Cards</h2>
+          <p>আপনার registered card এখানে।</p>
+        </div>
+        <div id="myCardsArea"></div>
+        <a href="register.html" class="btn-apply">＋ Apply New Card</a>
+      </div>
+
+      <!-- DOWNLOAD -->
+      <div class="dash-panel" id="panel-download">
+        <div class="dash-greeting">
+          <h2>Download Card</h2>
+          <p>আপনার card download করুন।</p>
+        </div>
+        <div id="downloadArea"></div>
+      </div>
+
+      <!-- PROFILE -->
+      <div class="dash-panel" id="panel-profile">
+        <div class="dash-greeting">
+          <h2>My Profile</h2>
+          <p>আপনার ব্যক্তিগত তথ্য।</p>
+        </div>
+        <div class="profile-card">
+          <div class="profile-avatar-lg">👤</div>
+          <div class="profile-info-grid">
+            <div class="profile-field">
+              <label>Full Name</label>
+              <span id="profileFullname">—</span>
+            </div>
+            <div class="profile-field">
+              <label>NID Number</label>
+              <span id="profileNid">—</span>
+            </div>
+            <div class="profile-field">
+              <label>Date of Birth</label>
+              <span id="profileDob">—</span>
+            </div>
+            <div class="profile-field">
+              <label>Phone Number</label>
+              <span id="profilePhone">—</span>
+            </div>
+            <div class="profile-field">
+              <label>Card Type</label>
+              <span id="profileCard">—</span>
+            </div>
+            <div class="profile-field">
+              <label>Account Status</label>
+              <span style="color:#27ae60; font-weight:600;">✅ Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="dash-panel" id="panel-settings">
+        <div class="dash-greeting">
+          <h2>Settings</h2>
+          <p>আপনার account settings পরিবর্তন করুন।</p>
+        </div>
+
+        <div class="settings-box">
+          <h4>🔒 Change Password</h4>
+          <p>নতুন password set করুন।</p>
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password" id="currentPass" placeholder="Current Password" />
+          </div>
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" id="newPass" placeholder="New Password" />
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Confirm New Password</label>
+            <input type="password" id="confirmPass" placeholder="Confirm Password" />
+          </div>
+          <button class="btn-login" style="margin-top:16px;" onclick="changePassword()">Save Password</button>
+        </div>
+
+        <div class="settings-danger">
+          <h4>🗑️ Delete Account</h4>
+          <p>এই কাজটি undo করা যাবে না।</p>
+          <button class="btn-danger" onclick="deleteAccount()">Delete Account</button>
+        </div>
+      </div>
+
+    </main>
   </div>
-  <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="#" onclick="showPanel('download', null); return false;">Download Smart Card</a></li>
-  </ul>
-  <div class="nav-right">🌐 English ▾</div>
-</nav>
 
-<div class="dashboard-wrap">
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-user">
-      <div class="sidebar-avatar">👤</div>
-      <div class="sidebar-name" id="sidebarName">—</div>
-      <div class="sidebar-nid" id="sidebarNid">NID: —</div>
-    </div>
-
-    <nav class="sidebar-nav">
-      <a class="active" onclick="showPanel('overview', this)">
-        <span class="nav-icon">🏠</span> Overview
-      </a>
-      <a onclick="showPanel('mycards', this)">
-        <span class="nav-icon">🪪</span> My Cards
-      </a>
-      <a onclick="showPanel('download', this)">
-        <span class="nav-icon">⬇️</span> Download Card
-      </a>
-      <a onclick="showPanel('profile', this)">
-        <span class="nav-icon">👤</span> Profile
-      </a>
-      <a onclick="showPanel('settings', this)">
-        <span class="nav-icon">⚙️</span> Settings
-      </a>
-    </nav>
-
-    <div class="sidebar-bottom">
-      <a onclick="logout()">
-        <span class="nav-icon">🚪</span> Logout
-      </a>
-    </div>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="dashboard-main">
-
-    <!-- OVERVIEW -->
-    <div class="dash-panel active" id="panel-overview">
-      <div class="dash-greeting">
-        <h2>স্বাগতম, <span id="greetingName">—</span>! 👋</h2>
-        <p>আপনার Bangladesh Citizen Card dashboard-এ আপনাকে স্বাগত জানাই।</p>
-      </div>
-
-      <div class="stat-row">
-        <div class="stat-card">
-          <div class="stat-label">Total Cards</div>
-          <div class="stat-value" id="statTotal">0</div>
-          <div class="stat-sub">Registered cards</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Status</div>
-          <div class="stat-value" style="font-size:1.2rem; color:#e67e22;">⏳</div>
-          <div class="stat-sub">Pending review</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Account</div>
-          <div class="stat-value" style="font-size:1.2rem; color:#27ae60;">✅</div>
-          <div class="stat-sub">Active</div>
-        </div>
-      </div>
-
-      <div class="section-title">My Card</div>
-      <div id="overviewCardArea"></div>
-    </div>
-
-    <!-- MY CARDS -->
-    <div class="dash-panel" id="panel-mycards">
-      <div class="dash-greeting">
-        <h2>My Cards</h2>
-        <p>আপনার registered card এখানে।</p>
-      </div>
-      <div id="myCardsArea"></div>
-      <a href="register.html" class="btn-apply">＋ Apply New Card</a>
-    </div>
-
-    <!-- DOWNLOAD -->
-    <div class="dash-panel" id="panel-download">
-      <div class="dash-greeting">
-        <h2>Download Card</h2>
-        <p>আপনার card download করুন।</p>
-      </div>
-      <div id="downloadArea"></div>
-    </div>
-
-    <!-- PROFILE -->
-    <div class="dash-panel" id="panel-profile">
-      <div class="dash-greeting">
-        <h2>My Profile</h2>
-        <p>আপনার ব্যক্তিগত তথ্য।</p>
-      </div>
-      <div class="profile-card">
-        <div class="profile-avatar-lg">👤</div>
-        <div class="profile-info-grid">
-          <div class="profile-field">
-            <label>Full Name</label>
-            <span id="profileFullname">—</span>
-          </div>
-          <div class="profile-field">
-            <label>NID Number</label>
-            <span id="profileNid">—</span>
-          </div>
-          <div class="profile-field">
-            <label>Date of Birth</label>
-            <span id="profileDob">—</span>
-          </div>
-          <div class="profile-field">
-            <label>Phone Number</label>
-            <span id="profilePhone">—</span>
-          </div>
-          <div class="profile-field">
-            <label>Card Type</label>
-            <span id="profileCard">—</span>
-          </div>
-          <div class="profile-field">
-            <label>Account Status</label>
-            <span style="color:#27ae60; font-weight:600;">✅ Active</span>
-          </div>
-        </div>
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">
+      <div class="footer-logo">🇧🇩</div>
+      <div class="footer-brand">
+        People's Republic of Bangladesh
+        <small>Bangladesh Citizen Card System</small>
       </div>
     </div>
-
-    <!-- SETTINGS -->
-    <div class="dash-panel" id="panel-settings">
-      <div class="dash-greeting">
-        <h2>Settings</h2>
-        <p>আপনার account settings পরিবর্তন করুন।</p>
-      </div>
-
-      <div class="settings-box">
-        <h4>🔒 Change Password</h4>
-        <p>নতুন password set করুন।</p>
-        <div class="form-group">
-          <label>Current Password</label>
-          <input type="password" id="currentPass" placeholder="Current Password" />
-        </div>
-        <div class="form-group">
-          <label>New Password</label>
-          <input type="password" id="newPass" placeholder="New Password" />
-        </div>
-        <div class="form-group" style="margin-bottom:0;">
-          <label>Confirm New Password</label>
-          <input type="password" id="confirmPass" placeholder="Confirm Password" />
-        </div>
-        <button class="btn-login" style="margin-top:16px;" onclick="changePassword()">Save Password</button>
-      </div>
-
-      <div class="settings-danger">
-        <h4>🗑️ Delete Account</h4>
-        <p>এই কাজটি undo করা যাবে না।</p>
-        <button class="btn-danger" onclick="deleteAccount()">Delete Account</button>
-      </div>
+    <div class="footer-right">
+      Email: <a href="mailto:info@smartcard.gov.bd">info@smartcard.gov.bd</a><br />
+      Helpline: 105, +88 01708-501261
     </div>
+  </footer>
 
-  </main>
-</div>
+  <script>
+    let currentUser = null;
+    let userCards = [];
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-left">
-    <div class="footer-logo">🇧🇩</div>
-    <div class="footer-brand">
-      People's Republic of Bangladesh
-      <small>Bangladesh Citizen Card System</small>
-    </div>
-  </div>
-  <div class="footer-right">
-    Email: <a href="mailto:info@smartcard.gov.bd">info@smartcard.gov.bd</a><br/>
-    Helpline: 105, +88 01708-501261
-  </div>
-</footer>
+    /* ---- PANEL SWITCH ---- */
+    function showPanel(id, linkEl) {
+      document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+      document.getElementById('panel-' + id).classList.add('active');
+      if (linkEl) linkEl.classList.add('active');
+    }
 
-<script>
-  let currentUser = null;
+    /* ---- LOGOUT ---- */
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('loggedInUser');
+      window.location.href = 'index.html';
+    }
 
-  /* ---- PANEL SWITCH ---- */
-  function showPanel(id, linkEl) {
-    document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
-    document.getElementById('panel-' + id).classList.add('active');
-    if (linkEl) linkEl.classList.add('active');
-  }
+    /* ---- STATUS BADGE ---- */
+    function statusBadge(status) {
+      const map = {
+        applied: { cls: 'status-pending', icon: '⏳', label: 'Applied' },
+        processing: { cls: 'status-pending', icon: '🔄', label: 'Processing' },
+        approved: { cls: 'status-approved', icon: '✅', label: 'Approved' },
+        rejected: { cls: 'status-pending', icon: '❌', label: 'Rejected' },
+        issued: { cls: 'status-approved', icon: '🪪', label: 'Issued' },
+      };
+      const s = map[status] || map['applied'];
+      return `<span class="card-status ${s.cls}">${s.icon} ${s.label}</span>`;
+    }
 
-  /* ---- LOGOUT ---- */
-  function logout() {
-    localStorage.removeItem('loggedInUser');
-    window.location.href = 'index.html';
-  }
-
-  /* ---- CARD HTML ---- */
-  function cardHTML(user, showDownload) {
-    return `
+    /* ---- CARD HTML ---- */
+    function cardHTML(card, user, showDownload) {
+      return `
       <div class="card-item">
         <div class="card-item-top">
-          <span class="card-type-badge">${user.cardType}</span>
-          <span class="card-status status-pending">⏳ Pending</span>
+          <span class="card-type-badge">${card.card_type}</span>
+          ${statusBadge(card.status)}
         </div>
-        <div class="card-item-name">${user.fullname}</div>
-        <div class="card-item-nid">NID: ${user.nid}</div>
-        ${showDownload ? `
+        <div class="card-item-name">${user.full_name}</div>
+        <div class="card-item-nid">Card No: ${card.card_number}</div>
+        ${showDownload && card.status === 'issued' ? `
         <div class="card-item-actions">
-          <button class="btn-card-action btn-download" onclick="alert('Card download শুরু হচ্ছে...')">⬇ Download</button>
+          <button class="btn-card-action btn-download">⬇ Download</button>
         </div>` : ''}
       </div>
     `;
-  }
+    }
 
-  /* ---- LOAD USER DATA ---- */
-  document.addEventListener('DOMContentLoaded', () => {
-    const loggedIn = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
-    if (!loggedIn) { window.location.href = 'index.html'; return; }
+    /* ---- LOAD USER DATA FROM API ---- */
+    document.addEventListener('DOMContentLoaded', async () => {
+      const token = localStorage.getItem('token');
+      if (!token) { window.location.href = 'index.html'; return; }
 
-    // Fresh data from users list
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    currentUser = users.find(u => u.nid === loggedIn.nid) || loggedIn;
+      // Profile থেকে data নাও
+      const profileRes = await getProfile();
+      if (!profileRes.success) { window.location.href = 'index.html'; return; }
+      currentUser = profileRes.user;
 
-    const name  = currentUser.fullname || '—';
-    const nid   = currentUser.nid || '—';
-    const dob   = currentUser.dob || '—';
-    const phone = currentUser.phone || '—';
-    const card  = currentUser.cardType || '—';
+      // Cards থেকে data নাও
+      const cardsRes = await getMyCards();
+      userCards = cardsRes.success ? cardsRes.cards : [];
 
-    // Sidebar
-    document.getElementById('sidebarName').textContent = name;
-    document.getElementById('sidebarNid').textContent  = 'NID: ' + nid;
+      const name = currentUser.full_name || '—';
+      const nid = currentUser.nid_number || '—';
+      const dob = currentUser.date_of_birth ? currentUser.date_of_birth.split('T')[0] : '—';
+      const phone = currentUser.phone || '—';
 
-    // Greeting
-    document.getElementById('greetingName').textContent = name.split(' ')[0] || name;
+      // Sidebar
+      document.getElementById('sidebarName').textContent = name;
+      document.getElementById('sidebarNid').textContent = 'NID: ' + nid;
 
-    // Stats
-    document.getElementById('statTotal').textContent = '1';
+      // Greeting
+      document.getElementById('greetingName').textContent = name.split(' ')[0] || name;
 
-    // Overview card
-    document.getElementById('overviewCardArea').innerHTML = `<div class="cards-grid">${cardHTML(currentUser, false)}</div>`;
+      // Stats
+      const approvedCount = userCards.filter(c => c.status === 'approved' || c.status === 'issued').length;
+      document.getElementById('statTotal').textContent = userCards.length;
 
-    // My Cards
-    document.getElementById('myCardsArea').innerHTML = `<div class="cards-grid">${cardHTML(currentUser, false)}</div>`;
+      // Cards HTML
+      const cardsGridHTML = userCards.length > 0
+        ? `<div class="cards-grid">${userCards.map(c => cardHTML(c, currentUser, false)).join('')}</div>`
+        : `<div class="empty-state"><div class="empty-icon">🪪</div><p>কোনো card নেই।</p></div>`;
 
-    // Download
-    document.getElementById('downloadArea').innerHTML = `<div class="cards-grid">${cardHTML(currentUser, true)}</div>`;
+      const downloadGridHTML = userCards.length > 0
+        ? `<div class="cards-grid">${userCards.map(c => cardHTML(c, currentUser, true)).join('')}</div>`
+        : `<div class="empty-state"><div class="empty-icon">⬇️</div><p>কোনো issued card নেই।</p></div>`;
 
-    // Profile
-    document.getElementById('profileFullname').textContent = name;
-    document.getElementById('profileNid').textContent      = nid;
-    document.getElementById('profileDob').textContent      = dob;
-    document.getElementById('profilePhone').textContent    = phone;
-    document.getElementById('profileCard').textContent     = card;
-  });
+      document.getElementById('overviewCardArea').innerHTML = cardsGridHTML;
+      document.getElementById('myCardsArea').innerHTML = cardsGridHTML;
+      document.getElementById('downloadArea').innerHTML = downloadGridHTML;
 
-  /* ---- CHANGE PASSWORD ---- */
-  function changePassword() {
-    const current = document.getElementById('currentPass').value.trim();
-    const newP    = document.getElementById('newPass').value.trim();
-    const confirm = document.getElementById('confirmPass').value.trim();
+      // Profile
+      document.getElementById('profileFullname').textContent = name;
+      document.getElementById('profileNid').textContent = nid;
+      document.getElementById('profileDob').textContent = dob;
+      document.getElementById('profilePhone').textContent = phone;
+      document.getElementById('profileCard').textContent = userCards.map(c => c.card_type).join(', ') || '—';
+    });
 
-    if (!current || !newP || !confirm) { alert('⚠️ সব field পূরণ করুন।'); return; }
-    if (current !== currentUser.password) { alert('⚠️ Current Password ভুল।'); return; }
-    if (newP.length < 6) { alert('⚠️ কমপক্ষে ৬ character দিন।'); return; }
-    if (newP !== confirm) { alert('⚠️ Password মিলছে না।'); return; }
+    /* ---- CHANGE PASSWORD ---- */
+    async function changePassword() {
+      const current = document.getElementById('currentPass').value.trim();
+      const newP = document.getElementById('newPass').value.trim();
+      const confirm = document.getElementById('confirmPass').value.trim();
 
-    // Update in localStorage
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const idx   = users.findIndex(u => u.nid === currentUser.nid);
-    if (idx !== -1) { users[idx].password = newP; localStorage.setItem('users', JSON.stringify(users)); }
-    currentUser.password = newP;
-    localStorage.setItem('loggedInUser', JSON.stringify(currentUser));
+      if (!current || !newP || !confirm) { alert('⚠️ সব field পূরণ করুন।'); return; }
+      if (newP.length < 6) { alert('⚠️ কমপক্ষে ৬ character দিন।'); return; }
+      if (newP !== confirm) { alert('⚠️ Password মিলছে না।'); return; }
 
-    alert('✅ Password সফলভাবে পরিবর্তন হয়েছে!');
-    document.getElementById('currentPass').value = '';
-    document.getElementById('newPass').value     = '';
-    document.getElementById('confirmPass').value = '';
-  }
+      const token = localStorage.getItem('token');
+      const res = await fetch('https://citizen-card-backend-production.up.railway.app/api/user/change-password', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ current_password: current, new_password: newP })
+      });
+      const data = await res.json();
 
-  /* ---- DELETE ACCOUNT ---- */
-  function deleteAccount() {
-    if (!confirm('আপনি কি সত্যিই account delete করতে চান?')) return;
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const updated = users.filter(u => u.nid !== currentUser.nid);
-    localStorage.setItem('users', JSON.stringify(updated));
-    localStorage.removeItem('loggedInUser');
-    alert('Account delete হয়েছে।');
-    window.location.href = 'index.html';
-  }
-</script>
+      if (data.success) {
+        alert('✅ Password সফলভাবে পরিবর্তন হয়েছে!');
+        document.getElementById('currentPass').value = '';
+        document.getElementById('newPass').value = '';
+        document.getElementById('confirmPass').value = '';
+      } else {
+        alert('❌ ' + data.message);
+      }
+    }
 
+    /* ---- DELETE ACCOUNT ---- */
+    function deleteAccount() {
+      if (!confirm('আপনি কি সত্যিই account delete করতে চান?')) return;
+      logout();
+    }
+  </script>
+  <script src="api.js"></script>
 </body>
+
 </html>
