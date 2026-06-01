@@ -9,6 +9,7 @@
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     .dashboard-wrap {
       display: flex;
@@ -28,7 +29,8 @@
       position: sticky;
       top: 60px;
       height: calc(100vh - 60px);
-      overflow-y: auto;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
     }
 
     .sidebar-user {
@@ -70,6 +72,8 @@
       display: flex;
       flex-direction: column;
       gap: 4px;
+      overflow: visible !important;
+      padding: 0 12px !important;
     }
 
     .sidebar-nav a {
@@ -84,6 +88,8 @@
       font-weight: 500;
       transition: background 0.2s, color 0.2s;
       cursor: pointer;
+      width: 100% !important;
+      overflow: visible !important;
     }
 
     .sidebar-nav a:hover {
@@ -124,6 +130,12 @@
     .sidebar-bottom a:hover {
       color: #e74c3c;
     }
+
+    .nav-label {
+      font-size: 0.9rem;
+      color: inherit;
+    }
+
 
     /* ---- MAIN ---- */
     .dashboard-main {
@@ -466,6 +478,7 @@
       cursor: pointer;
     }
 
+
     @media (max-width: 768px) {
       .dashboard-wrap {
         flex-direction: column;
@@ -494,6 +507,150 @@
       .profile-info-grid {
         grid-template-columns: 1fr;
       }
+    }
+
+    /* ---- SMART CARD PDF TEMPLATE ---- */
+    #card-pdf-template {
+      width: 324px;
+      height: 204px;
+      background: linear-gradient(135deg, #006a4e 0%, #004d38 100%);
+      border-radius: 12px;
+      padding: 12px;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      position: relative;
+      overflow: hidden;
+      box-sizing: border-box;
+      border: 1.5px solid #c9a84c;
+    }
+    #card-pdf-template::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(201, 168, 76, 0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .card-pdf-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.4);
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+    .card-pdf-logo {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .card-pdf-title-box h5 {
+      font-size: 0.5rem;
+      font-weight: 700;
+      color: #e2c47a;
+      letter-spacing: 0.05em;
+      margin: 0;
+      line-height: 1;
+    }
+    .card-pdf-title-box p {
+      font-size: 0.38rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin: 2px 0 0;
+      font-weight: 500;
+      line-height: 1;
+    }
+    .card-pdf-body {
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .card-pdf-photo-area {
+      width: 52px;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(201, 168, 76, 0.5);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: rgba(255,255,255,0.7);
+      flex-shrink: 0;
+    }
+    .card-pdf-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .card-pdf-field {
+      display: flex;
+      flex-direction: column;
+    }
+    .card-pdf-field label {
+      font-size: 0.35rem;
+      text-transform: uppercase;
+      color: #7a9a90;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      line-height: 1;
+    }
+    .card-pdf-field span {
+      font-size: 0.52rem;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.2;
+    }
+    .card-pdf-side-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      width: 52px;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .card-pdf-badge {
+      font-size: 0.38rem;
+      font-weight: 700;
+      background: rgba(201, 168, 76, 0.2);
+      color: #e2c47a;
+      border: 1px solid #c9a84c;
+      border-radius: 4px;
+      padding: 2px 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-align: center;
+      width: 100%;
+      box-sizing: border-box;
+      line-height: 1;
+    }
+    .card-pdf-qr-box {
+      width: 44px;
+      height: 44px;
+      background: #fff;
+      border-radius: 4px;
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .card-pdf-qr-box img {
+      width: 100%;
+      height: 100%;
+    }
+    .card-pdf-footer {
+      position: absolute;
+      bottom: 8px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.35rem;
+      color: rgba(255,255,255,0.4);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 4px;
     }
   </style>
 </head>
@@ -525,23 +682,28 @@
         <div class="sidebar-nid" id="sidebarNid">NID: —</div>
       </div>
 
-      <nav class="sidebar-nav">
+      <div class="sidebar-nav">
         <a class="active" onclick="showPanel('overview', this)">
-          <span class="nav-icon">🏠</span> Overview
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">Overview</span>
         </a>
         <a onclick="showPanel('mycards', this)">
-          <span class="nav-icon">🪪</span> My Cards
+          <span class="nav-icon">🪪</span>
+          <span class="nav-label">My Cards</span>
         </a>
         <a onclick="showPanel('download', this)">
-          <span class="nav-icon">⬇️</span> Download Card
+          <span class="nav-icon">⬇️</span>
+          <span class="nav-label">Download Card</span>
         </a>
         <a onclick="showPanel('profile', this)">
-          <span class="nav-icon">👤</span> Profile
+          <span class="nav-icon">👤</span>
+          <span class="nav-label">Profile</span>
         </a>
         <a onclick="showPanel('settings', this)">
-          <span class="nav-icon">⚙️</span> Settings
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-label">Settings</span>
         </a>
-      </nav>
+      </div>
 
       <div class="sidebar-bottom">
         <a onclick="logout()">
@@ -688,6 +850,49 @@
     </div>
   </footer>
 
+  <!-- HIDDEN SMART CARD TEMPLATE FOR PDF GENERATION -->
+  <div style="position: absolute; left: -9999px; top: -9999px;">
+    <div id="card-pdf-template">
+      <div class="card-pdf-header">
+        <svg class="card-pdf-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38">
+          <circle cx="19" cy="19" r="18" fill="#006a4e" stroke="#c9a84c" stroke-width="2" />
+          <circle cx="19" cy="19" r="7" fill="#f42a41" />
+        </svg>
+        <div class="card-pdf-title-box">
+          <h5>PEOPLE'S REPUBLIC OF BANGLADESH</h5>
+          <p>Government Digital Identity Card System</p>
+        </div>
+      </div>
+      <div class="card-pdf-body">
+        <div class="card-pdf-photo-area">👤</div>
+        <div class="card-pdf-info">
+          <div class="card-pdf-field">
+            <label>Name</label>
+            <span id="pdf-card-name">—</span>
+          </div>
+          <div class="card-pdf-field">
+            <label>NID Number</label>
+            <span id="pdf-card-nid">—</span>
+          </div>
+          <div class="card-pdf-field">
+            <label>Card Number</label>
+            <span id="pdf-card-number">—</span>
+          </div>
+        </div>
+        <div class="card-pdf-side-area">
+          <div class="card-pdf-badge" id="pdf-card-type">FAMILY</div>
+          <div class="card-pdf-qr-box">
+            <img id="pdf-card-qr" src="" alt="QR Code" />
+          </div>
+        </div>
+      </div>
+      <div class="card-pdf-footer">
+        <span>DOB: <strong id="pdf-card-dob">—</strong></span>
+        <span>🇧🇩 Official Document</span>
+      </div>
+    </div>
+  </div>
+
   <script>
     let currentUser = null;
     let userCards = [];
@@ -722,6 +927,7 @@
 
     /* ---- CARD HTML ---- */
     function cardHTML(card, user, showDownload) {
+      const isAvailable = card.status === 'approved' || card.status === 'issued';
       return `
       <div class="card-item">
         <div class="card-item-top">
@@ -729,10 +935,10 @@
           ${statusBadge(card.status)}
         </div>
         <div class="card-item-name">${user.full_name}</div>
-        <div class="card-item-nid">Card No: ${card.card_number}</div>
-        ${showDownload && card.status === 'issued' ? `
+        <div class="card-item-nid">Card No: ${card.card_number || 'PENDING'}</div>
+        ${showDownload && isAvailable ? `
         <div class="card-item-actions">
-          <button class="btn-card-action btn-download">⬇ Download</button>
+          <button class="btn-card-action btn-download" onclick="downloadCardPDF(${card.id})">⬇ Download</button>
         </div>` : ''}
       </div>
     `;
@@ -773,9 +979,10 @@
         ? `<div class="cards-grid">${userCards.map(c => cardHTML(c, currentUser, false)).join('')}</div>`
         : `<div class="empty-state"><div class="empty-icon">🪪</div><p>কোনো card নেই।</p></div>`;
 
-      const downloadGridHTML = userCards.length > 0
-        ? `<div class="cards-grid">${userCards.map(c => cardHTML(c, currentUser, true)).join('')}</div>`
-        : `<div class="empty-state"><div class="empty-icon">⬇️</div><p>কোনো issued card নেই।</p></div>`;
+      const downloadableCards = userCards.filter(c => c.status === 'approved' || c.status === 'issued');
+      const downloadGridHTML = downloadableCards.length > 0
+        ? `<div class="cards-grid">${downloadableCards.map(c => cardHTML(c, currentUser, true)).join('')}</div>`
+        : `<div class="empty-state"><div class="empty-icon">⬇️</div><p>কোনো অনুমোদিত (Approved/Issued) কার্ড নেই।</p></div>`;
 
       document.getElementById('overviewCardArea').innerHTML = cardsGridHTML;
       document.getElementById('myCardsArea').innerHTML = cardsGridHTML;
@@ -824,6 +1031,43 @@
     function deleteAccount() {
       if (!confirm('আপনি কি সত্যিই account delete করতে চান?')) return;
       logout();
+    }
+
+    /* ---- DOWNLOAD CARD PDF ---- */
+    async function downloadCardPDF(cardId) {
+      const card = userCards.find(c => c.id === cardId);
+      if (!card) return;
+      
+      const cardTypeUpper = card.card_type.toUpperCase();
+      const cardNo = card.card_number || 'PENDING';
+      
+      const template = document.getElementById('card-pdf-template');
+      
+      // Populate Details
+      document.getElementById('pdf-card-type').textContent = cardTypeUpper;
+      document.getElementById('pdf-card-number').textContent = cardNo;
+      document.getElementById('pdf-card-name').textContent = currentUser.full_name;
+      document.getElementById('pdf-card-nid').textContent = currentUser.nid_number;
+      
+      const dobFormatted = currentUser.date_of_birth ? currentUser.date_of_birth.split('T')[0] : '—';
+      document.getElementById('pdf-card-dob').textContent = dobFormatted;
+      
+      // Dynamic QR Code link
+      const qrData = `https://tanviryestehad0096.github.io/dbms_project/verify.html?card_no=${cardNo}`;
+      document.getElementById('pdf-card-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(qrData)}`;
+      
+      // Wait for image to load, then trigger PDF generation
+      setTimeout(() => {
+        const opt = {
+          margin:       0,
+          filename:     `Citizen_Card_${cardNo}.pdf`,
+          image:        { type: 'jpeg', quality: 0.98 },
+          html2canvas:  { scale: 2.5, useCORS: true },
+          jsPDF:        { unit: 'in', format: [3.375, 2.125], orientation: 'landscape' }
+        };
+        
+        html2pdf().set(opt).from(template).save();
+      }, 600);
     }
   </script>
   <script src="api.js"></script>
