@@ -697,6 +697,125 @@
       border-top: 1px solid rgba(255,255,255,0.1);
       padding-top: 3px;
     }
+
+    /* ── Apply New Card Modal ─────────────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(6px);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-box {
+      background: #0f2820;
+      border: 1px solid rgba(0,180,100,0.25);
+      border-radius: 18px;
+      padding: 36px 32px 28px;
+      width: 100%;
+      max-width: 520px;
+      position: relative;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.55);
+      animation: modalIn 0.28s cubic-bezier(.22,.68,0,1.2) both;
+    }
+    @keyframes modalIn {
+      from { opacity:0; transform: translateY(28px) scale(0.96); }
+      to   { opacity:1; transform: translateY(0) scale(1); }
+    }
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.45);
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color .2s;
+    }
+    .modal-close:hover { color: #fff; }
+    .modal-box h3 {
+      margin: 0 0 6px;
+      font-size: 1.25rem;
+      color: #fff;
+      font-weight: 700;
+    }
+    .modal-box p.modal-sub {
+      margin: 0 0 22px;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.5);
+    }
+    .card-type-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .card-type-option {
+      border: 2px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 14px 12px;
+      cursor: pointer;
+      text-align: center;
+      transition: all .2s;
+      background: rgba(255,255,255,0.04);
+      position: relative;
+      user-select: none;
+    }
+    .card-type-option:hover {
+      border-color: #27ae60;
+      background: rgba(39,174,96,0.10);
+    }
+    .card-type-option.selected {
+      border-color: #27ae60;
+      background: rgba(39,174,96,0.18);
+      box-shadow: 0 0 0 3px rgba(39,174,96,0.2);
+    }
+    .card-type-option.disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .card-type-option .ct-icon { font-size: 1.8rem; display: block; margin-bottom: 6px; }
+    .card-type-option .ct-name { font-size: 0.82rem; font-weight: 600; color: #fff; }
+    .card-type-option .ct-tag {
+      position: absolute;
+      top: 6px; right: 8px;
+      font-size: 0.62rem;
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.5);
+      border-radius: 4px;
+      padding: 1px 5px;
+    }
+    .modal-apply-btn {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #27ae60, #1a8a49);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+    }
+    .modal-apply-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .modal-apply-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+    .modal-msg {
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      display: none;
+    }
+    .modal-msg.success { background: rgba(39,174,96,0.18); color: #5dde90; display: block; }
+    .modal-msg.error   { background: rgba(231,76,60,0.18);  color: #f08080; display: block; }
   </style>
 </head>
 
@@ -796,7 +915,7 @@
           <p>আপনার registered card এখানে।</p>
         </div>
         <div id="myCardsArea"></div>
-        <a href="register.html" class="btn-apply">＋ Apply New Card</a>
+        <button class="btn-apply" onclick="openApplyModal()">＋ Apply New Card</button>
       </div>
 
       <!-- DOWNLOAD -->
@@ -878,6 +997,20 @@
       </div>
 
     </main>
+  </div>
+
+  <!-- APPLY NEW CARD MODAL -->
+  <div class="modal-overlay" id="applyCardModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeApplyModal()">✕</button>
+      <h3>🪪 নতুন কার্ডের জন্য আবেদন</h3>
+      <p class="modal-sub">যে কার্ডটি চান সেটি বেছে নিন এবং আবেদন করুন। Admin অনুমোদন করলে আপনি download করতে পারবেন।</p>
+
+      <div class="card-type-grid" id="cardTypeGrid"></div>
+
+      <button class="modal-apply-btn" id="applyCardBtn" onclick="submitCardApply()" disabled>আবেদন করুন</button>
+      <div class="modal-msg" id="applyModalMsg"></div>
+    </div>
   </div>
 
   <!-- FOOTER -->
@@ -1137,6 +1270,114 @@
         html2pdf().set(opt).from(template).save();
       }, 600);
     }
+
+    /* ── APPLY NEW CARD MODAL LOGIC ─────────────────── */
+    const ALL_CARD_TYPES = [
+      { value: 'family',      label: 'Family',      icon: '👨‍👩‍👧‍👦' },
+      { value: 'business',    label: 'Business',    icon: '💼' },
+      { value: 'student',     label: 'Student',     icon: '🎓' },
+      { value: 'vehicle',     label: 'Vehicle',     icon: '🚗' },
+      { value: 'agriculture', label: 'Agriculture', icon: '🌾' },
+    ];
+    let selectedApplyType = null;
+
+    function openApplyModal() {
+      selectedApplyType = null;
+      const grid = document.getElementById('cardTypeGrid');
+      const btn  = document.getElementById('applyCardBtn');
+      const msg  = document.getElementById('applyModalMsg');
+
+      // Already applied card types (any status)
+      const appliedTypes = new Set(userCards.map(c => c.card_type.toLowerCase()));
+
+      // Build grid
+      grid.innerHTML = ALL_CARD_TYPES.map(ct => {
+        const alreadyApplied = appliedTypes.has(ct.value);
+        return `
+          <div
+            class="card-type-option ${alreadyApplied ? 'disabled' : ''}"
+            id="ct-${ct.value}"
+            onclick="selectCardType('${ct.value}')"
+          >
+            ${alreadyApplied ? '<span class="ct-tag">আবেদন করা হয়েছে</span>' : ''}
+            <span class="ct-icon">${ct.icon}</span>
+            <span class="ct-name">${ct.label}</span>
+          </div>`;
+      }).join('');
+
+      btn.disabled = true;
+      msg.className = 'modal-msg';
+      msg.textContent = '';
+      document.getElementById('applyCardModal').classList.add('open');
+    }
+
+    function closeApplyModal() {
+      document.getElementById('applyCardModal').classList.remove('open');
+    }
+
+    function selectCardType(val) {
+      // Deselect previous
+      if (selectedApplyType) {
+        const prev = document.getElementById('ct-' + selectedApplyType);
+        if (prev) prev.classList.remove('selected');
+      }
+      selectedApplyType = val;
+      const el = document.getElementById('ct-' + val);
+      if (el) el.classList.add('selected');
+      document.getElementById('applyCardBtn').disabled = false;
+    }
+
+    async function submitCardApply() {
+      if (!selectedApplyType) return;
+      const btn = document.getElementById('applyCardBtn');
+      const msg = document.getElementById('applyModalMsg');
+
+      btn.disabled = true;
+      btn.textContent = 'অপেক্ষা করুন...';
+      msg.className = 'modal-msg';
+      msg.textContent = '';
+
+      const res = await applyCard(selectedApplyType);
+
+      if (res.success) {
+        msg.className = 'modal-msg success';
+        msg.textContent = '✅ ' + res.message;
+        btn.textContent = 'আবেদন সম্পন্ন!';
+
+        // Refresh card data silently after 1.5s then close modal
+        setTimeout(async () => {
+          const cardsRes = await getMyCards();
+          userCards = cardsRes.success ? cardsRes.cards : userCards;
+
+          const cardsGridHTML = userCards.length > 0
+            ? `<div class="cards-grid">${userCards.map(c => cardHTML(c, currentUser, false)).join('')}</div>`
+            : `<div class="empty-state"><div class="empty-icon">🪪</div><p>কোনো card নেই।</p></div>`;
+
+          const downloadableCards = userCards.filter(c => c.status === 'approved' || c.status === 'issued');
+          const downloadGridHTML = downloadableCards.length > 0
+            ? `<div class="cards-grid">${downloadableCards.map(c => cardHTML(c, currentUser, true)).join('')}</div>`
+            : `<div class="empty-state"><div class="empty-icon">⬇️</div><p>কোনো অনুমোদিত কার্ড নেই।</p></div>`;
+
+          document.getElementById('overviewCardArea').innerHTML = cardsGridHTML;
+          document.getElementById('myCardsArea').innerHTML = cardsGridHTML;
+          document.getElementById('downloadArea').innerHTML = downloadGridHTML;
+          document.getElementById('statTotal').textContent = userCards.length;
+          document.getElementById('profileCard').textContent = userCards.map(c => c.card_type).join(', ') || '—';
+
+          closeApplyModal();
+        }, 1800);
+      } else {
+        msg.className = 'modal-msg error';
+        msg.textContent = '❌ ' + res.message;
+        btn.textContent = 'আবেদন করুন';
+        btn.disabled = false;
+      }
+    }
+
+    // Close modal on overlay click
+    document.getElementById('applyCardModal').addEventListener('click', function(e) {
+      if (e.target === this) closeApplyModal();
+    });
   </script>
   <script src="api.js"></script>
 </body>

@@ -77,3 +77,17 @@ async function resetPassword(reset_token, new_password) {
   });
   return await res.json();
 }
+
+// ── Apply New Card (for existing logged-in user) ──
+async function applyCard(card_type) {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${API_BASE}/user/apply-card`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({ card_type })
+  });
+  return await res.json();
+}

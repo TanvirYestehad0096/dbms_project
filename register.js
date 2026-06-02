@@ -3,6 +3,14 @@
    File: register.js
 ============================================================ */
 
+/* ---- Already Logged In? → Redirect to Dashboard ---- */
+(function checkAlreadyLoggedIn() {
+  const token = localStorage.getItem('token');
+  if (token) {
+    window.location.href = 'dashboard.html';
+  }
+})();
+
 /* ---- Date Format ---- */
 function formatDate(input) {
   let val = input.value.replace(/\D/g, '');
