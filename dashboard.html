@@ -834,6 +834,14 @@
       transition: opacity .2s, transform .15s;
     }
     .edit-profile-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .ep-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 16px;
+    }
+    .ep-grid .ep-form-group.full-width {
+      grid-column: 1 / -1;
+    }
     .ep-form-group {
       display: flex;
       flex-direction: column;
@@ -841,8 +849,8 @@
       margin-bottom: 16px;
     }
     .ep-form-group label {
-      font-size: 0.82rem;
-      color: rgba(255,255,255,0.55);
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.5);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.04em;
@@ -855,18 +863,38 @@
       border-radius: 8px;
       padding: 10px 14px;
       color: #fff;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-family: inherit;
       outline: none;
-      transition: border-color .2s;
+      transition: border-color .2s, background .2s;
       resize: none;
     }
     .ep-form-group input:focus,
     .ep-form-group select:focus,
     .ep-form-group textarea:focus {
       border-color: #27ae60;
+      background: rgba(39,174,96,0.08);
     }
+    .ep-form-group input::placeholder,
+    .ep-form-group textarea::placeholder { color: rgba(255,255,255,0.25); }
     .ep-form-group select option { background: #0f2820; }
+    .ep-section-title {
+      font-size: 0.72rem;
+      color: #27ae60;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 4px 0 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(39,174,96,0.2);
+      grid-column: 1 / -1;
+    }
+    .ep-readonly-note {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.3);
+      font-style: italic;
+      margin-top: 2px;
+    }
   </style>
 </head>
 
@@ -1004,6 +1032,10 @@
               <span id="profilePhone">—</span>
             </div>
             <div class="profile-field">
+              <label>Email</label>
+              <span id="profileEmail">—</span>
+            </div>
+            <div class="profile-field">
               <label>Blood Group</label>
               <span id="profileBlood">—</span>
             </div>
@@ -1075,29 +1107,69 @@
 
   <!-- EDIT PROFILE MODAL -->
   <div class="modal-overlay" id="editProfileModal">
-    <div class="modal-box" style="max-width:480px;">
+    <div class="modal-box" style="max-width:560px; max-height:90vh; overflow-y:auto;">
       <button class="modal-close" onclick="closeEditProfileModal()">✕</button>
       <h3>✏️ Edit Profile</h3>
-      <p class="modal-sub">আপনার তথ্য আপডেট করুন।</p>
+      <p class="modal-sub">আপনার ব্যক্তিগত তথ্য আপডেট করুন।</p>
 
-      <div class="ep-form-group">
-        <label>Blood Group</label>
-        <select id="epBloodGroup">
-          <option value="">— Select —</option>
-          <option value="A+">A+</option>
-          <option value="A-">A-</option>
-          <option value="B+">B+</option>
-          <option value="B-">B-</option>
-          <option value="AB+">AB+</option>
-          <option value="AB-">AB-</option>
-          <option value="O+">O+</option>
-          <option value="O-">O-</option>
-        </select>
-      </div>
+      <div class="ep-grid">
 
-      <div class="ep-form-group">
-        <label>Address</label>
-        <textarea id="epAddress" rows="3" placeholder="আপনার ঠিকানা লিখুন..."></textarea>
+        <!-- Section: Personal Info -->
+        <div class="ep-section-title">👤 Personal Information</div>
+
+        <div class="ep-form-group">
+          <label>Full Name</label>
+          <input type="text" id="epFullName" placeholder="আপনার পূর্ণ নাম" />
+        </div>
+
+        <div class="ep-form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="epPhone" placeholder="01XXXXXXXXX" />
+        </div>
+
+        <div class="ep-form-group">
+          <label>Email Address</label>
+          <input type="email" id="epEmail" placeholder="your@email.com" />
+        </div>
+
+        <div class="ep-form-group">
+          <label>Blood Group</label>
+          <select id="epBloodGroup">
+            <option value="">— Select —</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+        </div>
+
+        <!-- Section: Address -->
+        <div class="ep-section-title">🏠 Address Information</div>
+
+        <div class="ep-form-group full-width">
+          <label>Full Address</label>
+          <textarea id="epAddress" rows="3" placeholder="বাড়ি/ফ্ল্যাট, রাস্তা, এলাকা, জেলা..."></textarea>
+        </div>
+
+        <!-- Section: Locked fields -->
+        <div class="ep-section-title">🔒 Non-Editable Fields</div>
+
+        <div class="ep-form-group">
+          <label>NID Number</label>
+          <input type="text" id="epNidReadonly" disabled style="opacity:0.4; cursor:not-allowed;" />
+          <span class="ep-readonly-note">NID পরিবর্তন করা যাবে না</span>
+        </div>
+
+        <div class="ep-form-group">
+          <label>Date of Birth</label>
+          <input type="text" id="epDobReadonly" disabled style="opacity:0.4; cursor:not-allowed;" />
+          <span class="ep-readonly-note">DOB পরিবর্তন করা যাবে না</span>
+        </div>
+
       </div>
 
       <button class="modal-apply-btn" id="saveProfileBtn" onclick="saveEditProfile()">💾 Save Changes</button>
@@ -1274,9 +1346,10 @@
       document.getElementById('profileNid').textContent = nid;
       document.getElementById('profileDob').textContent = dob;
       document.getElementById('profilePhone').textContent = phone;
-      document.getElementById('profileBlood').textContent = currentUser.blood_group || currentUser.blood || '—';
+      document.getElementById('profileEmail').textContent   = currentUser.email || '—';
+      document.getElementById('profileBlood').textContent   = currentUser.blood_group || currentUser.blood || '—';
       document.getElementById('profileAddress').textContent = currentUser.address || '—';
-      document.getElementById('profileCard').textContent = userCards.map(c => c.card_type).join(', ') || '—';
+      document.getElementById('profileCard').textContent    = userCards.map(c => c.card_type).join(', ') || '—';
     });
 
     /* ---- CHANGE PASSWORD ---- */
@@ -1478,11 +1551,17 @@
 
     /* ── EDIT PROFILE MODAL LOGIC ─────────────────── */
     function openEditProfileModal() {
-      // Pre-fill current values
-      const bloodVal = currentUser.blood_group || currentUser.blood || '';
-      const addrVal  = currentUser.address || '';
-      document.getElementById('epBloodGroup').value = bloodVal;
-      document.getElementById('epAddress').value    = addrVal;
+      // Pre-fill editable fields
+      document.getElementById('epFullName').value   = currentUser.full_name  || '';
+      document.getElementById('epPhone').value      = currentUser.phone       || '';
+      document.getElementById('epEmail').value      = currentUser.email       || '';
+      document.getElementById('epBloodGroup').value = currentUser.blood_group || currentUser.blood || '';
+      document.getElementById('epAddress').value    = currentUser.address     || '';
+      // Pre-fill readonly fields
+      document.getElementById('epNidReadonly').value = currentUser.nid_number || '—';
+      document.getElementById('epDobReadonly').value = currentUser.date_of_birth
+        ? currentUser.date_of_birth.split('T')[0] : '—';
+      // Reset msg
       const msg = document.getElementById('editProfileMsg');
       msg.className = 'modal-msg';
       msg.textContent = '';
@@ -1496,14 +1575,28 @@
     }
 
     async function saveEditProfile() {
-      const blood   = document.getElementById('epBloodGroup').value.trim();
-      const address = document.getElementById('epAddress').value.trim();
-      const btn     = document.getElementById('saveProfileBtn');
-      const msg     = document.getElementById('editProfileMsg');
+      const fullName = document.getElementById('epFullName').value.trim();
+      const phone    = document.getElementById('epPhone').value.trim();
+      const email    = document.getElementById('epEmail').value.trim();
+      const blood    = document.getElementById('epBloodGroup').value.trim();
+      const address  = document.getElementById('epAddress').value.trim();
+      const btn      = document.getElementById('saveProfileBtn');
+      const msg      = document.getElementById('editProfileMsg');
 
-      if (!blood && !address) {
+      // Validation
+      if (!fullName && !phone && !email && !blood && !address) {
         msg.className = 'modal-msg error';
         msg.textContent = '⚠️ অন্তত একটি field পূরণ করুন।';
+        return;
+      }
+      if (phone && !/^01[3-9]\d{8}$/.test(phone)) {
+        msg.className = 'modal-msg error';
+        msg.textContent = '⚠️ সঠিক বাংলাদেশি মোবাইল নম্বর দিন (01XXXXXXXXX)';
+        return;
+      }
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        msg.className = 'modal-msg error';
+        msg.textContent = '⚠️ সঠিক Email address দিন।';
         return;
       }
 
@@ -1512,25 +1605,46 @@
       msg.className = 'modal-msg';
       msg.textContent = '';
 
+      // Build payload — only include changed fields
       const payload = {};
-      if (blood)   payload.blood_group = blood;
-      if (address) payload.address     = address;
+      if (fullName && fullName !== currentUser.full_name)   payload.full_name   = fullName;
+      if (phone    && phone    !== currentUser.phone)       payload.phone       = phone;
+      if (email    && email    !== currentUser.email)       payload.email       = email;
+      if (blood    && blood    !== (currentUser.blood_group || currentUser.blood)) payload.blood_group = blood;
+      if (address  && address  !== currentUser.address)     payload.address     = address;
+
+      if (Object.keys(payload).length === 0) {
+        msg.className = 'modal-msg error';
+        msg.textContent = '⚠️ কোনো পরিবর্তন হয়নি।';
+        btn.disabled = false;
+        btn.textContent = '💾 Save Changes';
+        return;
+      }
 
       const res = await updateProfile(payload);
 
       if (res.success) {
-        // Update local user object
-        if (blood)   { currentUser.blood_group = blood; currentUser.blood = blood; }
-        if (address)   currentUser.address = address;
+        // Update local currentUser object
+        if (payload.full_name)   currentUser.full_name   = fullName;
+        if (payload.phone)       currentUser.phone       = phone;
+        if (payload.email)       currentUser.email       = email;
+        if (payload.blood_group) { currentUser.blood_group = blood; currentUser.blood = blood; }
+        if (payload.address)     currentUser.address     = address;
 
-        // Refresh profile display
-        document.getElementById('profileBlood').textContent   = currentUser.blood_group || '—';
-        document.getElementById('profileAddress').textContent = currentUser.address     || '—';
+        // Refresh profile display panel
+        document.getElementById('profileFullname').textContent = currentUser.full_name  || '—';
+        document.getElementById('profilePhone').textContent    = currentUser.phone      || '—';
+        document.getElementById('profileEmail').textContent    = currentUser.email      || '—';
+        document.getElementById('profileBlood').textContent    = currentUser.blood_group || '—';
+        document.getElementById('profileAddress').textContent  = currentUser.address    || '—';
+        // Update sidebar name too
+        document.getElementById('sidebarName').textContent     = currentUser.full_name  || '—';
+        document.getElementById('greetingName').textContent    = (currentUser.full_name || '').split(' ')[0] || '—';
 
         msg.className = 'modal-msg success';
         msg.textContent = '✅ Profile সফলভাবে আপডেট হয়েছে!';
         btn.textContent = '✅ Saved!';
-        setTimeout(() => closeEditProfileModal(), 1600);
+        setTimeout(() => closeEditProfileModal(), 1800);
       } else {
         msg.className = 'modal-msg error';
         msg.textContent = '❌ ' + (res.message || 'Update ব্যর্থ হয়েছে।');
