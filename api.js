@@ -91,3 +91,17 @@ async function applyCard(card_type) {
   });
   return await res.json();
 }
+
+// ── Update Profile ────────────────────────
+async function updateProfile(data) {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${API_BASE}/user/update-profile`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(data)
+  });
+  return await res.json();
+}

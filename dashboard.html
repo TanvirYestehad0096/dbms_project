@@ -816,6 +816,57 @@
     }
     .modal-msg.success { background: rgba(39,174,96,0.18); color: #5dde90; display: block; }
     .modal-msg.error   { background: rgba(231,76,60,0.18);  color: #f08080; display: block; }
+
+    /* ── Edit Profile Modal ─────────────────────── */
+    .edit-profile-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 11px 28px;
+      background: linear-gradient(135deg, #27ae60, #1a8a49);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+    }
+    .edit-profile-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .ep-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .ep-form-group label {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.55);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .ep-form-group input,
+    .ep-form-group select,
+    .ep-form-group textarea {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .2s;
+      resize: none;
+    }
+    .ep-form-group input:focus,
+    .ep-form-group select:focus,
+    .ep-form-group textarea:focus {
+      border-color: #27ae60;
+    }
+    .ep-form-group select option { background: #0f2820; }
   </style>
 </head>
 
@@ -957,6 +1008,10 @@
               <span id="profileBlood">—</span>
             </div>
             <div class="profile-field">
+              <label>Address</label>
+              <span id="profileAddress">—</span>
+            </div>
+            <div class="profile-field">
               <label>Card Type</label>
               <span id="profileCard">—</span>
             </div>
@@ -966,6 +1021,7 @@
             </div>
           </div>
         </div>
+        <button class="edit-profile-btn" onclick="openEditProfileModal()">✏️ Edit Profile</button>
       </div>
 
       <!-- SETTINGS -->
@@ -1014,6 +1070,38 @@
 
       <button class="modal-apply-btn" id="applyCardBtn" onclick="submitCardApply()" disabled>আবেদন করুন</button>
       <div class="modal-msg" id="applyModalMsg"></div>
+    </div>
+  </div>
+
+  <!-- EDIT PROFILE MODAL -->
+  <div class="modal-overlay" id="editProfileModal">
+    <div class="modal-box" style="max-width:480px;">
+      <button class="modal-close" onclick="closeEditProfileModal()">✕</button>
+      <h3>✏️ Edit Profile</h3>
+      <p class="modal-sub">আপনার তথ্য আপডেট করুন।</p>
+
+      <div class="ep-form-group">
+        <label>Blood Group</label>
+        <select id="epBloodGroup">
+          <option value="">— Select —</option>
+          <option value="A+">A+</option>
+          <option value="A-">A-</option>
+          <option value="B+">B+</option>
+          <option value="B-">B-</option>
+          <option value="AB+">AB+</option>
+          <option value="AB-">AB-</option>
+          <option value="O+">O+</option>
+          <option value="O-">O-</option>
+        </select>
+      </div>
+
+      <div class="ep-form-group">
+        <label>Address</label>
+        <textarea id="epAddress" rows="3" placeholder="আপনার ঠিকানা লিখুন..."></textarea>
+      </div>
+
+      <button class="modal-apply-btn" id="saveProfileBtn" onclick="saveEditProfile()">💾 Save Changes</button>
+      <div class="modal-msg" id="editProfileMsg"></div>
     </div>
   </div>
 
@@ -1187,6 +1275,7 @@
       document.getElementById('profileDob').textContent = dob;
       document.getElementById('profilePhone').textContent = phone;
       document.getElementById('profileBlood').textContent = currentUser.blood_group || currentUser.blood || '—';
+      document.getElementById('profileAddress').textContent = currentUser.address || '—';
       document.getElementById('profileCard').textContent = userCards.map(c => c.card_type).join(', ') || '—';
     });
 
@@ -1385,6 +1474,74 @@
     // Close modal on overlay click
     document.getElementById('applyCardModal').addEventListener('click', function(e) {
       if (e.target === this) closeApplyModal();
+    });
+
+    /* ── EDIT PROFILE MODAL LOGIC ─────────────────── */
+    function openEditProfileModal() {
+      // Pre-fill current values
+      const bloodVal = currentUser.blood_group || currentUser.blood || '';
+      const addrVal  = currentUser.address || '';
+      document.getElementById('epBloodGroup').value = bloodVal;
+      document.getElementById('epAddress').value    = addrVal;
+      const msg = document.getElementById('editProfileMsg');
+      msg.className = 'modal-msg';
+      msg.textContent = '';
+      document.getElementById('saveProfileBtn').disabled = false;
+      document.getElementById('saveProfileBtn').textContent = '💾 Save Changes';
+      document.getElementById('editProfileModal').classList.add('open');
+    }
+
+    function closeEditProfileModal() {
+      document.getElementById('editProfileModal').classList.remove('open');
+    }
+
+    async function saveEditProfile() {
+      const blood   = document.getElementById('epBloodGroup').value.trim();
+      const address = document.getElementById('epAddress').value.trim();
+      const btn     = document.getElementById('saveProfileBtn');
+      const msg     = document.getElementById('editProfileMsg');
+
+      if (!blood && !address) {
+        msg.className = 'modal-msg error';
+        msg.textContent = '⚠️ অন্তত একটি field পূরণ করুন।';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'সংরক্ষণ হচ্ছে...';
+      msg.className = 'modal-msg';
+      msg.textContent = '';
+
+      const payload = {};
+      if (blood)   payload.blood_group = blood;
+      if (address) payload.address     = address;
+
+      const res = await updateProfile(payload);
+
+      if (res.success) {
+        // Update local user object
+        if (blood)   { currentUser.blood_group = blood; currentUser.blood = blood; }
+        if (address)   currentUser.address = address;
+
+        // Refresh profile display
+        document.getElementById('profileBlood').textContent   = currentUser.blood_group || '—';
+        document.getElementById('profileAddress').textContent = currentUser.address     || '—';
+
+        msg.className = 'modal-msg success';
+        msg.textContent = '✅ Profile সফলভাবে আপডেট হয়েছে!';
+        btn.textContent = '✅ Saved!';
+        setTimeout(() => closeEditProfileModal(), 1600);
+      } else {
+        msg.className = 'modal-msg error';
+        msg.textContent = '❌ ' + (res.message || 'Update ব্যর্থ হয়েছে।');
+        btn.disabled = false;
+        btn.textContent = '💾 Save Changes';
+      }
+    }
+
+    // Close edit profile modal on overlay click
+    document.getElementById('editProfileModal').addEventListener('click', function(e) {
+      if (e.target === this) closeEditProfileModal();
     });
   </script>
   <script src="api.js"></script>
