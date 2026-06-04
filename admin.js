@@ -64,6 +64,7 @@ function renderTable(tbodyId, cards) {
       <td><strong>${c.user_name}</strong></td>
       <td>${c.nid}</td>
       <td>${c.phone}</td>
+      <td><span style="font-weight:600;color:#c0392b;">${c.blood || '—'}</span></td>
       <td>${typeBadge(c.card_type)}</td>
       <td>${new Date(c.applied_at).toLocaleDateString('en-BD')}</td>
       <td>${statusBadge(c.status)}</td>
@@ -108,6 +109,7 @@ function filterAndRenderUsers() {
       <td><strong>${u.full_name}</strong></td>
       <td>${u.nid_number}</td>
       <td>${u.phone}</td>
+      <td><span style="font-weight:600;color:#c0392b;">${u.blood_group || u.blood || '—'}</span></td>
       <td>${new Date(u.created_at).toLocaleDateString('en-BD')}</td>
       <td>${userStatusBadge(u.status)}</td>
       <td>
@@ -135,7 +137,7 @@ async function loadApplications() {
     const uData = await uRes.json();
     if (uData.success) {
       uData.user.cards.forEach(card => {
-        allCards.push({ ...card, user_name: uData.user.full_name, nid: uData.user.nid_number, phone: uData.user.phone });
+        allCards.push({ ...card, user_name: uData.user.full_name, nid: uData.user.nid_number, phone: uData.user.phone, blood: uData.user.blood_group || uData.user.blood });
       });
     }
   }

@@ -953,6 +953,10 @@
               <span id="profilePhone">—</span>
             </div>
             <div class="profile-field">
+              <label>Blood Group</label>
+              <span id="profileBlood">—</span>
+            </div>
+            <div class="profile-field">
               <label>Card Type</label>
               <span id="profileCard">—</span>
             </div>
@@ -1182,6 +1186,7 @@
       document.getElementById('profileNid').textContent = nid;
       document.getElementById('profileDob').textContent = dob;
       document.getElementById('profilePhone').textContent = phone;
+      document.getElementById('profileBlood').textContent = currentUser.blood_group || currentUser.blood || '—';
       document.getElementById('profileCard').textContent = userCards.map(c => c.card_type).join(', ') || '—';
     });
 
@@ -1247,10 +1252,13 @@
       const issueDateFormatted = `${String(issueDateRaw.getDate()).padStart(2, '0')}/${String(issueDateRaw.getMonth() + 1).padStart(2, '0')}/${issueDateRaw.getFullYear()}`;
       document.getElementById('pdf-card-issue-date').textContent = issueDateFormatted;
       
-      // Dynamic Blood Group generation based on last digit of NID (completely dynamic and realistic)
-      const bloodGroups = ['O+', 'A+', 'B+', 'AB+', 'O-', 'A-', 'B-', 'AB-'];
-      const lastDigit = parseInt(currentUser.nid_number.slice(-1)) || 0;
-      const bloodGroup = bloodGroups[lastDigit % bloodGroups.length];
+      // Check if user has a real blood group from profile, otherwise fallback to NID-based hashing
+      let bloodGroup = currentUser.blood_group || currentUser.blood;
+      if (!bloodGroup) {
+        const bloodGroups = ['O+', 'A+', 'B+', 'AB+', 'O-', 'A-', 'B-', 'AB-'];
+        const lastDigit = parseInt(currentUser.nid_number.slice(-1)) || 0;
+        bloodGroup = bloodGroups[lastDigit % bloodGroups.length];
+      }
       document.getElementById('pdf-card-blood').textContent = bloodGroup;
       
       // Dynamic QR Code link — embed all card details for public verification

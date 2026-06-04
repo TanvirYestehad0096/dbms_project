@@ -56,6 +56,7 @@ async function handleNext() {
   const fullname = document.getElementById('fullname').value.trim();
   const dob = document.getElementById('dob').value.trim();
   const phone = document.getElementById('phone').value.trim();
+  const bloodGroup = document.getElementById('bloodGroup').value;
   const cardType = document.getElementById('cardType').value;
   const password = document.getElementById('password').value.trim();
   const confirmPassword = document.getElementById('confirmPassword').value.trim();
@@ -66,6 +67,7 @@ async function handleNext() {
   if (!fullname) { showError('fullname'); valid = false; }
   if (!dob || dob.length < 10) { showError('dob'); valid = false; }
   if (!phone || !/^01[0-9]{9}$/.test(phone)) { showError('phone'); valid = false; }
+  if (!bloodGroup) { showError('bloodGroup'); valid = false; }
   if (!cardType) { document.getElementById('cardType-err').classList.add('show'); valid = false; }
   if (!password) { showError('password'); valid = false; }
   if (!confirmPassword || password !== confirmPassword) {
@@ -85,6 +87,8 @@ async function handleNext() {
     date_of_birth: dobFormatted,
     phone: phone,
     password: password,
+    blood_group: bloodGroup,
+    blood: bloodGroup,
     card_types: [...selectedCards]
   });
 
