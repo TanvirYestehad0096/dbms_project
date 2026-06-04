@@ -414,6 +414,77 @@
       min-height: 100px;
     }
 
+    /* ---- FILTER BAR ---- */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .filter-search-wrap {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      min-width: 200px;
+      background: #f0f4f2;
+      border-radius: 8px;
+      padding: 0 12px;
+      gap: 8px;
+    }
+
+    .filter-search-icon {
+      font-size: 0.95rem;
+      flex-shrink: 0;
+      color: var(--text-muted);
+    }
+
+    .filter-input {
+      border: none;
+      background: transparent;
+      outline: none;
+      padding: 10px 0;
+      font-size: 0.88rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-dark);
+      width: 100%;
+    }
+
+    .filter-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .filter-select {
+      padding: 9px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-dark);
+      background: #f0f4f2;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .filter-select:focus {
+      border-color: var(--green-mid);
+    }
+
+    .filter-count {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+      margin-left: auto;
+    }
+
     /* ---- RESPONSIVE ---- */
     @media (max-width: 768px) {
       .admin-wrap {
@@ -535,9 +606,9 @@
             <div class="s-sub">Under review</div>
           </div>
           <div class="admin-stat">
-            <div class="s-label">Rejected</div>
+            <div class="s-label">Total Cards</div>
             <div class="s-value" id="stat-total-cards">—</div>
-            <div class="s-sub">Applications rejected</div>
+            <div class="s-sub">Total card applications</div>
           </div>
         </div>
 
@@ -568,6 +639,32 @@
           <h2>All Applications</h2>
           <p>সব card application এখানে দেখুন এবং manage করুন।</p>
         </div>
+
+        <!-- Search & Filter Bar -->
+        <div class="filter-bar">
+          <div class="filter-search-wrap">
+            <span class="filter-search-icon">🔍</span>
+            <input type="text" id="app-search" class="filter-input" placeholder="নাম, NID বা ফোন দিয়ে খুঁজুন..." oninput="filterAndRenderApplications()" />
+          </div>
+          <select id="app-filter-type" class="filter-select" onchange="filterAndRenderApplications()">
+            <option value="">সব Card Type</option>
+            <option value="family">👨‍👩‍👧‍👦 Family</option>
+            <option value="business">💼 Business</option>
+            <option value="student">🎓 Student</option>
+            <option value="vehicle">🚗 Vehicle</option>
+            <option value="agriculture">🌾 Agriculture</option>
+          </select>
+          <select id="app-filter-status" class="filter-select" onchange="filterAndRenderApplications()">
+            <option value="">সব Status</option>
+            <option value="applied">⏳ Applied</option>
+            <option value="processing">🔄 Processing</option>
+            <option value="approved">✅ Approved</option>
+            <option value="issued">🪪 Issued</option>
+            <option value="rejected">❌ Rejected</option>
+          </select>
+          <span class="filter-count" id="app-filter-count"></span>
+        </div>
+
         <div class="admin-table-wrap">
           <table>
             <thead>
@@ -594,6 +691,16 @@
           <h2>All Users</h2>
           <p>সব registered user এর তালিকা।</p>
         </div>
+
+        <!-- Search Bar -->
+        <div class="filter-bar">
+          <div class="filter-search-wrap">
+            <span class="filter-search-icon">🔍</span>
+            <input type="text" id="user-search" class="filter-input" placeholder="নাম, NID বা ফোন দিয়ে খুঁজুন..." oninput="filterAndRenderUsers()" />
+          </div>
+          <span class="filter-count" id="user-filter-count"></span>
+        </div>
+
         <div class="admin-table-wrap">
           <table>
             <thead>
@@ -602,9 +709,9 @@
                 <th>Name</th>
                 <th>NID</th>
                 <th>Phone</th>
-                <th>Cards</th>
                 <th>Joined</th>
                 <th>Status</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody id="users-table">

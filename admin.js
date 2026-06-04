@@ -5,6 +5,10 @@
 
 const API_BASE = 'https://citizen-card-backend-production.up.railway.app/api';
 
+/* ---- GLOBAL STATE ---- */
+let allUsers = [];
+let allCards = [];
+
 /* ---- GET ADMIN TOKEN ---- */
 function getAdminToken() {
   return localStorage.getItem('adminToken');
@@ -50,6 +54,24 @@ async function loadStats() {
   document.getElementById('stat-total-cards').textContent    = s.total_cards;
 }
 
+/* ---- RENDER TABLE (shared helper) ---- */
+function renderTable(tbodyId, cards) {
+  const tbody = document.getElementById(tbodyId);
+  if (!tbody) return;
+  tbody.innerHTML = cards.map((c, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td><strong>${c.user_name}</strong></td>
+      <td>${c.nid}</td>
+      <td>${c.phone}</td>
+      <td>${typeBadge(c.card_type)}</td>
+      <td>${new Date(c.applied_at).toLocaleDateString('en-BD')}</td>
+      <td>${statusBadge(c.status)}</td>
+      <td>${cardActionBtns(c.id, c.status)}</td>
+    </tr>
+  `).join('');
+}
+
 /* ---- LOAD USERS ---- */
 async function loadUsers() {
   const res = await fetch(`${API_BASE}/admin/users`, {
@@ -58,8 +80,29 @@ async function loadUsers() {
   const data = await res.json();
   if (!data.success) return;
 
+  allUsers = data.users;
+  filterAndRenderUsers();
+}
+
+/* ---- FILTER & RENDER USERS ---- */
+function filterAndRenderUsers() {
+  const query = (document.getElementById('user-search')?.value || '').toLowerCase().trim();
+
+  const filtered = allUsers.filter(u => {
+    if (!query) return true;
+    return (
+      (u.full_name  || '').toLowerCase().includes(query) ||
+      (u.nid_number || '').toLowerCase().includes(query) ||
+      (u.phone      || '').toLowerCase().includes(query)
+    );
+  });
+
+  const countEl = document.getElementById('user-filter-count');
+  if (countEl) countEl.textContent = `${filtered.length} / ${allUsers.length} ব্যক্তি`;
+
   const tbody = document.getElementById('users-table');
-  tbody.innerHTML = data.users.map((u, i) => `
+  if (!tbody) return;
+  tbody.innerHTML = filtered.map((u, i) => `
     <tr>
       <td>${i + 1}</td>
       <td><strong>${u.full_name}</strong></td>
@@ -68,8 +111,8 @@ async function loadUsers() {
       <td>${new Date(u.created_at).toLocaleDateString('en-BD')}</td>
       <td>${userStatusBadge(u.status)}</td>
       <td>
-        ${u.status !== 'active' ? `<button class="btn-approve" onclick="updateUserStatus(${u.id}, 'active')">✅ Activate</button>` : ''}
-        ${u.status !== 'suspended' ? `<button class="btn-reject" onclick="updateUserStatus(${u.id}, 'suspended')">🚫 Suspend</button>` : ''}
+        ${u.status !== 'active'    ? `<button class="btn-approve" onclick="updateUserStatus(${u.id}, 'active')">✅ Activate</button>` : ''}
+        ${u.status !== 'suspended' ? `<button class="btn-reject"  onclick="updateUserStatus(${u.id}, 'suspended')">🚫 Suspend</button>` : ''}
       </td>
     </tr>
   `).join('');
@@ -84,7 +127,7 @@ async function loadApplications() {
   if (!data.success) return;
 
   // সব user এর cards load করো
-  let allCards = [];
+  allCards = [];
   for (const user of data.users) {
     const uRes = await fetch(`${API_BASE}/admin/users/${user.id}`, {
       headers: { 'Authorization': `Bearer ${getAdminToken()}` }
@@ -97,25 +140,33 @@ async function loadApplications() {
     }
   }
 
-  const renderTable = (tbodyId, cards) => {
-    const tbody = document.getElementById(tbodyId);
-    if (!tbody) return;
-    tbody.innerHTML = cards.map((c, i) => `
-      <tr>
-        <td>${i + 1}</td>
-        <td><strong>${c.user_name}</strong></td>
-        <td>${c.nid}</td>
-        <td>${c.phone}</td>
-        <td>${typeBadge(c.card_type)}</td>
-        <td>${new Date(c.applied_at).toLocaleDateString('en-BD')}</td>
-        <td>${statusBadge(c.status)}</td>
-        <td>${cardActionBtns(c.id, c.status)}</td>
-      </tr>
-    `).join('');
-  };
-
+  // Overview তে সর্বশেষ ৫টি দেখাও
   renderTable('overview-table', allCards.slice(0, 5));
-  renderTable('applications-table', allCards);
+  // Applications panel এ filter সহ রেন্ডার করো
+  filterAndRenderApplications();
+}
+
+/* ---- FILTER & RENDER APPLICATIONS ---- */
+function filterAndRenderApplications() {
+  const query      = (document.getElementById('app-search')?.value        || '').toLowerCase().trim();
+  const typeFilter = (document.getElementById('app-filter-type')?.value   || '').toLowerCase();
+  const statFilter = (document.getElementById('app-filter-status')?.value || '').toLowerCase();
+
+  const filtered = allCards.filter(c => {
+    const matchQuery = !query || (
+      (c.user_name || '').toLowerCase().includes(query) ||
+      (c.nid       || '').toLowerCase().includes(query) ||
+      (c.phone     || '').toLowerCase().includes(query)
+    );
+    const matchType   = !typeFilter || (c.card_type || '').toLowerCase() === typeFilter;
+    const matchStatus = !statFilter || (c.status    || '').toLowerCase() === statFilter;
+    return matchQuery && matchType && matchStatus;
+  });
+
+  const countEl = document.getElementById('app-filter-count');
+  if (countEl) countEl.textContent = `${filtered.length} / ${allCards.length} আবেদন`;
+
+  renderTable('applications-table', filtered);
 }
 
 /* ---- CARD ACTION BUTTONS ---- */
@@ -186,7 +237,7 @@ function adminLogout() {
   window.location.href = 'index.html';
 }
 
-/* ---- NOTIFY TO TOGGLE ---- */
+/* ---- ON LOAD ---- */
 document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('adminToken');
   if (!token) { window.location.href = 'admin-login.html'; return; }
@@ -199,7 +250,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Update stat IDs in HTML
   loadStats();
   loadApplications();
   loadUsers();

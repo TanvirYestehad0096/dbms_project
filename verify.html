@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Card Verification — Bangladesh Citizen Card System</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --green-dark: #004d38;
+      --green-mid: #2e6b5e;
+      --gold: #c9a84c;
+      --gold-light: #e2c47a;
+      --white: #ffffff;
+      --text-dark: #1a3c34;
+      --text-mid: #3d6b5e;
+      --text-muted: #7a9a90;
+      --border: #d8e4e0;
+      --shadow: 0 2px 16px rgba(26, 60, 52, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f0f4f2;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      background: var(--green-dark);
+      height: 60px;
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      gap: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    }
+
+    .nav-logo svg { flex-shrink: 0; }
+
+    .nav-title {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold-light);
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-subtitle {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.45);
+      margin-left: auto;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ---- MAIN ---- */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 48px 20px 60px;
+    }
+
+    .verify-container {
+      width: 100%;
+      max-width: 680px;
+    }
+
+    /* ---- PORTAL HEADER ---- */
+    .portal-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .portal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green-dark);
+      color: var(--gold-light);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+
+    .portal-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .portal-header p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* ---- RESULT CARD ---- */
+    .result-card {
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 4px 32px rgba(26,60,52,0.12);
+      overflow: hidden;
+      border: 1.5px solid var(--border);
+      animation: slideUp 0.4s ease both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---- STATUS BANNER ---- */
+    .status-banner {
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .status-banner.verified {
+      background: linear-gradient(135deg, #004d38 0%, #006a4e 100%);
+    }
+
+    .status-banner.invalid {
+      background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+    }
+
+    .status-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.25);
+    }
+
+    .status-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .status-text p {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 0.04em;
+    }
+
+    .status-seal {
+      margin-left: auto;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .status-seal svg {
+      opacity: 0.9;
+    }
+
+    /* ---- CARD BODY ---- */
+    .card-body {
+      padding: 28px;
+    }
+
+    /* ---- CARD TYPE RIBBON ---- */
+    .card-type-ribbon {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,77,56,0.08);
+      color: var(--green-dark);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1.5px solid rgba(0,77,56,0.15);
+      margin-bottom: 24px;
+    }
+
+    /* ---- INFO GRID ---- */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .info-field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .info-field.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .info-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .info-value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .blood-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fef2f2;
+      color: #c0392b;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 8px;
+      border: 1.5px solid #f5c6c0;
+    }
+
+    /* ---- DIVIDER ---- */
+    .divider {
+      border: none;
+      border-top: 1.5px dashed var(--border);
+      margin: 4px 0 20px;
+    }
+
+    /* ---- DISCLAIMER ---- */
+    .disclaimer {
+      background: #f7faf9;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .disclaimer-icon {
+      font-size: 1rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .disclaimer p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ---- CARD FOOTER ---- */
+    .card-footer {
+      background: #f7faf9;
+      border-top: 1.5px solid var(--border);
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .footer-meta span {
+      font-weight: 600;
+      color: var(--text-mid);
+    }
+
+    .btn-print {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green-dark);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      padding: 9px 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+
+    .btn-print:hover {
+      background: var(--green-mid);
+      transform: translateY(-1px);
+    }
+
+    /* ---- ERROR STATE ---- */
+    .error-state {
+      text-align: center;
+      padding: 48px 24px;
+    }
+
+    .error-state .error-icon {
+      font-size: 3.5rem;
+      margin-bottom: 16px;
+    }
+
+    .error-state h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: #c0392b;
+      margin-bottom: 10px;
+    }
+
+    .error-state p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      background: var(--green-dark);
+      color: var(--white);
+      padding: 10px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+      transition: background 0.2s;
+    }
+
+    .btn-home:hover {
+      background: var(--green-mid);
+    }
+
+    /* ---- LOADING STATE ---- */
+    .loading-state {
+      text-align: center;
+      padding: 64px 24px;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid var(--border);
+      border-top-color: var(--green-dark);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-state p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+      background: var(--green-dark);
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      padding: 16px;
+      font-size: 0.75rem;
+    }
+
+    footer a {
+      color: var(--gold-light);
+      text-decoration: none;
+    }
+
+    /* ---- PRINT STYLES ---- */
+    @media print {
+      nav, footer, .btn-print, .btn-home, .card-footer { display: none !important; }
+      body { background: white; }
+      main { padding: 0; }
+      .result-card { box-shadow: none; border: 1.5px solid #ccc; }
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 520px) {
+      .info-grid { grid-template-columns: 1fr; }
+      .status-seal { display: none; }
+      .card-footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38" width="34" height="34">
+        <circle cx="19" cy="19" r="18" fill="#006a4e" stroke="#c9a84c" stroke-width="2" />
+        <circle cx="19" cy="19" r="7" fill="#f42a41" />
+      </svg>
+    </div>
+    <div class="nav-title">Bangladesh Citizen Card — Verification Portal</div>
+    <div class="nav-subtitle">Official Gateway</div>
+  </nav>
+
+  <!-- MAIN -->
+  <main>
+    <div class="verify-container">
+
+      <!-- Portal Header -->
+      <div class="portal-header">
+        <div class="portal-badge">🏛️ Government of Bangladesh</div>
+        <h1>Citizen Card Verification</h1>
+        <p>Real-time verification powered by the Bangladesh Digital Identity Registry</p>
+      </div>
+
+      <!-- Result Card -->
+      <div class="result-card" id="resultCard">
+        <!-- Loading state shown initially -->
+        <div class="loading-state" id="loadingState">
+          <div class="spinner"></div>
+          <p>ডেটাবেস থেকে তথ্য যাচাই করা হচ্ছে...</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    People's Republic of Bangladesh &mdash; Bangladesh Citizen Card System &mdash;
+    <a href="index.html">Home Portal</a>
+  </footer>
+
+  <script>
+    /* ── Parse URL Parameters ─────────────────────────── */
+    function getParams() {
+      const p = new URLSearchParams(window.location.search);
+      return {
+        card_no : p.get('card_no') || '',
+        name    : p.get('name')    || '',
+        nid     : p.get('nid')     || '',
+        blood   : p.get('blood')   || '—',
+        dob     : p.get('dob')     || '—',
+        phone   : p.get('phone')   || '—',
+        type    : p.get('type')    || '',
+      };
+    }
+
+    /* ── Card type display helpers ─────────────────────── */
+    const CARD_META = {
+      family:      { icon: '👨‍👩‍👧‍👦', label: 'Family Card' },
+      business:    { icon: '💼', label: 'Business Card' },
+      student:     { icon: '🎓', label: 'Student Card' },
+      vehicle:     { icon: '🚗', label: 'Vehicle Card' },
+      agriculture: { icon: '🌾', label: 'Agriculture Card' },
+    };
+
+    /* ── Format date from YYYY-MM-DD ──────────────────── */
+    function formatDate(dateStr) {
+      if (!dateStr || dateStr === '—') return '—';
+      try {
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('en-BD', { day: '2-digit', month: 'long', year: 'numeric' });
+      } catch { return dateStr; }
+    }
+
+    /* ── Get current datetime for verification timestamp ─ */
+    function now() {
+      return new Date().toLocaleString('en-BD', {
+        day: '2-digit', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+    }
+
+    /* ── Render verified card ─────────────────────────── */
+    function renderVerified(p) {
+      const meta = CARD_META[p.type.toLowerCase()] || { icon: '🪪', label: p.type + ' Card' };
+
+      return `
+        <div class="status-banner verified">
+          <div class="status-icon">✅</div>
+          <div class="status-text">
+            <h2>Card Verified Successfully</h2>
+            <p>এই নাগরিক কার্ডটি Bangladesh Citizen Card System-এ নিবন্ধিত এবং বৈধ।</p>
+          </div>
+          <div class="status-seal">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="58" height="58">
+              <circle cx="30" cy="30" r="28" fill="none" stroke="#c9a84c" stroke-width="2" stroke-dasharray="6 3"/>
+              <circle cx="30" cy="30" r="22" fill="rgba(255,255,255,0.08)" stroke="#e2c47a" stroke-width="1.5"/>
+              <circle cx="30" cy="30" r="9" fill="#f42a41"/>
+              <circle cx="30" cy="30" r="4" fill="#006a4e"/>
+              <text x="30" y="13" text-anchor="middle" font-size="5.5" fill="#e2c47a" font-family="DM Sans" font-weight="700" letter-spacing="0.5">VERIFIED</text>
+              <text x="30" y="52" text-anchor="middle" font-size="5" fill="rgba(255,255,255,0.5)" font-family="DM Sans">BANGLADESH</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="card-type-ribbon">
+            ${meta.icon} &nbsp;${meta.label.toUpperCase()}
+          </div>
+
+          <div class="info-grid">
+            <div class="info-field full-width">
+              <div class="info-label">Full Name</div>
+              <div class="info-value" style="font-size:1.15rem;">${p.name}</div>
+            </div>
+
+            <div class="info-field">
+              <div class="info-label">NID Number</div>
+              <div class="info-value">${p.nid}</div>
+            </div>
+
+            <div class="info-field">
+              <div class="info-label">Card Number</div>
+              <div class="info-value">${p.card_no}</div>
+            </div>
+
+            <div class="info-field">
+              <div class="info-label">Date of Birth</div>
+              <div class="info-value">${formatDate(p.dob)}</div>
+            </div>
+
+            <div class="info-field">
+              <div class="info-label">Mobile Number</div>
+              <div class="info-value">${p.phone}</div>
+            </div>
+
+            <div class="info-field">
+              <div class="info-label">Blood Group</div>
+              <div class="info-value">
+                <span class="blood-badge">🩸 ${p.blood}</span>
+              </div>
+            </div>
+
+            <div class="info-field">
+              <div class="info-label">Card Status</div>
+              <div class="info-value" style="color:#27ae60;">✅ Active &amp; Valid</div>
+            </div>
+          </div>
+
+          <hr class="divider" />
+
+          <div class="disclaimer">
+            <span class="disclaimer-icon">ℹ️</span>
+            <p>
+              এই তথ্যটি <strong>Bangladesh Digital Citizen Card Registry</strong> থেকে সরাসরি যাচাই করা হয়েছে।
+              কার্ডধারীর ব্যক্তিগত তথ্য সরকারি ডেটাবেসে নিরাপদে সংরক্ষিত।
+              For official inquiries, contact: <strong>info@smartcard.gov.bd</strong>
+            </p>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="footer-meta">
+            Verified on: <span>${now()}</span> &nbsp;|&nbsp;
+            Portal: <span>Bangladesh Citizen Card System</span>
+          </div>
+          <button class="btn-print" onclick="window.print()">🖨️ Print Certificate</button>
+        </div>
+      `;
+    }
+
+    /* ── Render error / invalid ───────────────────────── */
+    function renderError() {
+      return `
+        <div class="status-banner invalid">
+          <div class="status-icon">❌</div>
+          <div class="status-text">
+            <h2>Verification Failed</h2>
+            <p>কার্ড নম্বরটি ডেটাবেসে খুঁজে পাওয়া যায়নি বা লিংকটি সঠিক নয়।</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="error-state">
+            <div class="error-icon">🔍</div>
+            <h2>Card Not Found</h2>
+            <p>
+              এই কার্ডটি Bangladesh Citizen Card System-এ নিবন্ধিত নয় অথবা ভেরিফিকেশন লিংকটি অবৈধ।<br />
+              সঠিক কার্ড নম্বর ব্যবহার করুন অথবা আমাদের সাথে যোগাযোগ করুন।
+            </p>
+            <a href="index.html" class="btn-home">← Back to Home Portal</a>
+          </div>
+        </div>
+      `;
+    }
+
+    /* ── Main: parse params and render ───────────────────── */
+    window.addEventListener('DOMContentLoaded', () => {
+      // Simulate a brief DB query delay for realistic feel
+      setTimeout(() => {
+        const p = getParams();
+        const card = document.getElementById('resultCard');
+
+        if (p.card_no && p.name && p.nid) {
+          card.innerHTML = renderVerified(p);
+        } else {
+          card.innerHTML = renderError();
+        }
+      }, 900);
+    });
+  </script>
+
+</body>
+</html>

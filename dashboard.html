@@ -1253,8 +1253,8 @@
       const bloodGroup = bloodGroups[lastDigit % bloodGroups.length];
       document.getElementById('pdf-card-blood').textContent = bloodGroup;
       
-      // Dynamic QR Code link
-      const qrData = `https://tanviryestehad0096.github.io/dbms_project/verify.html?card_no=${cardNo}`;
+      // Dynamic QR Code link — embed all card details for public verification
+      const qrData = `https://tanviryestehad0096.github.io/dbms_project/verify.html?card_no=${encodeURIComponent(cardNo)}&name=${encodeURIComponent(currentUser.full_name)}&nid=${encodeURIComponent(currentUser.nid_number)}&blood=${encodeURIComponent(bloodGroup)}&dob=${encodeURIComponent(dobFormatted)}&phone=${encodeURIComponent(currentUser.phone || '')}&type=${encodeURIComponent(card.card_type)}`;
       document.getElementById('pdf-card-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(qrData)}`;
       
       // Wait for image to load, then trigger PDF generation
