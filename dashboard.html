@@ -1393,11 +1393,34 @@
     }
 
     /* ---- DELETE ACCOUNT ---- */
-    function deleteAccount() {
-      if (!confirm('আপনি কি সত্যিই account delete করতে চান?')) return;
-      logout();
-    }
+    async function deleteAccount() {
+      const password = prompt('আপনি কি সত্যিই account delete করতে চান? নিশ্চিত করতে আপনার password দিন:');
+      if (!password) return; // User cancelled or entered empty string
 
+      if (!confirm('Account delete করলে আপনার সব ডেটা এবং কার্ড মুছে যাবে। আপনি কি নিশ্চিত?')) return;
+
+      const token = localStorage.getItem('token');
+      try {
+        const res = await fetch('https://citizen-card-backend-production.up.railway.app/api/user/delete-account', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ password })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          alert('✅ ' + data.message);
+          logout();
+        } else {
+          alert('❌ ' + data.message);
+        }
+      } catch (err) {
+        alert('❌ সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না।');
+      }
+    }
     /* ---- DOWNLOAD CARD PDF ---- */
     async function downloadCardPDF(cardId) {
       const card = userCards.find(c => c.id === cardId);
