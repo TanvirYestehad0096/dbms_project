@@ -125,6 +125,12 @@ async function fpSendOtp() {
         if (res.success) {
             fpPhone = phone;
             document.getElementById('fp-otp-desc').textContent = phone + ' নম্বরে OTP পাঠানো হয়েছে।';
+            
+            // NOTE: Show OTP in an alert since there is no real SMS API
+            if (res.otp) {
+                alert(`📱 Demo/Development Mode\n\nআপনার OTP হচ্ছে: ${res.otp}`);
+            }
+
             fpGoStep('fp-step2');
             document.getElementById('otp1').focus();
         } else {
