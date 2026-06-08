@@ -257,7 +257,6 @@ document.addEventListener('DOMContentLoaded', () => {
   loadUsers();
 });
 
-/* ---- SEND NOTIFICATION ---- */
 function sendNotification() {
   const title = document.getElementById('notify-title').value.trim();
   const msg   = document.getElementById('notify-msg').value.trim();
@@ -265,4 +264,59 @@ function sendNotification() {
   alert(`✅ Notification পাঠানো হয়েছে!\n\nTitle: ${title}\nMessage: ${msg}`);
   document.getElementById('notify-title').value = '';
   document.getElementById('notify-msg').value   = '';
+}
+
+/* ---- CHANGE ADMIN PASSWORD ---- */
+async function changeAdminPassword() {
+  const current  = document.getElementById('adminCurrentPass').value.trim();
+  const newPass  = document.getElementById('adminNewPass').value.trim();
+  const confirm  = document.getElementById('adminConfirmPass').value.trim();
+  const msgEl    = document.getElementById('admin-pass-msg');
+
+  msgEl.textContent = '';
+
+  if (!current || !newPass || !confirm) {
+    msgEl.style.color = '#e74c3c';
+    msgEl.textContent = '⚠️ সব field পূরণ করুন।';
+    return;
+  }
+  if (newPass.length < 6) {
+    msgEl.style.color = '#e74c3c';
+    msgEl.textContent = '⚠️ নতুন password কমপক্ষে ৬ character হতে হবে।';
+    return;
+  }
+  if (newPass !== confirm) {
+    msgEl.style.color = '#e74c3c';
+    msgEl.textContent = '⚠️ নতুন password দুটো মিলছে না।';
+    return;
+  }
+
+  msgEl.style.color = '#888';
+  msgEl.textContent = 'সংরক্ষণ হচ্ছে...';
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/change-password`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getAdminToken()}`
+      },
+      body: JSON.stringify({ current_password: current, new_password: newPass })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      msgEl.style.color = '#27ae60';
+      msgEl.textContent = '✅ Password সফলভাবে পরিবর্তন হয়েছে!';
+      document.getElementById('adminCurrentPass').value = '';
+      document.getElementById('adminNewPass').value     = '';
+      document.getElementById('adminConfirmPass').value = '';
+    } else {
+      msgEl.style.color = '#e74c3c';
+      msgEl.textContent = '❌ ' + (data.message || 'Password পরিবর্তন ব্যর্থ হয়েছে।');
+    }
+  } catch (err) {
+    msgEl.style.color = '#e74c3c';
+    msgEl.textContent = '❌ সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না।';
+  }
 }

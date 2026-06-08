@@ -478,6 +478,10 @@
       cursor: pointer;
     }
 
+    .status-rejected {
+      background: #fdf0ee;
+      color: #e74c3c;
+    }
 
     @media (max-width: 768px) {
       .dashboard-wrap {
@@ -511,154 +515,156 @@
 
     /* ---- SMART CARD PDF TEMPLATE ---- */
     #card-pdf-template {
-      width: 324px;
-      height: 204px;
-      background: linear-gradient(135deg, #006a4e 0%, #004d38 100%);
-      border-radius: 12px;
-      padding: 10px 12px;
+      width: 640px;
+      height: 404px;
+      background: linear-gradient(135deg, #006a4e 0%, #004d38 60%, #003828 100%);
+      border-radius: 18px;
+      padding: 22px 26px;
       color: #fff;
       font-family: 'DM Sans', sans-serif;
       position: relative;
       overflow: hidden;
       box-sizing: border-box;
-      border: 1.5px solid #c9a84c;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      border: 2px solid #c9a84c;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
     }
     #card-pdf-template::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: 
-        radial-gradient(circle at 80% 20%, rgba(201, 168, 76, 0.18) 0%, transparent 60%),
-        radial-gradient(circle at 10% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
+      background:
+        radial-gradient(circle at 78% 18%, rgba(201, 168, 76, 0.22) 0%, transparent 55%),
+        radial-gradient(circle at 12% 85%, rgba(255, 255, 255, 0.07) 0%, transparent 40%);
       pointer-events: none;
     }
     .card-pdf-header {
       display: flex;
       align-items: center;
-      gap: 6px;
-      border-bottom: 1.5px solid rgba(201, 168, 76, 0.5);
-      padding-bottom: 4px;
-      margin-bottom: 6px;
+      gap: 14px;
+      border-bottom: 1.5px solid rgba(201, 168, 76, 0.55);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
     }
     .card-pdf-logo {
-      width: 26px;
-      height: 26px;
+      width: 52px;
+      height: 52px;
       flex-shrink: 0;
     }
     .card-pdf-title-box h5 {
-      font-size: 0.48rem;
+      font-size: 1rem;
       font-weight: 700;
       color: #e2c47a;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.07em;
       margin: 0;
-      line-height: 1;
+      line-height: 1.1;
       text-transform: uppercase;
     }
     .card-pdf-title-box p {
-      font-size: 0.35rem;
-      color: rgba(255, 255, 255, 0.85);
-      margin: 1.5px 0 0;
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.82);
+      margin: 3px 0 0;
       font-weight: 500;
-      line-height: 1;
+      line-height: 1.2;
       letter-spacing: 0.02em;
     }
     .card-pdf-body {
       display: flex;
-      gap: 10px;
+      gap: 20px;
       align-items: flex-start;
     }
     .card-pdf-left-column {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 8px;
       flex-shrink: 0;
     }
     .card-pdf-photo-area {
-      width: 50px;
-      height: 60px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(201, 168, 76, 0.5);
-      border-radius: 5px;
+      width: 96px;
+      height: 116px;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1.5px solid rgba(201, 168, 76, 0.55);
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.6rem;
-      color: rgba(255,255,255,0.7);
+      font-size: 3rem;
+      color: rgba(255,255,255,0.65);
     }
     .card-pdf-blood-badge {
-      font-size: 0.35rem;
+      font-size: 0.7rem;
       font-weight: 700;
       background: #c0392b;
       color: #fff;
-      border-radius: 3px;
-      padding: 1px 4px;
+      border-radius: 5px;
+      padding: 3px 10px;
       text-align: center;
       width: 100%;
       box-sizing: border-box;
-      line-height: 1;
-      border: 0.5px solid rgba(255,255,255,0.3);
+      line-height: 1.4;
+      letter-spacing: 0.05em;
+      border: 1px solid rgba(255,255,255,0.25);
     }
     .card-pdf-info {
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 8px;
     }
     .card-pdf-field {
       display: flex;
       flex-direction: column;
+      gap: 1px;
     }
     .card-pdf-field label {
-      font-size: 0.32rem;
+      font-size: 0.62rem;
       text-transform: uppercase;
-      color: #7a9a90;
-      font-weight: 600;
-      letter-spacing: 0.03em;
+      color: #7abba8;
+      font-weight: 700;
+      letter-spacing: 0.07em;
       line-height: 1;
     }
     .card-pdf-field span {
-      font-size: 0.48rem;
+      font-size: 0.95rem;
       font-weight: 600;
       color: #fff;
-      line-height: 1.1;
+      line-height: 1.2;
     }
     .card-pdf-right-column {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      width: 52px;
-      height: 84px;
+      width: 100px;
+      height: 166px;
       flex-shrink: 0;
     }
     .card-pdf-badge {
-      font-size: 0.35rem;
+      font-size: 0.68rem;
       font-weight: 700;
-      background: rgba(201, 168, 76, 0.15);
+      background: rgba(201, 168, 76, 0.18);
       color: #e2c47a;
-      border: 1px solid #c9a84c;
-      border-radius: 3px;
-      padding: 1.5px 0;
+      border: 1.5px solid #c9a84c;
+      border-radius: 6px;
+      padding: 4px 0;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
       text-align: center;
       width: 100%;
       box-sizing: border-box;
-      line-height: 1;
+      line-height: 1.3;
     }
     .card-pdf-qr-box {
-      width: 44px;
-      height: 44px;
+      width: 88px;
+      height: 88px;
       background: #fff;
-      border-radius: 4px;
-      padding: 1.5px;
+      border-radius: 6px;
+      padding: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
-      border: 1px solid rgba(201,168,76,0.3);
+      border: 1.5px solid rgba(201,168,76,0.4);
     }
     .card-pdf-qr-box img {
       width: 100%;
@@ -668,34 +674,36 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1px;
+      gap: 2px;
     }
     .card-pdf-signature {
       font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: 0.38rem;
+      font-size: 0.75rem;
       color: #e2c47a;
-      border-bottom: 0.5px solid rgba(255,255,255,0.3);
-      line-height: 1;
-      padding-bottom: 1px;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      line-height: 1.2;
+      padding-bottom: 2px;
+      white-space: nowrap;
     }
     .card-pdf-signature-title {
-      font-size: 0.28rem;
-      color: rgba(255,255,255,0.4);
+      font-size: 0.55rem;
+      color: rgba(255,255,255,0.45);
       text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
     .card-pdf-footer {
       position: absolute;
-      bottom: 6px;
-      left: 12px;
-      right: 12px;
+      bottom: 13px;
+      left: 26px;
+      right: 26px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.32rem;
+      font-size: 0.65rem;
       color: rgba(255,255,255,0.45);
       border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 3px;
+      padding-top: 7px;
     }
 
     /* ── Apply New Card Modal ─────────────────────── */
@@ -1246,6 +1254,7 @@
     </div>
   </div>
 
+  <script src="api.js"></script>
   <script>
     let currentUser = null;
     let userCards = [];
@@ -1271,7 +1280,7 @@
         applied: { cls: 'status-pending', icon: '⏳', label: 'Applied' },
         processing: { cls: 'status-pending', icon: '🔄', label: 'Processing' },
         approved: { cls: 'status-approved', icon: '✅', label: 'Approved' },
-        rejected: { cls: 'status-pending', icon: '❌', label: 'Rejected' },
+        rejected: { cls: 'status-rejected', icon: '❌', label: 'Rejected' },
         issued: { cls: 'status-approved', icon: '🪪', label: 'Issued' },
       };
       const s = map[status] || map['applied'];
@@ -1425,20 +1434,20 @@
       
       // Dynamic QR Code link — embed all card details for public verification
       const qrData = `https://tanviryestehad0096.github.io/dbms_project/verify.html?card_no=${encodeURIComponent(cardNo)}&name=${encodeURIComponent(currentUser.full_name)}&nid=${encodeURIComponent(currentUser.nid_number)}&blood=${encodeURIComponent(bloodGroup)}&dob=${encodeURIComponent(dobFormatted)}&phone=${encodeURIComponent(currentUser.phone || '')}&type=${encodeURIComponent(card.card_type)}`;
-      document.getElementById('pdf-card-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(qrData)}`;
+      document.getElementById('pdf-card-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
       
-      // Wait for image to load, then trigger PDF generation
+      // Wait for QR image to load, then generate PDF
       setTimeout(() => {
         const opt = {
           margin:       0,
           filename:     `Citizen_Card_${cardNo}.pdf`,
-          image:        { type: 'jpeg', quality: 0.98 },
-          html2canvas:  { scale: 3, useCORS: true, logging: false },
-          jsPDF:        { unit: 'in', format: [3.375, 2.125], orientation: 'landscape' }
+          image:        { type: 'jpeg', quality: 0.99 },
+          html2canvas:  { scale: 2, useCORS: true, logging: false, allowTaint: true },
+          jsPDF:        { unit: 'in', format: [6.67, 4.21], orientation: 'landscape' }
         };
         
         html2pdf().set(opt).from(template).save();
-      }, 600);
+      }, 800);
     }
 
     /* ── APPLY NEW CARD MODAL LOGIC ─────────────────── */
@@ -1658,7 +1667,7 @@
       if (e.target === this) closeEditProfileModal();
     });
   </script>
-  <script src="api.js"></script>
+
 </body>
 
 </html>

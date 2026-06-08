@@ -201,6 +201,13 @@
 
   <script src="api.js"></script>
   <script>
+    // Redirect if admin already logged in
+    (function () {
+      if (localStorage.getItem('adminToken')) {
+        window.location.href = 'admin.html';
+      }
+    })();
+
     async function handleAdminLogin() {
       const username = document.getElementById('admin-username').value.trim();
       const password = document.getElementById('admin-password').value.trim();
@@ -248,7 +255,11 @@
       }
     }
 
-    document.addEventListener('keydown', e => {
+    // Enter key support on both fields
+    document.getElementById('admin-username').addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleAdminLogin();
+    });
+    document.getElementById('admin-password').addEventListener('keydown', e => {
       if (e.key === 'Enter') handleAdminLogin();
     });
   </script>

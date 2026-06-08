@@ -70,6 +70,13 @@ async function handleNext() {
   if (!bloodGroup) { showError('bloodGroup'); valid = false; }
   if (!cardType) { document.getElementById('cardType-err').classList.add('show'); valid = false; }
   if (!password) { showError('password'); valid = false; }
+  else if (password.length < 6) {
+    const errEl = document.getElementById('password-err');
+    const input = document.getElementById('password');
+    if (errEl) { errEl.textContent = '⚠️ কমপক্ষে ৬ character দিন।'; errEl.classList.add('show'); }
+    if (input) { input.classList.add('error'); input.focus(); }
+    valid = false;
+  }
   if (!confirmPassword || password !== confirmPassword) {
     showError('confirmPassword');
     valid = false;

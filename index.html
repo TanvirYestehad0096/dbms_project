@@ -173,9 +173,10 @@
                 <h3>🔑 Forget Password</h3>
                 <p>Registered phone number দিন। OTP পাঠানো হবে।</p>
                 <div class="form-group">
-                    <label>Phone Number</label>
-                    <input type="tel" id="fp-phone" placeholder="+880 XXXXXXXXXX" />
-                    <span class="fp-err" id="fp-phone-err">⚠️ Phone number দিন।</span>
+                    <label>Mobile Number</label>
+                    <input type="tel" id="fp-phone" placeholder="01XXXXXXXXX" />
+                    <span style="font-size:0.78rem; color:var(--text-muted); margin-top:4px; display:block;">📱 Bangladesh format: 01XXXXXXXXX</span>
+                    <span class="fp-err" id="fp-phone-err">⚠️ Phone নম্বর দিন।</span>
                 </div>
                 <button class="modal-btn" onclick="fpSendOtp()">Send OTP →</button>
             </div>
@@ -189,7 +190,7 @@
                     <input type="text" maxlength="1" id="otp3" class="otp-box" oninput="otpNext(this,'otp4')" />
                     <input type="text" maxlength="1" id="otp4" class="otp-box" oninput="otpNext(this,null)" />
                 </div>
-                <span class="fp-demo-hint">💡 Demo OTP: <strong>1234</strong></span>
+                <span style="font-size:0.78rem; color:var(--text-muted); display:block; margin-bottom:6px;">📲 আপনার ফোনে পাঠানো ৪-digit OTP টি দিন।</span>
                 <span class="fp-err" id="fp-otp-err">⚠️ সঠিক OTP দিন।</span>
                 <button class="modal-btn" onclick="fpVerifyOtp()">Verify OTP →</button>
             </div>
