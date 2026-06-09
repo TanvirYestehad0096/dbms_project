@@ -331,8 +331,8 @@
 
       <div class="form-group">
         <label for="nid">NID Number</label>
-        <input type="text" id="nid" placeholder="NID Number" maxlength="17" oninput="clearError(this)" />
-        <span class="error-msg" id="nid-err">⚠️ NID Number দিন।</span>
+        <input type="text" id="nid" placeholder="10-digit NID Number" maxlength="10" oninput="this.value = this.value.replace(/\D/g, ''); clearError(this)" />
+        <span class="error-msg" id="nid-err">⚠️ সঠিক ১০-ডিজিট NID নম্বর দিন।</span>
       </div>
 
       <div class="form-group">

@@ -66,7 +66,7 @@ async function handleNext() {
   const dobErr = document.getElementById('dob-err');
   if (dobErr) dobErr.textContent = '⚠️ সঠিক Date of Birth দিন। (DD/MM/YYYY)';
 
-  if (!nid) { showError('nid'); valid = false; }
+  if (!nid || nid.length !== 10) { showError('nid'); valid = false; }
   if (!fullname) { showError('fullname'); valid = false; }
   
   if (!dob || dob.length < 10) {
