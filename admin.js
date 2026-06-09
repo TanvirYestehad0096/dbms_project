@@ -43,6 +43,7 @@ function userStatusBadge(status) {
 
 /* ---- LOAD STATS ---- */
 async function loadStats() {
+  const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
   try {
     const res = await fetch(`${API_BASE}/admin/stats`, {
       headers: { 'Authorization': `Bearer ${getAdminToken()}` }
@@ -50,22 +51,32 @@ async function loadStats() {
 
     // 401/403 → logout, অন্য error → silently skip
     if (res.status === 401 || res.status === 403) { adminLogout(); return; }
-    if (!res.ok) { console.warn('Stats API error:', res.status); return; }
+    if (!res.ok) { 
+      console.warn('Stats API error:', res.status); 
+      setEl('stat-total-users', 'Error');
+      setEl('stat-issued-cards', 'Error');
+      setEl('stat-pending-cards', 'Error');
+      setEl('stat-total-cards', 'Error');
+      return; 
+    }
 
     const data = await res.json();
     if (!data.success) return;
 
     const s = data.stats;
-    const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val ?? 0; };
-    setEl('stat-total-users',  s.total_users);
-    setEl('stat-issued-cards', s.issued_cards);
-    setEl('stat-pending-cards',s.pending_cards);
-    setEl('stat-total-cards',  s.total_cards);
+    setEl('stat-total-users',  s.total_users ?? 0);
+    setEl('stat-issued-cards', s.issued_cards ?? 0);
+    setEl('stat-pending-cards',s.pending_cards ?? 0);
+    setEl('stat-total-cards',  s.total_cards ?? 0);
 
     renderCharts(s);
   } catch (err) {
     // Network/timeout error — show 0s, do NOT logout
     console.warn('Stats load failed (network?):', err.message);
+    setEl('stat-total-users', '0');
+    setEl('stat-issued-cards', '0');
+    setEl('stat-pending-cards', '0');
+    setEl('stat-total-cards', '0');
   }
 }
 
