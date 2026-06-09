@@ -9,6 +9,7 @@
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     .admin-wrap {
       display: flex;
@@ -485,6 +486,40 @@
       margin-left: auto;
     }
 
+    /* ---- CHARTS ROW ---- */
+    .chart-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .chart-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .chart-card h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    .chart-canvas-wrap {
+      position: relative;
+      height: 220px;
+    }
+
+    @media (max-width: 640px) {
+      .chart-row { grid-template-columns: 1fr; }
+    }
+
     /* ---- RESPONSIVE ---- */
     @media (max-width: 768px) {
       .admin-wrap {
@@ -609,6 +644,22 @@
             <div class="s-label">Total Cards</div>
             <div class="s-value" id="stat-total-cards">—</div>
             <div class="s-sub">Total card applications</div>
+          </div>
+        </div>
+
+        <!-- CHARTS -->
+        <div class="chart-row">
+          <div class="chart-card">
+            <h4>📊 Cards by Type</h4>
+            <div class="chart-canvas-wrap">
+              <canvas id="chartCardType"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <h4>📈 Cards by Status</h4>
+            <div class="chart-canvas-wrap">
+              <canvas id="chartCardStatus"></canvas>
+            </div>
           </div>
         </div>
 

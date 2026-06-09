@@ -8,6 +8,8 @@ const API_BASE = 'https://citizen-card-backend-production.up.railway.app/api';
 /* ---- GLOBAL STATE ---- */
 let allUsers = [];
 let allCards = [];
+let chartTypeInstance   = null;
+let chartStatusInstance = null;
 
 /* ---- GET ADMIN TOKEN ---- */
 function getAdminToken() {
@@ -52,6 +54,96 @@ async function loadStats() {
   document.getElementById('stat-issued-cards').textContent   = s.issued_cards;
   document.getElementById('stat-pending-cards').textContent  = s.pending_cards;
   document.getElementById('stat-total-cards').textContent    = s.total_cards;
+
+  // Render charts with live data
+  renderCharts(s);
+}
+
+/* ---- RENDER CHARTS ---- */
+function renderCharts(stats) {
+  // --- Chart 1: Cards by Type (Donut) ---
+  const typeData  = stats.cards_by_type || [];
+  const typeLabels = typeData.map(r => r.type_name.charAt(0).toUpperCase() + r.type_name.slice(1));
+  const typeCounts = typeData.map(r => r.count);
+  const typeColors = ['#006a4e', '#c9a84c', '#3498db', '#8e44ad', '#e67e22'];
+
+  const ctxType = document.getElementById('chartCardType')?.getContext('2d');
+  if (ctxType) {
+    if (chartTypeInstance) chartTypeInstance.destroy();
+    chartTypeInstance = new Chart(ctxType, {
+      type: 'doughnut',
+      data: {
+        labels: typeLabels,
+        datasets: [{
+          data: typeCounts,
+          backgroundColor: typeColors,
+          borderWidth: 2,
+          borderColor: '#fff',
+          hoverOffset: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { family: 'DM Sans', size: 12 }, padding: 14 } },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed} cards` } }
+        },
+        cutout: '60%'
+      }
+    });
+  }
+
+  // --- Chart 2: Cards by Status (Bar) ---
+  const statusLabels = ['Applied', 'Processing', 'Approved', 'Issued', 'Rejected'];
+  const statusValues = [
+    parseInt(stats.pending_cards  || 0),
+    0,  // processing — not in stats directly, derived below
+    0,
+    parseInt(stats.issued_cards   || 0),
+    0
+  ];
+  // Use cards_by_type data to derive full breakdown from allCards
+  const statusMap = { applied: 0, processing: 0, approved: 0, issued: 0, rejected: 0 };
+  allCards.forEach(c => { if (statusMap[c.status] !== undefined) statusMap[c.status]++; });
+  const barValues = [
+    statusMap.applied,
+    statusMap.processing,
+    statusMap.approved,
+    statusMap.issued,
+    statusMap.rejected
+  ];
+  const barColors = ['#e67e22', '#3498db', '#c9a84c', '#006a4e', '#e74c3c'];
+
+  const ctxStatus = document.getElementById('chartCardStatus')?.getContext('2d');
+  if (ctxStatus) {
+    if (chartStatusInstance) chartStatusInstance.destroy();
+    chartStatusInstance = new Chart(ctxStatus, {
+      type: 'bar',
+      data: {
+        labels: statusLabels,
+        datasets: [{
+          label: 'Applications',
+          data: barValues,
+          backgroundColor: barColors,
+          borderRadius: 8,
+          borderSkipped: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} applications` } }
+        },
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 1, font: { family: 'DM Sans' } }, grid: { color: '#f0f4f2' } },
+          x: { ticks: { font: { family: 'DM Sans', size: 11 } }, grid: { display: false } }
+        }
+      }
+    });
+  }
 }
 
 /* ---- RENDER TABLE (shared helper) ---- */
@@ -146,6 +238,8 @@ async function loadApplications() {
   renderTable('overview-table', allCards.slice(0, 5));
   // Applications panel এ filter সহ রেন্ডার করো
   filterAndRenderApplications();
+  // Re-render status chart now that allCards is fully loaded
+  loadStats();
 }
 
 /* ---- FILTER & RENDER APPLICATIONS ---- */
