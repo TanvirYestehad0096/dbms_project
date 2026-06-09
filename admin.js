@@ -20,13 +20,13 @@ function getAdminToken() {
 function statusBadge(status) {
   const map = {
     approved:   '<span class="badge badge-approved">✅ Approved</span>',
-    pending:    '<span class="badge badge-pending">⏳ Pending</span>',
+    pending:    '<span class="badge badge-pending">⏳ Applied</span>',
     applied:    '<span class="badge badge-pending">⏳ Applied</span>',
     processing: '<span class="badge badge-pending">🔄 Processing</span>',
     rejected:   '<span class="badge badge-rejected">❌ Rejected</span>',
     issued:     '<span class="badge badge-approved">🪪 Issued</span>',
   };
-  return map[status] || status;
+  return map[status] || `<span class="badge badge-pending">${status || '—'}</span>`;
 }
 
 function typeBadge(type) {
@@ -175,15 +175,19 @@ function renderCharts(stats) {
 function renderTable(tbodyId, cards) {
   const tbody = document.getElementById(tbodyId);
   if (!tbody) return;
+  if (!cards || cards.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#888;">কোনো তথ্য পাওয়া যায়নি।</td></tr>';
+    return;
+  }
   tbody.innerHTML = cards.map((c, i) => `
     <tr>
       <td>${i + 1}</td>
-      <td><strong>${c.user_name}</strong></td>
-      <td>${c.nid}</td>
-      <td>${c.phone}</td>
+      <td><strong>${c.user_name || '—'}</strong></td>
+      <td>${c.nid || '—'}</td>
+      <td>${c.phone || '—'}</td>
       <td><span style="font-weight:600;color:#c0392b;">${c.blood || '—'}</span></td>
-      <td>${typeBadge(c.card_type)}</td>
-      <td>${new Date(c.applied_at).toLocaleDateString('en-BD')}</td>
+      <td>${typeBadge(c.card_type || 'unknown')}</td>
+      <td>${c.applied_at ? new Date(c.applied_at).toLocaleDateString('en-BD') : '—'}</td>
       <td>${statusBadge(c.status)}</td>
       <td>${cardActionBtns(c.id, c.status)}</td>
     </tr>
@@ -247,14 +251,16 @@ function filterAndRenderUsers() {
 
 /* ---- LOAD APPLICATIONS (cards) ---- */
 async function loadApplications() {
-  // Loading indicator
   const ovTbody  = document.getElementById('overview-table');
   const appTbody = document.getElementById('applications-table');
-  if (ovTbody)  ovTbody.innerHTML  = '<tr><td colspan="9" style="text-align:center;padding:20px;color:#888;">⏳ লোড হচ্ছে...</td></tr>';
-  if (appTbody) appTbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px;color:#888;">⏳ লোড হচ্ছে...</td></tr>';
+  const loadingRow = (cols) => `<tr><td colspan="${cols}" style="text-align:center;padding:20px;color:#888;">⏳ লোড হচ্ছে...</td></tr>`;
+  const errorRow   = (cols, msg) => `<tr><td colspan="${cols}" style="text-align:center;padding:20px;color:#e74c3c;">${msg} <button onclick="loadApplications()" style="margin-left:8px;background:#e74c3c;color:#fff;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.8rem;">🔄 Retry</button></td></tr>`;
+
+  if (ovTbody)  ovTbody.innerHTML  = loadingRow(9);
+  if (appTbody) appTbody.innerHTML = loadingRow(9);
 
   try {
-    const res = await fetch(`${API_BASE}/admin/users?limit=200`, {
+    const res = await fetch(`${API_BASE}/admin/users?limit=500`, {
       headers: { 'Authorization': `Bearer ${getAdminToken()}` }
     });
     if (res.status === 401 || res.status === 403) { adminLogout(); return; }
@@ -262,41 +268,50 @@ async function loadApplications() {
 
     const data = await res.json();
     if (!data.success) {
-      if (ovTbody)  ovTbody.innerHTML  = '<tr><td colspan="9" style="text-align:center;padding:20px;color:#e74c3c;">❌ ডেটা লোড ব্যর্থ হয়েছে।</td></tr>';
-      if (appTbody) appTbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px;color:#e74c3c;">❌ ডেটা লোড ব্যর্থ হয়েছে।</td></tr>';
+      if (ovTbody)  ovTbody.innerHTML  = errorRow(9, '❌ ডেটা লোড ব্যর্থ হয়েছে।');
+      if (appTbody) appTbody.innerHTML = errorRow(9, '❌ ডেটা লোড ব্যর্থ হয়েছে।');
       return;
     }
 
-    // প্রতিটি user এর cards fetch করো
+    const users = data.users || [];
+    if (users.length === 0) {
+      const emptyRow = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#888;">কোনো user নেই।</td></tr>';
+      if (ovTbody)  ovTbody.innerHTML  = emptyRow;
+      if (appTbody) appTbody.innerHTML = emptyRow;
+      return;
+    }
+
+    // Fetch each user's details in parallel (batch of 10 at a time to avoid overload)
     allCards = [];
-    const userFetches = data.users.map(user =>
-      fetch(`${API_BASE}/admin/users/${user.id}`, {
-        headers: { 'Authorization': `Bearer ${getAdminToken()}` }
-      })
-      .then(r => r.ok ? r.json() : null)
-      .then(uData => {
-        if (uData?.success) {
-          (uData.user.cards || []).forEach(card => {
-            allCards.push({
-              ...card,
-              user_name: uData.user.full_name,
-              nid:       uData.user.nid_number,
-              phone:     uData.user.phone,
-              blood:     uData.user.blood_group || uData.user.blood || '—'
+    const BATCH = 10;
+    for (let i = 0; i < users.length; i += BATCH) {
+      const batch = users.slice(i, i + BATCH);
+      await Promise.all(batch.map(user =>
+        fetch(`${API_BASE}/admin/users/${user.id}`, {
+          headers: { 'Authorization': `Bearer ${getAdminToken()}` }
+        })
+        .then(r => r.ok ? r.json() : null)
+        .then(uData => {
+          if (uData?.success && uData.user) {
+            const u = uData.user;
+            (u.cards || []).forEach(card => {
+              allCards.push({
+                ...card,
+                user_name: u.full_name  || '—',
+                nid:       u.nid_number || '—',
+                phone:     u.phone      || '—',
+                blood:     u.blood_group || u.blood || '—'
+              });
             });
-          });
-        }
-      })
-      .catch(() => {})
-    );
+          }
+        })
+        .catch(() => {})
+      ));
+    }
 
-    // সব parallel fetch শেষ হওয়ার জন্য অপেক্ষা করো
-    await Promise.all(userFetches);
+    // Sort by applied_at descending
+    allCards.sort((a, b) => new Date(b.applied_at || 0) - new Date(a.applied_at || 0));
 
-    // applied_at দিয়ে sort করো (সাম্প্রতিক আগে)
-    allCards.sort((a, b) => new Date(b.applied_at) - new Date(a.applied_at));
-
-    // empty state handle
     if (allCards.length === 0) {
       const emptyRow = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#888;">কোনো আবেদন নেই।</td></tr>';
       if (ovTbody)  ovTbody.innerHTML  = emptyRow;
@@ -306,14 +321,13 @@ async function loadApplications() {
       filterAndRenderApplications();
     }
 
-    // allCards লোড হওয়ার পর chart re-render
+    // Re-render charts with updated allCards data
     loadStats();
 
   } catch (err) {
     console.error('loadApplications error:', err);
-    const errRow = '<tr><td colspan="9" style="text-align:center;padding:20px;color:#e74c3c;">⚠️ সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না।</td></tr>';
-    if (ovTbody)  ovTbody.innerHTML  = errRow;
-    if (appTbody) appTbody.innerHTML = errRow;
+    if (ovTbody)  ovTbody.innerHTML  = errorRow(9, '⚠️ সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না।');
+    if (appTbody) appTbody.innerHTML = errorRow(9, '⚠️ সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না।');
   }
 }
 

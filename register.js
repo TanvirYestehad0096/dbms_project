@@ -117,27 +117,57 @@ async function handleNext() {
   const dobParts = dob.split('/');
   const dobFormatted = `${dobParts[2]}-${dobParts[1]}-${dobParts[0]}`;
 
+  const cardsArray = [...selectedCards];
+  const firstCard  = cardsArray[0];
+
+  // Step 1: Register with first card type
   const res = await registerUser({
-    nid_number: nid,
-    full_name: fullname,
+    nid_number:    nid,
+    full_name:     fullname,
     date_of_birth: dobFormatted,
-    phone: phone,
-    password: password,
-    blood_group: bloodGroup,
-    blood: bloodGroup,
-    card_types: [...selectedCards]
+    phone:         phone,
+    password:      password,
+    blood_group:   bloodGroup,
+    blood:         bloodGroup,
+    card_type:     firstCard
   });
 
-  if (res.success) {
-    document.getElementById('registerForm').style.display = 'none';
-    document.getElementById('successBox').style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setTimeout(() => {
-      window.location.href = 'index.html';
-    }, 3000);
-  } else {
-    alert('❌ ' + res.message);
+  if (!res.success) {
+    alert('❌ ' + (res.message || 'Registration failed'));
+    return;
   }
+
+  // Step 2: If there are additional cards, login then apply them
+  if (cardsArray.length > 1) {
+    try {
+      const loginRes = await loginUser(nid, password);
+      if (loginRes.success && loginRes.token) {
+        // Temporarily store token for apply-card calls
+        const tempToken = loginRes.token;
+        const remainingCards = cardsArray.slice(1);
+        for (const cardType of remainingCards) {
+          await fetch(`${API_BASE}/user/apply-card`, {
+            method: 'POST',
+            headers: {
+              'Content-Type':  'application/json',
+              'Authorization': `Bearer ${tempToken}`
+            },
+            body: JSON.stringify({ card_type: cardType })
+          });
+        }
+      }
+    } catch (err) {
+      console.warn('Extra card apply failed:', err);
+      // Non-fatal — registration was still successful
+    }
+  }
+
+  document.getElementById('registerForm').style.display = 'none';
+  document.getElementById('successBox').style.display   = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => {
+    window.location.href = 'index.html';
+  }, 3000);
 }
 /* ---- Card Picker (Multiple) ---- */
 const selectedCards = new Set();
