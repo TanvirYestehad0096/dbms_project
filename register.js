@@ -6,7 +6,7 @@
 /* ---- Already Logged In? → Redirect to Dashboard ---- */
 (function checkAlreadyLoggedIn() {
   const token = localStorage.getItem('token');
-  if (token) {
+  if (token && token !== 'undefined' && token !== 'null') {
     window.location.href = 'dashboard.html';
   }
 })();

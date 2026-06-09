@@ -1309,7 +1309,11 @@
     /* ---- LOAD USER DATA FROM API ---- */
     document.addEventListener('DOMContentLoaded', async () => {
       const token = localStorage.getItem('token');
-      if (!token) { window.location.href = 'index.html'; return; }
+      if (!token || token === 'undefined' || token === 'null') {
+        localStorage.removeItem('token');
+        window.location.href = 'index.html';
+        return;
+      }
 
       try {
         // Profile থেকে data নাও
