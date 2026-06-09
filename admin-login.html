@@ -203,7 +203,8 @@
   <script>
     // Redirect if admin already logged in
     (function () {
-      if (localStorage.getItem('adminToken')) {
+      const token = localStorage.getItem('adminToken');
+      if (token && token !== 'undefined' && token !== 'null') {
         window.location.href = 'admin.html';
       }
     })();

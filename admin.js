@@ -348,7 +348,11 @@ function adminLogout() {
 /* ---- ON LOAD ---- */
 document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('adminToken');
-  if (!token) { window.location.href = 'admin-login.html'; return; }
+  if (!token || token === 'undefined' || token === 'null') {
+    localStorage.removeItem('adminToken');
+    window.location.href = 'admin-login.html';
+    return;
+  }
 
   const notifyTo = document.getElementById('notify-to');
   if (notifyTo) {
