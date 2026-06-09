@@ -105,7 +105,11 @@ function renderCharts(stats) {
   ];
   // Use cards_by_type data to derive full breakdown from allCards
   const statusMap = { applied: 0, processing: 0, approved: 0, issued: 0, rejected: 0 };
-  allCards.forEach(c => { if (statusMap[c.status] !== undefined) statusMap[c.status]++; });
+  allCards.forEach(c => { 
+    let st = c.status;
+    if (st === 'pending') st = 'applied';
+    if (statusMap[st] !== undefined) statusMap[st]++; 
+  });
   const barValues = [
     statusMap.applied,
     statusMap.processing,
@@ -228,7 +232,7 @@ async function loadApplications() {
     });
     const uData = await uRes.json();
     if (uData.success) {
-      uData.user.cards.forEach(card => {
+      (uData.user.cards || []).forEach(card => {
         allCards.push({ ...card, user_name: uData.user.full_name, nid: uData.user.nid_number, phone: uData.user.phone, blood: uData.user.blood_group || uData.user.blood });
       });
     }

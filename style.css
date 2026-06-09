@@ -637,6 +637,25 @@ footer {
   animation: textGlow 2.4s ease-in-out infinite alternate;
 }
 
+.cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  background-color: var(--gold);
+  margin-left: 2px;
+  animation: blink 1s infinite;
+  vertical-align: text-bottom;
+}
+.cursor.typing {
+  animation: none;
+}
+@keyframes blink {
+  0% { background-color: var(--gold); }
+  49% { background-color: var(--gold); }
+  50% { background-color: transparent; }
+  100% { background-color: transparent; }
+}
+
 /* ---------- FORGET PASSWORD MODAL ---------- */
 .modal-overlay {
   display: none;
