@@ -80,16 +80,28 @@ async function handleLogin() {
     try {
         const res = await loginUser(nid, password);
 
-        if (res.success) {
+        if (res.success && res.token) {
             localStorage.setItem('token', res.token);
-            localStorage.setItem('loggedInUser', JSON.stringify(res.user));
-            alert('✅ Login সফল! স্বাগতম ' + res.user.full_name);
+
+            // Backend returns user_id but not full user object
+            // Fetch profile to get full name
+            let fullName = 'স্বাগতম!';
+            try {
+                const profileRes = await getProfile();
+                if (profileRes.success && profileRes.user) {
+                    fullName = profileRes.user.full_name || fullName;
+                    localStorage.setItem('loggedInUser', JSON.stringify(profileRes.user));
+                }
+            } catch (_) {}
+
+            alert('✅ Login সফল! স্বাগতম ' + fullName);
             window.location.href = 'dashboard.html';
         } else {
-            alert('⚠️ ' + res.message);
+            alert('⚠️ ' + (res.message || 'Login ব্যর্থ হয়েছে।'));
             if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = 'Login'; }
         }
     } catch (err) {
+        console.error('Login error:', err);
         alert('❌ সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না। পরে চেষ্টা করুন।');
         if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = 'Login'; }
     }

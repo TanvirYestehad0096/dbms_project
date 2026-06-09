@@ -232,18 +232,29 @@ function filterAndRenderUsers() {
 
   const tbody = document.getElementById('users-table');
   if (!tbody) return;
+  if (!filtered || filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:24px;color:#888;">${query ? 'কোনো result পাওয়া যায়নি।' : 'কোনো user নেই।'}</td></tr>`;
+    return;
+  }
   tbody.innerHTML = filtered.map((u, i) => `
     <tr>
       <td>${i + 1}</td>
-      <td><strong>${u.full_name}</strong></td>
-      <td>${u.nid_number}</td>
-      <td>${u.phone}</td>
+      <td><strong>${u.full_name || '—'}</strong></td>
+      <td>${u.nid_number || '—'}</td>
+      <td>${u.phone || '—'}</td>
       <td><span style="font-weight:600;color:#c0392b;">${u.blood_group || u.blood || '—'}</span></td>
-      <td>${new Date(u.created_at).toLocaleDateString('en-BD')}</td>
+      <td>${u.created_at ? new Date(u.created_at).toLocaleDateString('en-BD') : '—'}</td>
       <td>${userStatusBadge(u.status)}</td>
-      <td>
-        ${u.status !== 'active'    ? `<button class="btn-approve" onclick="updateUserStatus(${u.id}, 'active')">✅ Activate</button>` : ''}
-        ${u.status !== 'suspended' ? `<button class="btn-reject"  onclick="updateUserStatus(${u.id}, 'suspended')">🚫 Suspend</button>` : ''}
+      <td style="white-space:nowrap;">
+        ${u.status !== 'active'    ? `<button class="btn-approve" onclick="updateUserStatus(${u.id}, 'active')" title="Activate">✅ Activate</button>` : ''}
+        ${u.status !== 'suspended' ? `<button class="btn-reject"  onclick="updateUserStatus(${u.id}, 'suspended')" title="Suspend">🚫 Suspend</button>` : ''}
+        <button class="btn-delete" onclick="deleteUser(${u.id}, '${(u.full_name||'').replace(/'/g,'')}')"
+          title="Delete User"
+          style="background:#fdf0ee;color:#c0392b;border:1px solid #f5c6c0;border-radius:6px;padding:5px 10px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:inherit;margin-left:4px;transition:background 0.2s;"
+          onmouseover="this.style.background='#c0392b';this.style.color='#fff'"
+          onmouseout="this.style.background='#fdf0ee';this.style.color='#c0392b'">
+          🗑️ Delete
+        </button>
       </td>
     </tr>
   `).join('');
@@ -390,21 +401,49 @@ async function updateCardStatus(cardId, status) {
 
 /* ---- UPDATE USER STATUS ---- */
 async function updateUserStatus(userId, status) {
-  const res = await fetch(`${API_BASE}/admin/users/${userId}/status`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${getAdminToken()}`
-    },
-    body: JSON.stringify({ status })
-  });
-  const data = await res.json();
-  if (data.success) {
-    alert(`✅ User status "${status}" করা হয়েছে!`);
-    loadUsers();
-    loadStats();
-  } else {
-    alert('❌ ' + data.message);
+  try {
+    const res = await fetch(`${API_BASE}/admin/users/${userId}/status`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getAdminToken()}`
+      },
+      body: JSON.stringify({ status })
+    });
+    const data = await res.json();
+    if (data.success) {
+      // Update local state without full reload for speed
+      const u = allUsers.find(x => x.id === userId);
+      if (u) u.status = status;
+      filterAndRenderUsers();
+      loadStats();
+    } else {
+      alert('❌ ' + (data.message || 'Status update failed'));
+    }
+  } catch (err) {
+    alert('❌ সার্ভারের সাথে যোগাযোগ হয়নি।');
+  }
+}
+
+/* ---- DELETE USER ---- */
+async function deleteUser(userId, userName) {
+  if (!confirm(`⚠️ "${userName}" এর সব তথ্য মুছে যাবে! নিশ্চিত?`)) return;
+  try {
+    const res = await fetch(`${API_BASE}/admin/users/${userId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${getAdminToken()}` }
+    });
+    const data = await res.json();
+    if (data.success) {
+      alert('✅ User মুছে ফেলা হয়েছে।');
+      allUsers = allUsers.filter(u => u.id !== userId);
+      filterAndRenderUsers();
+      loadStats();
+    } else {
+      alert('❌ ' + (data.message || 'Delete সম্ভব হয়নি।'));
+    }
+  } catch (err) {
+    alert('❌ সার্ভারের সাথে যোগাযোগ হয়নি।');
   }
 }
 
