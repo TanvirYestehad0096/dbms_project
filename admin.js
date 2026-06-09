@@ -20,10 +20,12 @@ function getAdminToken() {
 function statusBadge(status) {
   const map = {
     approved:   '<span class="badge badge-approved">✅ Approved</span>',
+    active:     '<span class="badge badge-approved">✅ Approved</span>',
     pending:    '<span class="badge badge-pending">⏳ Applied</span>',
     applied:    '<span class="badge badge-pending">⏳ Applied</span>',
     processing: '<span class="badge badge-pending">🔄 Processing</span>',
     rejected:   '<span class="badge badge-rejected">❌ Rejected</span>',
+    suspended:  '<span class="badge badge-rejected">❌ Rejected</span>',
     issued:     '<span class="badge badge-approved">🪪 Issued</span>',
   };
   return map[status] || `<span class="badge badge-pending">${status || '—'}</span>`;
@@ -246,8 +248,8 @@ function filterAndRenderUsers() {
       <td>${u.created_at ? new Date(u.created_at).toLocaleDateString('en-BD') : '—'}</td>
       <td>${userStatusBadge(u.status)}</td>
       <td style="white-space:nowrap;">
-        ${u.status !== 'active'    ? `<button class="btn-approve" onclick="updateUserStatus(${u.id}, 'active')" title="Activate">✅ Activate</button>` : ''}
-        ${u.status !== 'suspended' ? `<button class="btn-reject"  onclick="updateUserStatus(${u.id}, 'suspended')" title="Suspend">🚫 Suspend</button>` : ''}
+        ${u.status !== 'active'    ? `<button class="btn-approve" onclick="updateUserStatus(${u.id}, 'active')" title="Accept">✅ Accept</button>` : ''}
+        ${u.status !== 'suspended' ? `<button class="btn-reject"  onclick="updateUserStatus(${u.id}, 'suspended')" title="Reject">❌ Reject</button>` : ''}
         <button class="btn-delete" onclick="deleteUser(${u.id}, '${(u.full_name||'').replace(/'/g,'')}')"
           title="Delete User"
           style="background:#fdf0ee;color:#c0392b;border:1px solid #f5c6c0;border-radius:6px;padding:5px 10px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:inherit;margin-left:4px;transition:background 0.2s;"
@@ -292,33 +294,18 @@ async function loadApplications() {
       return;
     }
 
-    // Fetch each user's details in parallel (batch of 10 at a time to avoid overload)
-    allCards = [];
-    const BATCH = 10;
-    for (let i = 0; i < users.length; i += BATCH) {
-      const batch = users.slice(i, i + BATCH);
-      await Promise.all(batch.map(user =>
-        fetch(`${API_BASE}/admin/users/${user.id}`, {
-          headers: { 'Authorization': `Bearer ${getAdminToken()}` }
-        })
-        .then(r => r.ok ? r.json() : null)
-        .then(uData => {
-          if (uData?.success && uData.user) {
-            const u = uData.user;
-            (u.cards || []).forEach(card => {
-              allCards.push({
-                ...card,
-                user_name: u.full_name  || '—',
-                nid:       u.nid_number || '—',
-                phone:     u.phone      || '—',
-                blood:     u.blood_group || u.blood || '—'
-              });
-            });
-          }
-        })
-        .catch(() => {})
-      ));
-    }
+    // Backend Cards API is currently throwing 500 or missing,
+    // so we treat every registered user as a Card Application.
+    allCards = users.map(u => ({
+      id: u.id,
+      user_name: u.full_name || '—',
+      nid: u.nid_number || '—',
+      phone: u.phone || '—',
+      blood: u.blood_group || u.blood || '—',
+      card_type: 'Family', // Default type
+      applied_at: u.created_at,
+      status: u.status // maps to user status (pending, active, suspended)
+    }));
 
     // Sort by applied_at descending
     allCards.sort((a, b) => new Date(b.applied_at || 0) - new Date(a.applied_at || 0));
@@ -366,17 +353,15 @@ function filterAndRenderApplications() {
 }
 
 /* ---- CARD ACTION BUTTONS ---- */
-function cardActionBtns(cardId, status) {
-  if (status === 'applied' || status === 'processing') {
-    return `
-      <button class="btn-approve" onclick="updateCardStatus(${cardId}, 'approved')">✅ Approve</button>
-      <button class="btn-reject"  onclick="updateCardStatus(${cardId}, 'rejected')">❌ Reject</button>
-    `;
+function cardActionBtns(userId, status) {
+  let btns = '';
+  if (status !== 'active') {
+    btns += `<button class="btn-approve" onclick="updateUserStatus(${userId}, 'active')">✅ Accept</button> `;
   }
-  if (status === 'approved') {
-    return `<button class="btn-approve" onclick="updateCardStatus(${cardId}, 'issued')">🪪 Issue</button>`;
+  if (status !== 'suspended') {
+    btns += `<button class="btn-reject" onclick="updateUserStatus(${userId}, 'suspended')">❌ Reject</button>`;
   }
-  return `<span style="font-size:0.8rem; color:var(--text-muted);">—</span>`;
+  return btns || `<span style="font-size:0.8rem; color:var(--text-muted);">—</span>`;
 }
 
 /* ---- UPDATE CARD STATUS ---- */
