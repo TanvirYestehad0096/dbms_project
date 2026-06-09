@@ -47,7 +47,10 @@ async function loadStats() {
     headers: { 'Authorization': `Bearer ${getAdminToken()}` }
   });
   const data = await res.json();
-  if (!data.success) return;
+  if (!data.success) {
+    if (res.status === 401 || res.status === 403) adminLogout();
+    return;
+  }
 
   const s = data.stats;
   document.getElementById('stat-total-users').textContent    = s.total_users;

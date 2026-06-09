@@ -1313,7 +1313,7 @@
 
       // Profile থেকে data নাও
       const profileRes = await getProfile();
-      if (!profileRes.success) { window.location.href = 'index.html'; return; }
+      if (!profileRes.success) { localStorage.removeItem('token'); window.location.href = 'index.html'; return; }
       currentUser = profileRes.user;
 
       // Cards থেকে data নাও
