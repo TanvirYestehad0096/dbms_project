@@ -43,23 +43,28 @@ function userStatusBadge(status) {
 
 /* ---- LOAD STATS ---- */
 async function loadStats() {
-  const res = await fetch(`${API_BASE}/admin/stats`, {
-    headers: { 'Authorization': `Bearer ${getAdminToken()}` }
-  });
-  const data = await res.json();
-  if (!data.success) {
-    if (res.status === 401 || res.status === 403) adminLogout();
-    return;
+  try {
+    const res = await fetch(`${API_BASE}/admin/stats`, {
+      headers: { 'Authorization': `Bearer ${getAdminToken()}` }
+    });
+    const data = await res.json();
+    if (!data.success) {
+      if (res.status === 401 || res.status === 403) adminLogout();
+      return;
+    }
+
+    const s = data.stats;
+    document.getElementById('stat-total-users').textContent    = s.total_users;
+    document.getElementById('stat-issued-cards').textContent   = s.issued_cards;
+    document.getElementById('stat-pending-cards').textContent  = s.pending_cards;
+    document.getElementById('stat-total-cards').textContent    = s.total_cards;
+
+    // Render charts with live data
+    renderCharts(s);
+  } catch (err) {
+    console.error("Stats load error", err);
+    adminLogout();
   }
-
-  const s = data.stats;
-  document.getElementById('stat-total-users').textContent    = s.total_users;
-  document.getElementById('stat-issued-cards').textContent   = s.issued_cards;
-  document.getElementById('stat-pending-cards').textContent  = s.pending_cards;
-  document.getElementById('stat-total-cards').textContent    = s.total_cards;
-
-  // Render charts with live data
-  renderCharts(s);
 }
 
 /* ---- RENDER CHARTS ---- */

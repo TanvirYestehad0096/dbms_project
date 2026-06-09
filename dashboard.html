@@ -1311,14 +1311,21 @@
       const token = localStorage.getItem('token');
       if (!token) { window.location.href = 'index.html'; return; }
 
-      // Profile থেকে data নাও
-      const profileRes = await getProfile();
-      if (!profileRes.success) { localStorage.removeItem('token'); window.location.href = 'index.html'; return; }
-      currentUser = profileRes.user;
+      try {
+        // Profile থেকে data নাও
+        const profileRes = await getProfile();
+        if (!profileRes.success) { localStorage.removeItem('token'); window.location.href = 'index.html'; return; }
+        currentUser = profileRes.user;
 
-      // Cards থেকে data নাও
-      const cardsRes = await getMyCards();
-      userCards = cardsRes.success ? cardsRes.cards : [];
+        // Cards থেকে data নাও
+        const cardsRes = await getMyCards();
+        userCards = cardsRes.success ? cardsRes.cards : [];
+      } catch (err) {
+        console.error("Dashboard Load Error:", err);
+        localStorage.removeItem('token');
+        window.location.href = 'index.html';
+        return;
+      }
 
       const name = currentUser.full_name || '—';
       const nid = currentUser.nid_number || '—';
