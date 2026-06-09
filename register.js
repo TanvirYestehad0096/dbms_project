@@ -63,9 +63,38 @@ async function handleNext() {
 
   let valid = true;
 
+  const dobErr = document.getElementById('dob-err');
+  if (dobErr) dobErr.textContent = '⚠️ সঠিক Date of Birth দিন। (DD/MM/YYYY)';
+
   if (!nid) { showError('nid'); valid = false; }
   if (!fullname) { showError('fullname'); valid = false; }
-  if (!dob || dob.length < 10) { showError('dob'); valid = false; }
+  
+  if (!dob || dob.length < 10) {
+    showError('dob');
+    valid = false;
+  } else {
+    const dobParts = dob.split('/');
+    const birthDate = new Date(dobParts[2], dobParts[1] - 1, dobParts[0]);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    if (age < 18) {
+      const errEl = document.getElementById('dob-err');
+      const input = document.getElementById('dob');
+      if (errEl) {
+        errEl.textContent = '⚠️ আপনার বয়স কমপক্ষে ১৮ বছর হতে হবে।';
+        errEl.classList.add('show');
+      }
+      if (input) {
+        input.classList.add('error');
+        input.focus();
+      }
+      valid = false;
+    }
+  }
   if (!phone || !/^01[0-9]{9}$/.test(phone)) { showError('phone'); valid = false; }
   if (!bloodGroup) { showError('bloodGroup'); valid = false; }
   if (!cardType) { document.getElementById('cardType-err').classList.add('show'); valid = false; }
