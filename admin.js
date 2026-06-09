@@ -47,23 +47,25 @@ async function loadStats() {
     const res = await fetch(`${API_BASE}/admin/stats`, {
       headers: { 'Authorization': `Bearer ${getAdminToken()}` }
     });
+
+    // 401/403 → logout, অন্য error → silently skip
+    if (res.status === 401 || res.status === 403) { adminLogout(); return; }
+    if (!res.ok) { console.warn('Stats API error:', res.status); return; }
+
     const data = await res.json();
-    if (!data.success) {
-      if (res.status === 401 || res.status === 403) adminLogout();
-      return;
-    }
+    if (!data.success) return;
 
     const s = data.stats;
-    document.getElementById('stat-total-users').textContent    = s.total_users;
-    document.getElementById('stat-issued-cards').textContent   = s.issued_cards;
-    document.getElementById('stat-pending-cards').textContent  = s.pending_cards;
-    document.getElementById('stat-total-cards').textContent    = s.total_cards;
+    const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val ?? 0; };
+    setEl('stat-total-users',  s.total_users);
+    setEl('stat-issued-cards', s.issued_cards);
+    setEl('stat-pending-cards',s.pending_cards);
+    setEl('stat-total-cards',  s.total_cards);
 
-    // Render charts with live data
     renderCharts(s);
   } catch (err) {
-    console.error("Stats load error", err);
-    adminLogout();
+    // Network/timeout error — show 0s, do NOT logout
+    console.warn('Stats load failed (network?):', err.message);
   }
 }
 
@@ -179,14 +181,22 @@ function renderTable(tbodyId, cards) {
 
 /* ---- LOAD USERS ---- */
 async function loadUsers() {
-  const res = await fetch(`${API_BASE}/admin/users`, {
-    headers: { 'Authorization': `Bearer ${getAdminToken()}` }
-  });
-  const data = await res.json();
-  if (!data.success) return;
-
-  allUsers = data.users;
-  filterAndRenderUsers();
+  const tbody = document.getElementById('users-table');
+  if (tbody) tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:#888;">⏳ লোড হচ্ছে...</td></tr>';
+  try {
+    const res = await fetch(`${API_BASE}/admin/users?limit=200`, {
+      headers: { 'Authorization': `Bearer ${getAdminToken()}` }
+    });
+    if (res.status === 401 || res.status === 403) { adminLogout(); return; }
+    if (!res.ok) throw new Error('Users API ' + res.status);
+    const data = await res.json();
+    if (!data.success) return;
+    allUsers = data.users;
+    filterAndRenderUsers();
+  } catch (err) {
+    console.error('loadUsers error:', err);
+    if (tbody) tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:#e74c3c;">⚠️ সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না।</td></tr>';
+  }
 }
 
 /* ---- FILTER & RENDER USERS ---- */
@@ -226,32 +236,74 @@ function filterAndRenderUsers() {
 
 /* ---- LOAD APPLICATIONS (cards) ---- */
 async function loadApplications() {
-  const res = await fetch(`${API_BASE}/admin/users?limit=100`, {
-    headers: { 'Authorization': `Bearer ${getAdminToken()}` }
-  });
-  const data = await res.json();
-  if (!data.success) return;
+  // Loading indicator
+  const ovTbody  = document.getElementById('overview-table');
+  const appTbody = document.getElementById('applications-table');
+  if (ovTbody)  ovTbody.innerHTML  = '<tr><td colspan="9" style="text-align:center;padding:20px;color:#888;">⏳ লোড হচ্ছে...</td></tr>';
+  if (appTbody) appTbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px;color:#888;">⏳ লোড হচ্ছে...</td></tr>';
 
-  // সব user এর cards load করো
-  allCards = [];
-  for (const user of data.users) {
-    const uRes = await fetch(`${API_BASE}/admin/users/${user.id}`, {
+  try {
+    const res = await fetch(`${API_BASE}/admin/users?limit=200`, {
       headers: { 'Authorization': `Bearer ${getAdminToken()}` }
     });
-    const uData = await uRes.json();
-    if (uData.success) {
-      (uData.user.cards || []).forEach(card => {
-        allCards.push({ ...card, user_name: uData.user.full_name, nid: uData.user.nid_number, phone: uData.user.phone, blood: uData.user.blood_group || uData.user.blood });
-      });
-    }
-  }
+    if (res.status === 401 || res.status === 403) { adminLogout(); return; }
+    if (!res.ok) throw new Error('Users API ' + res.status);
 
-  // Overview তে সর্বশেষ ৫টি দেখাও
-  renderTable('overview-table', allCards.slice(0, 5));
-  // Applications panel এ filter সহ রেন্ডার করো
-  filterAndRenderApplications();
-  // Re-render status chart now that allCards is fully loaded
-  loadStats();
+    const data = await res.json();
+    if (!data.success) {
+      if (ovTbody)  ovTbody.innerHTML  = '<tr><td colspan="9" style="text-align:center;padding:20px;color:#e74c3c;">❌ ডেটা লোড ব্যর্থ হয়েছে।</td></tr>';
+      if (appTbody) appTbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:20px;color:#e74c3c;">❌ ডেটা লোড ব্যর্থ হয়েছে।</td></tr>';
+      return;
+    }
+
+    // প্রতিটি user এর cards fetch করো
+    allCards = [];
+    const userFetches = data.users.map(user =>
+      fetch(`${API_BASE}/admin/users/${user.id}`, {
+        headers: { 'Authorization': `Bearer ${getAdminToken()}` }
+      })
+      .then(r => r.ok ? r.json() : null)
+      .then(uData => {
+        if (uData?.success) {
+          (uData.user.cards || []).forEach(card => {
+            allCards.push({
+              ...card,
+              user_name: uData.user.full_name,
+              nid:       uData.user.nid_number,
+              phone:     uData.user.phone,
+              blood:     uData.user.blood_group || uData.user.blood || '—'
+            });
+          });
+        }
+      })
+      .catch(() => {})
+    );
+
+    // সব parallel fetch শেষ হওয়ার জন্য অপেক্ষা করো
+    await Promise.all(userFetches);
+
+    // applied_at দিয়ে sort করো (সাম্প্রতিক আগে)
+    allCards.sort((a, b) => new Date(b.applied_at) - new Date(a.applied_at));
+
+    // empty state handle
+    if (allCards.length === 0) {
+      const emptyRow = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#888;">কোনো আবেদন নেই।</td></tr>';
+      if (ovTbody)  ovTbody.innerHTML  = emptyRow;
+      if (appTbody) appTbody.innerHTML = emptyRow;
+    } else {
+      renderTable('overview-table', allCards.slice(0, 5));
+      filterAndRenderApplications();
+    }
+
+    // allCards লোড হওয়ার পর chart re-render
+    loadStats();
+
+  } catch (err) {
+    console.error('loadApplications error:', err);
+    const errRow = '<tr><td colspan="9" style="text-align:center;padding:20px;color:#e74c3c;">⚠️ সার্ভারের সাথে যোগাযোগ করা যাচ্ছে না।</td></tr>';
+    if (ovTbody)  ovTbody.innerHTML  = errRow;
+    if (appTbody) appTbody.innerHTML = errRow;
+  }
 }
 
 /* ---- FILTER & RENDER APPLICATIONS ---- */
