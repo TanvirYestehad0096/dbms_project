@@ -173,7 +173,6 @@ function renderCharts(stats) {
   }
 }
 
-/* ---- RENDER TABLE (shared helper) ---- */
 function renderTable(tbodyId, cards) {
   const tbody = document.getElementById(tbodyId);
   if (!tbody) return;
@@ -184,12 +183,12 @@ function renderTable(tbodyId, cards) {
   tbody.innerHTML = cards.map((c, i) => `
     <tr>
       <td>${i + 1}</td>
-      <td><strong>${c.user_name || '—'}</strong></td>
-      <td>${c.nid || '—'}</td>
-      <td>${c.phone || '—'}</td>
-      <td><span style="font-weight:600;color:#c0392b;">${c.blood || '—'}</span></td>
+      <td><strong>${c.user_name || (c.user && c.user.full_name) || '—'}</strong></td>
+      <td>${c.nid || c.nid_number || (c.user && c.user.nid_number) || '—'}</td>
+      <td>${c.phone || (c.user && c.user.phone) || '—'}</td>
+      <td><span style="font-weight:600;color:#c0392b;">${c.blood || c.blood_group || (c.user && (c.user.blood_group || c.user.blood)) || '—'}</span></td>
       <td>${typeBadge(c.card_type || 'unknown')}</td>
-      <td>${c.applied_at ? new Date(c.applied_at).toLocaleDateString('en-BD') : '—'}</td>
+      <td>${c.applied_at || c.created_at ? new Date(c.applied_at || c.created_at).toLocaleDateString('en-BD') : '—'}</td>
       <td>${statusBadge(c.status)}</td>
       <td>${cardActionBtns(c.id, c.status)}</td>
     </tr>
@@ -221,6 +220,7 @@ function filterAndRenderUsers() {
   const query = (document.getElementById('user-search')?.value || '').toLowerCase().trim();
 
   const filtered = allUsers.filter(u => {
+    if ((u.status || '').toLowerCase() !== 'active' && (u.status || '').toLowerCase() !== 'accepted') return false;
     if (!query) return true;
     return (
       (u.full_name  || '').toLowerCase().includes(query) ||
@@ -273,11 +273,11 @@ async function loadApplications() {
   if (appTbody) appTbody.innerHTML = loadingRow(9);
 
   try {
-    const res = await fetch(`${API_BASE}/admin/users?limit=500`, {
+    const res = await fetch(`${API_BASE}/admin/cards`, {
       headers: { 'Authorization': `Bearer ${getAdminToken()}` }
     });
     if (res.status === 401 || res.status === 403) { adminLogout(); return; }
-    if (!res.ok) throw new Error('Users API ' + res.status);
+    if (!res.ok) throw new Error('Cards API ' + res.status);
 
     const data = await res.json();
     if (!data.success) {
@@ -286,36 +286,18 @@ async function loadApplications() {
       return;
     }
 
-    const users = data.users || [];
-    if (users.length === 0) {
-      const emptyRow = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#888;">কোনো user নেই।</td></tr>';
-      if (ovTbody)  ovTbody.innerHTML  = emptyRow;
-      if (appTbody) appTbody.innerHTML = emptyRow;
-      return;
-    }
+    allCards = data.cards || [];
 
-    // Backend Cards API is currently throwing 500 or missing,
-    // so we treat every registered user as a Card Application.
-    allCards = users.map(u => ({
-      id: u.id,
-      user_name: u.full_name || '—',
-      nid: u.nid_number || '—',
-      phone: u.phone || '—',
-      blood: u.blood_group || u.blood || '—',
-      card_type: 'Family', // Default type
-      applied_at: u.created_at,
-      status: u.status // maps to user status (pending, active, suspended)
-    }));
-
-    // Sort by applied_at descending
-    allCards.sort((a, b) => new Date(b.applied_at || 0) - new Date(a.applied_at || 0));
+    // Sort by created_at / applied_at descending
+    allCards.sort((a, b) => new Date(b.created_at || b.applied_at || 0) - new Date(a.created_at || a.applied_at || 0));
 
     if (allCards.length === 0) {
       const emptyRow = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#888;">কোনো আবেদন নেই।</td></tr>';
       if (ovTbody)  ovTbody.innerHTML  = emptyRow;
       if (appTbody) appTbody.innerHTML = emptyRow;
     } else {
-      renderTable('overview-table', allCards.slice(0, 5));
+      const pendingCards = allCards.filter(c => (c.status || '').toLowerCase() === 'pending');
+      renderTable('overview-table', pendingCards.slice(0, 5));
       filterAndRenderApplications();
     }
 
@@ -335,11 +317,13 @@ function filterAndRenderApplications() {
   const typeFilter = (document.getElementById('app-filter-type')?.value   || '').toLowerCase();
   const statFilter = (document.getElementById('app-filter-status')?.value || '').toLowerCase();
 
-  const filtered = allCards.filter(c => {
+  const pendingCards = allCards.filter(c => (c.status || '').toLowerCase() === 'pending');
+
+  const filtered = pendingCards.filter(c => {
     const matchQuery = !query || (
-      (c.user_name || '').toLowerCase().includes(query) ||
-      (c.nid       || '').toLowerCase().includes(query) ||
-      (c.phone     || '').toLowerCase().includes(query)
+      (c.user_name || (c.user && c.user.full_name) || '').toLowerCase().includes(query) ||
+      (c.nid || c.nid_number || (c.user && c.user.nid_number) || '').toLowerCase().includes(query) ||
+      (c.phone || (c.user && c.user.phone) || '').toLowerCase().includes(query)
     );
     const matchType   = !typeFilter || (c.card_type || '').toLowerCase() === typeFilter;
     const matchStatus = !statFilter || (c.status    || '').toLowerCase() === statFilter;
@@ -353,13 +337,13 @@ function filterAndRenderApplications() {
 }
 
 /* ---- CARD ACTION BUTTONS ---- */
-function cardActionBtns(userId, status) {
+function cardActionBtns(cardId, status) {
   let btns = '';
-  if (status !== 'active') {
-    btns += `<button class="btn-approve" onclick="updateUserStatus(${userId}, 'active')">✅ Accept</button> `;
+  if (status !== 'approved' && status !== 'issued' && status !== 'active') {
+    btns += `<button class="btn-approve" onclick="updateCardStatus(${cardId}, 'approved')">✅ Accept</button> `;
   }
-  if (status !== 'suspended') {
-    btns += `<button class="btn-reject" onclick="updateUserStatus(${userId}, 'suspended')">❌ Reject</button>`;
+  if (status !== 'rejected' && status !== 'suspended') {
+    btns += `<button class="btn-reject" onclick="updateCardStatus(${cardId}, 'rejected')">❌ Reject</button>`;
   }
   return btns || `<span style="font-size:0.8rem; color:var(--text-muted);">—</span>`;
 }
