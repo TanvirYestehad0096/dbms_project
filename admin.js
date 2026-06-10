@@ -248,8 +248,8 @@ function filterAndRenderUsers() {
       <td>${u.created_at ? new Date(u.created_at).toLocaleDateString('en-BD') : '—'}</td>
       <td>${userStatusBadge(u.status)}</td>
       <td style="white-space:nowrap;">
-        ${u.status !== 'active'    ? `<button class="btn-approve" onclick="updateUserStatus(${u.id}, 'active')" title="Accept">✅ Accept</button>` : ''}
-        ${u.status !== 'suspended' ? `<button class="btn-reject"  onclick="updateUserStatus(${u.id}, 'suspended')" title="Reject">❌ Reject</button>` : ''}
+        ${u.status !== 'active'    ? `<button class="btn-approve" onclick="updateUserStatus(${u.id || u._id}, 'active')" title="Accept">✅ Accept</button>` : ''}
+        ${u.status !== 'suspended' ? `<button class="btn-reject"  onclick="updateUserStatus(${u.id || u._id}, 'suspended')" title="Reject">❌ Reject</button>` : ''}
       </td>
     </tr>
   `).join('');
@@ -290,7 +290,7 @@ async function loadApplications() {
     // Backend Cards API is currently missing,
     // so we treat every registered user as a Card Application.
     allCards = users.map(u => ({
-      id: u.id, // This is userId
+      id: u.id || u._id, // Handle both SQL and MongoDB
       user_name: u.full_name || '—',
       nid: u.nid_number || '—',
       phone: u.phone || '—',
@@ -383,6 +383,10 @@ async function updateCardStatus(cardId, status) {
 
 /* ---- UPDATE USER STATUS ---- */
 async function updateUserStatus(userId, status) {
+  if (!userId) {
+    alert('❌ User ID is undefined. Database format error.');
+    return;
+  }
   try {
     const res = await fetch(`${API_BASE}/admin/users/${userId}/status`, {
       method: 'PATCH',
@@ -440,7 +444,7 @@ function showAdminPanel(id, linkEl) {
 /* ---- LOGOUT ---- */
 function adminLogout() {
   localStorage.removeItem('adminToken');
-  window.location.href = 'index.html';
+  window.location.replace('index.html');
 }
 
 /* ---- ON LOAD ---- */

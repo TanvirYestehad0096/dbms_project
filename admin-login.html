@@ -205,7 +205,7 @@
     (function () {
       const token = localStorage.getItem('adminToken');
       if (token && token !== 'undefined' && token !== 'null') {
-        window.location.href = 'admin.html';
+        window.location.replace('admin.html');
       }
     })();
 
