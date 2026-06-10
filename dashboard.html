@@ -1289,7 +1289,7 @@
 
     /* ---- CARD HTML ---- */
     function cardHTML(card, user, showDownload) {
-      const isAvailable = card.status === 'approved' || card.status === 'issued';
+      const isAvailable = card.status === 'approved' || card.status === 'issued' || user.status === 'active';
       return `
       <div class="card-item">
         <div class="card-item-top">
@@ -1352,7 +1352,8 @@
         ? `<div class="cards-grid">${userCards.map(c => cardHTML(c, currentUser, false)).join('')}</div>`
         : `<div class="empty-state"><div class="empty-icon">🪪</div><p>কোনো card নেই।</p></div>`;
 
-      const downloadableCards = userCards.filter(c => c.status === 'approved' || c.status === 'issued');
+      // Allow download if card is approved/issued OR if the user account is active
+      const downloadableCards = userCards.filter(c => c.status === 'approved' || c.status === 'issued' || currentUser.status === 'active');
       const downloadGridHTML = downloadableCards.length > 0
         ? `<div class="cards-grid">${downloadableCards.map(c => cardHTML(c, currentUser, true)).join('')}</div>`
         : `<div class="empty-state"><div class="empty-icon">⬇️</div><p>কোনো অনুমোদিত (Approved/Issued) কার্ড নেই।</p></div>`;
@@ -1566,7 +1567,7 @@
             ? `<div class="cards-grid">${userCards.map(c => cardHTML(c, currentUser, false)).join('')}</div>`
             : `<div class="empty-state"><div class="empty-icon">🪪</div><p>কোনো card নেই।</p></div>`;
 
-          const downloadableCards = userCards.filter(c => c.status === 'approved' || c.status === 'issued');
+          const downloadableCards = userCards.filter(c => c.status === 'approved' || c.status === 'issued' || currentUser.status === 'active');
           const downloadGridHTML = downloadableCards.length > 0
             ? `<div class="cards-grid">${downloadableCards.map(c => cardHTML(c, currentUser, true)).join('')}</div>`
             : `<div class="empty-state"><div class="empty-icon">⬇️</div><p>কোনো অনুমোদিত কার্ড নেই।</p></div>`;

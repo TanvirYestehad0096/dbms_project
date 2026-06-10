@@ -273,11 +273,11 @@ async function loadApplications() {
   if (appTbody) appTbody.innerHTML = loadingRow(9);
 
   try {
-    const res = await fetch(`${API_BASE}/admin/cards`, {
+    const res = await fetch(`${API_BASE}/admin/users?limit=500`, {
       headers: { 'Authorization': `Bearer ${getAdminToken()}` }
     });
     if (res.status === 401 || res.status === 403) { adminLogout(); return; }
-    if (!res.ok) throw new Error('Cards API ' + res.status);
+    if (!res.ok) throw new Error('Users API ' + res.status);
 
     const data = await res.json();
     if (!data.success) {
@@ -286,7 +286,26 @@ async function loadApplications() {
       return;
     }
 
-    allCards = data.cards || [];
+    const users = data.users || [];
+    if (users.length === 0) {
+      const emptyRow = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#888;">কোনো user নেই।</td></tr>';
+      if (ovTbody)  ovTbody.innerHTML  = emptyRow;
+      if (appTbody) appTbody.innerHTML = emptyRow;
+      return;
+    }
+
+    // Backend Cards API is currently missing,
+    // so we treat every registered user as a Card Application.
+    allCards = users.map(u => ({
+      id: u.id, // This is userId
+      user_name: u.full_name || '—',
+      nid: u.nid_number || '—',
+      phone: u.phone || '—',
+      blood: u.blood_group || u.blood || '—',
+      card_type: 'Family', // Default type
+      applied_at: u.created_at,
+      status: u.status // maps to user status (pending, active, suspended)
+    }));
 
     // Sort by created_at / applied_at descending
     allCards.sort((a, b) => new Date(b.created_at || b.applied_at || 0) - new Date(a.created_at || a.applied_at || 0));
@@ -339,11 +358,12 @@ function filterAndRenderApplications() {
 /* ---- CARD ACTION BUTTONS ---- */
 function cardActionBtns(cardId, status) {
   let btns = '';
+  // cardId is actually userId because of the mock mapping above
   if (status !== 'approved' && status !== 'issued' && status !== 'active') {
-    btns += `<button class="btn-approve" onclick="updateCardStatus(${cardId}, 'approved')">✅ Accept</button> `;
+    btns += `<button class="btn-approve" onclick="updateUserStatus(${cardId}, 'active')">✅ Accept</button> `;
   }
   if (status !== 'rejected' && status !== 'suspended') {
-    btns += `<button class="btn-reject" onclick="updateCardStatus(${cardId}, 'rejected')">❌ Reject</button>`;
+    btns += `<button class="btn-reject" onclick="updateUserStatus(${cardId}, 'suspended')">❌ Reject</button>`;
   }
   return btns || `<span style="font-size:0.8rem; color:var(--text-muted);">—</span>`;
 }
