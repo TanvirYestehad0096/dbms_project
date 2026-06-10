@@ -250,13 +250,6 @@ function filterAndRenderUsers() {
       <td style="white-space:nowrap;">
         ${u.status !== 'active'    ? `<button class="btn-approve" onclick="updateUserStatus(${u.id}, 'active')" title="Accept">✅ Accept</button>` : ''}
         ${u.status !== 'suspended' ? `<button class="btn-reject"  onclick="updateUserStatus(${u.id}, 'suspended')" title="Reject">❌ Reject</button>` : ''}
-        <button class="btn-delete" onclick="deleteUser(${u.id}, '${(u.full_name||'').replace(/'/g,'')}')"
-          title="Delete User"
-          style="background:#fdf0ee;color:#c0392b;border:1px solid #f5c6c0;border-radius:6px;padding:5px 10px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:inherit;margin-left:4px;transition:background 0.2s;"
-          onmouseover="this.style.background='#c0392b';this.style.color='#fff'"
-          onmouseout="this.style.background='#fdf0ee';this.style.color='#c0392b'">
-          🗑️ Delete
-        </button>
       </td>
     </tr>
   `).join('');
