@@ -73,11 +73,8 @@ async function handleNext() {
     showError('dob');
     valid = false;
   } else {
-    const dobParts = dob.split('/');
-    const day = dobParts[0].padStart(2, '0');
-    const month = dobParts[1].padStart(2, '0');
-    const year = dobParts[2];
-    const dobFormatted = `${year}-${month}-${day}`;
+    const dobPartsCheck = dob.split('/');
+    const birthDate = new Date(dobPartsCheck[2], dobPartsCheck[1] - 1, dobPartsCheck[0]);
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const m = today.getMonth() - birthDate.getMonth();
@@ -88,7 +85,7 @@ async function handleNext() {
       const errEl = document.getElementById('dob-err');
       const input = document.getElementById('dob');
       if (errEl) {
-        errEl.textContent = '⚠️ আপনার বয়স কমপক্ষে ১৮ বছর হতে হবে।';
+        errEl.textContent = '⚠️ আপনার বয়স কমপক্ষে ১৮ বছর হতে হবে।';
         errEl.classList.add('show');
       }
       if (input) {
@@ -98,6 +95,7 @@ async function handleNext() {
       valid = false;
     }
   }
+
   if (!phone || !/^01[0-9]{9}$/.test(phone)) { showError('phone'); valid = false; }
   if (!bloodGroup) { showError('bloodGroup'); valid = false; }
   if (!cardType) { document.getElementById('cardType-err').classList.add('show'); valid = false; }
@@ -116,14 +114,15 @@ async function handleNext() {
 
   if (!valid) return;
 
-  // Date format convert করো DD/MM/YYYY → YYYY-MM-DD
+  // Date format convert DD/MM/YYYY → YYYY-MM-DD
   const dobParts = dob.split('/');
-  const dobFormatted = `${dobParts[2]}-${dobParts[1]}-${dobParts[0]}`;
+  const day = dobParts[0].padStart(2, '0');
+  const month = dobParts[1].padStart(2, '0');
+  const year = dobParts[2];
+  const dobFormatted = `${year}-${month}-${day}`;
 
   const cardsArray = [...selectedCards];
-  const firstCard = cardsArray[0];
 
-  // Step 1: Register with  card type
   const res = await registerUser({
     nid_number: nid,
     full_name: fullname,
@@ -146,24 +145,21 @@ async function handleNext() {
     window.location.href = 'index.html';
   }, 3000);
 }
+
 /* ---- Card Picker (Multiple) ---- */
 const selectedCards = new Set();
 
 function selectCard(value, el) {
   if (selectedCards.has(value)) {
-    // আবার click করলে deselect
     selectedCards.delete(value);
     el.classList.remove('selected');
   } else {
-    // select করো
     selectedCards.add(value);
     el.classList.add('selected');
   }
 
-  // hidden input এ comma দিয়ে সব value রাখো
   document.getElementById('cardType').value = [...selectedCards].join(',');
 
-  // error সরাও
   if (selectedCards.size > 0) {
     document.getElementById('cardType-err').classList.remove('show');
   }
