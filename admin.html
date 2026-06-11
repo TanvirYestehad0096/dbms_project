@@ -3,14 +3,14 @@
 
 <head>
   <script>
-  (function () {
-    var token = localStorage.getItem('adminToken');
-    if (!token || token === 'undefined' || token === 'null') {
-      localStorage.removeItem('adminToken');
-      window.location.replace('admin-login.html');
-    }
-  })();
-</script>
+    (function () {
+      var token = localStorage.getItem('adminToken');
+      if (!token || token === 'undefined' || token === 'null') {
+        localStorage.removeItem('adminToken');
+        window.location.replace('admin-login.html');
+      }
+    })();
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard — Bangladesh Citizen Card</title>
@@ -526,7 +526,9 @@
     }
 
     @media (max-width: 640px) {
-      .chart-row { grid-template-columns: 1fr; }
+      .chart-row {
+        grid-template-columns: 1fr;
+      }
     }
 
     /* ---- RESPONSIVE ---- */
@@ -706,7 +708,8 @@
         <div class="filter-bar">
           <div class="filter-search-wrap">
             <span class="filter-search-icon">🔍</span>
-            <input type="text" id="app-search" class="filter-input" placeholder="নাম, NID বা ফোন দিয়ে খুঁজুন..." oninput="filterAndRenderApplications()" />
+            <input type="text" id="app-search" class="filter-input" placeholder="নাম, NID বা ফোন দিয়ে খুঁজুন..."
+              oninput="filterAndRenderApplications()" />
           </div>
           <select id="app-filter-type" class="filter-select" onchange="filterAndRenderApplications()">
             <option value="">সব Card Type</option>
@@ -759,7 +762,8 @@
         <div class="filter-bar">
           <div class="filter-search-wrap">
             <span class="filter-search-icon">🔍</span>
-            <input type="text" id="user-search" class="filter-input" placeholder="নাম, NID বা ফোন দিয়ে খুঁজুন..." oninput="filterAndRenderUsers()" />
+            <input type="text" id="user-search" class="filter-input" placeholder="নাম, NID বা ফোন দিয়ে খুঁজুন..."
+              oninput="filterAndRenderUsers()" />
           </div>
           <span class="filter-count" id="user-filter-count"></span>
         </div>

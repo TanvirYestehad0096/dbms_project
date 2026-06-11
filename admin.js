@@ -441,6 +441,7 @@ function showAdminPanel(id, linkEl) {
   if (linkEl) linkEl.classList.add('active');
 }
 
+
 /* ---- LOGOUT ---- */
 function adminLogout() {
   localStorage.removeItem('adminToken');
@@ -452,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('adminToken');
   if (!token || token === 'undefined' || token === 'null') {
     localStorage.removeItem('adminToken');
-    window.location.href = 'admin-login.html';
+    window.location.replace('admin-login.html');
     return;
   }
 

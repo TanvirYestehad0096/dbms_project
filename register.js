@@ -120,7 +120,7 @@ async function handleNext() {
   const cardsArray = [...selectedCards];
   const firstCard  = cardsArray[0];
 
-  // Step 1: Register with first card type
+  // Step 1: Register with  card type
   const res = await registerUser({
     nid_number:    nid,
     full_name:     fullname,
@@ -128,38 +128,12 @@ async function handleNext() {
     phone:         phone,
     password:      password,
     blood_group:   bloodGroup,
-    blood:         bloodGroup,
-    card_type:     firstCard
+    card_types:    cardsArray  
   });
 
   if (!res.success) {
     alert('❌ ' + (res.message || 'Registration failed'));
     return;
-  }
-
-  // Step 2: If there are additional cards, login then apply them
-  if (cardsArray.length > 1) {
-    try {
-      const loginRes = await loginUser(nid, password);
-      if (loginRes.success && loginRes.token) {
-        // Temporarily store token for apply-card calls
-        const tempToken = loginRes.token;
-        const remainingCards = cardsArray.slice(1);
-        for (const cardType of remainingCards) {
-          await fetch(`${API_BASE}/user/apply-card`, {
-            method: 'POST',
-            headers: {
-              'Content-Type':  'application/json',
-              'Authorization': `Bearer ${tempToken}`
-            },
-            body: JSON.stringify({ card_type: cardType })
-          });
-        }
-      }
-    } catch (err) {
-      console.warn('Extra card apply failed:', err);
-      // Non-fatal — registration was still successful
-    }
   }
 
   document.getElementById('registerForm').style.display = 'none';
