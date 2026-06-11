@@ -68,13 +68,16 @@ async function handleNext() {
 
   if (!nid || nid.length !== 10) { showError('nid'); valid = false; }
   if (!fullname) { showError('fullname'); valid = false; }
-  
+
   if (!dob || dob.length < 10) {
     showError('dob');
     valid = false;
   } else {
     const dobParts = dob.split('/');
-    const birthDate = new Date(dobParts[2], dobParts[1] - 1, dobParts[0]);
+    const day = dobParts[0].padStart(2, '0');
+    const month = dobParts[1].padStart(2, '0');
+    const year = dobParts[2];
+    const dobFormatted = `${year}-${month}-${day}`;
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const m = today.getMonth() - birthDate.getMonth();
@@ -118,17 +121,17 @@ async function handleNext() {
   const dobFormatted = `${dobParts[2]}-${dobParts[1]}-${dobParts[0]}`;
 
   const cardsArray = [...selectedCards];
-  const firstCard  = cardsArray[0];
+  const firstCard = cardsArray[0];
 
   // Step 1: Register with  card type
   const res = await registerUser({
-    nid_number:    nid,
-    full_name:     fullname,
+    nid_number: nid,
+    full_name: fullname,
     date_of_birth: dobFormatted,
-    phone:         phone,
-    password:      password,
-    blood_group:   bloodGroup,
-    card_types:    cardsArray  
+    phone: phone,
+    password: password,
+    blood_group: bloodGroup,
+    card_types: cardsArray
   });
 
   if (!res.success) {
@@ -137,7 +140,7 @@ async function handleNext() {
   }
 
   document.getElementById('registerForm').style.display = 'none';
-  document.getElementById('successBox').style.display   = 'block';
+  document.getElementById('successBox').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
   setTimeout(() => {
     window.location.href = 'index.html';
