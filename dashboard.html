@@ -526,8 +526,9 @@
       overflow: hidden;
       box-sizing: border-box;
       border: 2px solid #c9a84c;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
     }
+
     #card-pdf-template::before {
       content: '';
       position: absolute;
@@ -537,6 +538,7 @@
         radial-gradient(circle at 12% 85%, rgba(255, 255, 255, 0.07) 0%, transparent 40%);
       pointer-events: none;
     }
+
     .card-pdf-header {
       display: flex;
       align-items: center;
@@ -545,11 +547,13 @@
       padding-bottom: 10px;
       margin-bottom: 14px;
     }
+
     .card-pdf-logo {
       width: 52px;
       height: 52px;
       flex-shrink: 0;
     }
+
     .card-pdf-title-box h5 {
       font-size: 1rem;
       font-weight: 700;
@@ -559,6 +563,7 @@
       line-height: 1.1;
       text-transform: uppercase;
     }
+
     .card-pdf-title-box p {
       font-size: 0.72rem;
       color: rgba(255, 255, 255, 0.82);
@@ -567,11 +572,13 @@
       line-height: 1.2;
       letter-spacing: 0.02em;
     }
+
     .card-pdf-body {
       display: flex;
       gap: 20px;
       align-items: flex-start;
     }
+
     .card-pdf-left-column {
       display: flex;
       flex-direction: column;
@@ -579,6 +586,7 @@
       gap: 8px;
       flex-shrink: 0;
     }
+
     .card-pdf-photo-area {
       width: 96px;
       height: 116px;
@@ -589,8 +597,9 @@
       align-items: center;
       justify-content: center;
       font-size: 3rem;
-      color: rgba(255,255,255,0.65);
+      color: rgba(255, 255, 255, 0.65);
     }
+
     .card-pdf-blood-badge {
       font-size: 0.7rem;
       font-weight: 700;
@@ -603,19 +612,22 @@
       box-sizing: border-box;
       line-height: 1.4;
       letter-spacing: 0.05em;
-      border: 1px solid rgba(255,255,255,0.25);
+      border: 1px solid rgba(255, 255, 255, 0.25);
     }
+
     .card-pdf-info {
       flex: 1;
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
+
     .card-pdf-field {
       display: flex;
       flex-direction: column;
       gap: 1px;
     }
+
     .card-pdf-field label {
       font-size: 0.62rem;
       text-transform: uppercase;
@@ -624,12 +636,14 @@
       letter-spacing: 0.07em;
       line-height: 1;
     }
+
     .card-pdf-field span {
       font-size: 0.95rem;
       font-weight: 600;
       color: #fff;
       line-height: 1.2;
     }
+
     .card-pdf-right-column {
       display: flex;
       flex-direction: column;
@@ -639,6 +653,7 @@
       height: 166px;
       flex-shrink: 0;
     }
+
     .card-pdf-badge {
       font-size: 0.68rem;
       font-weight: 700;
@@ -654,6 +669,7 @@
       box-sizing: border-box;
       line-height: 1.3;
     }
+
     .card-pdf-qr-box {
       width: 88px;
       height: 88px;
@@ -664,34 +680,39 @@
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
-      border: 1.5px solid rgba(201,168,76,0.4);
+      border: 1.5px solid rgba(201, 168, 76, 0.4);
     }
+
     .card-pdf-qr-box img {
       width: 100%;
       height: 100%;
     }
+
     .card-pdf-signature-area {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 2px;
     }
+
     .card-pdf-signature {
       font-family: 'Playfair Display', serif;
       font-style: italic;
       font-size: 0.75rem;
       color: #e2c47a;
-      border-bottom: 1px solid rgba(255,255,255,0.3);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
       line-height: 1.2;
       padding-bottom: 2px;
       white-space: nowrap;
     }
+
     .card-pdf-signature-title {
       font-size: 0.55rem;
-      color: rgba(255,255,255,0.45);
+      color: rgba(255, 255, 255, 0.45);
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
+
     .card-pdf-footer {
       position: absolute;
       bottom: 13px;
@@ -701,8 +722,8 @@
       justify-content: space-between;
       align-items: center;
       font-size: 0.65rem;
-      color: rgba(255,255,255,0.45);
-      border-top: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255, 255, 255, 0.45);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
       padding-top: 7px;
     }
 
@@ -711,96 +732,130 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.65);
+      background: rgba(0, 0, 0, 0.65);
       backdrop-filter: blur(6px);
       z-index: 9999;
       align-items: center;
       justify-content: center;
     }
+
     .modal-overlay.open {
       display: flex;
     }
+
     .modal-box {
       background: #0f2820;
-      border: 1px solid rgba(0,180,100,0.25);
+      border: 1px solid rgba(0, 180, 100, 0.25);
       border-radius: 18px;
       padding: 36px 32px 28px;
       width: 100%;
       max-width: 520px;
       position: relative;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.55);
-      animation: modalIn 0.28s cubic-bezier(.22,.68,0,1.2) both;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+      animation: modalIn 0.28s cubic-bezier(.22, .68, 0, 1.2) both;
     }
+
     @keyframes modalIn {
-      from { opacity:0; transform: translateY(28px) scale(0.96); }
-      to   { opacity:1; transform: translateY(0) scale(1); }
+      from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.96);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
+
     .modal-close {
       position: absolute;
       top: 14px;
       right: 18px;
       background: none;
       border: none;
-      color: rgba(255,255,255,0.45);
+      color: rgba(255, 255, 255, 0.45);
       font-size: 1.5rem;
       cursor: pointer;
       line-height: 1;
       transition: color .2s;
     }
-    .modal-close:hover { color: #fff; }
+
+    .modal-close:hover {
+      color: #fff;
+    }
+
     .modal-box h3 {
       margin: 0 0 6px;
       font-size: 1.25rem;
       color: #fff;
       font-weight: 700;
     }
+
     .modal-box p.modal-sub {
       margin: 0 0 22px;
       font-size: 0.88rem;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255, 255, 255, 0.5);
     }
+
     .card-type-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
       margin-bottom: 24px;
     }
+
     .card-type-option {
-      border: 2px solid rgba(255,255,255,0.12);
+      border: 2px solid rgba(255, 255, 255, 0.12);
       border-radius: 12px;
       padding: 14px 12px;
       cursor: pointer;
       text-align: center;
       transition: all .2s;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255, 255, 255, 0.04);
       position: relative;
       user-select: none;
     }
+
     .card-type-option:hover {
       border-color: #27ae60;
-      background: rgba(39,174,96,0.10);
+      background: rgba(39, 174, 96, 0.10);
     }
+
     .card-type-option.selected {
       border-color: #27ae60;
-      background: rgba(39,174,96,0.18);
-      box-shadow: 0 0 0 3px rgba(39,174,96,0.2);
+      background: rgba(39, 174, 96, 0.18);
+      box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2);
     }
+
     .card-type-option.disabled {
       opacity: 0.38;
       cursor: not-allowed;
       pointer-events: none;
     }
-    .card-type-option .ct-icon { font-size: 1.8rem; display: block; margin-bottom: 6px; }
-    .card-type-option .ct-name { font-size: 0.82rem; font-weight: 600; color: #fff; }
+
+    .card-type-option .ct-icon {
+      font-size: 1.8rem;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .card-type-option .ct-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
     .card-type-option .ct-tag {
       position: absolute;
-      top: 6px; right: 8px;
+      top: 6px;
+      right: 8px;
       font-size: 0.62rem;
-      background: rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.5);
+      background: rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.5);
       border-radius: 4px;
       padding: 1px 5px;
     }
+
     .modal-apply-btn {
       width: 100%;
       padding: 13px;
@@ -813,8 +868,18 @@
       cursor: pointer;
       transition: opacity .2s, transform .15s;
     }
-    .modal-apply-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-    .modal-apply-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    .modal-apply-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .modal-apply-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
     .modal-msg {
       margin-top: 14px;
       padding: 10px 14px;
@@ -822,8 +887,18 @@
       font-size: 0.88rem;
       display: none;
     }
-    .modal-msg.success { background: rgba(39,174,96,0.18); color: #5dde90; display: block; }
-    .modal-msg.error   { background: rgba(231,76,60,0.18);  color: #f08080; display: block; }
+
+    .modal-msg.success {
+      background: rgba(39, 174, 96, 0.18);
+      color: #5dde90;
+      display: block;
+    }
+
+    .modal-msg.error {
+      background: rgba(231, 76, 60, 0.18);
+      color: #f08080;
+      display: block;
+    }
 
     /* ── Edit Profile Modal ─────────────────────── */
     .edit-profile-btn {
@@ -841,33 +916,42 @@
       cursor: pointer;
       transition: opacity .2s, transform .15s;
     }
-    .edit-profile-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .edit-profile-btn:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
     .ep-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0 16px;
     }
+
     .ep-grid .ep-form-group.full-width {
       grid-column: 1 / -1;
     }
+
     .ep-form-group {
       display: flex;
       flex-direction: column;
       gap: 6px;
       margin-bottom: 16px;
     }
+
     .ep-form-group label {
       font-size: 0.78rem;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255, 255, 255, 0.5);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
+
     .ep-form-group input,
     .ep-form-group select,
     .ep-form-group textarea {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 8px;
       padding: 10px 14px;
       color: #fff;
@@ -877,15 +961,23 @@
       transition: border-color .2s, background .2s;
       resize: none;
     }
+
     .ep-form-group input:focus,
     .ep-form-group select:focus,
     .ep-form-group textarea:focus {
       border-color: #27ae60;
-      background: rgba(39,174,96,0.08);
+      background: rgba(39, 174, 96, 0.08);
     }
+
     .ep-form-group input::placeholder,
-    .ep-form-group textarea::placeholder { color: rgba(255,255,255,0.25); }
-    .ep-form-group select option { background: #0f2820; }
+    .ep-form-group textarea::placeholder {
+      color: rgba(255, 255, 255, 0.25);
+    }
+
+    .ep-form-group select option {
+      background: #0f2820;
+    }
+
     .ep-section-title {
       font-size: 0.72rem;
       color: #27ae60;
@@ -894,14 +986,87 @@
       letter-spacing: 0.08em;
       margin: 4px 0 12px;
       padding-bottom: 6px;
-      border-bottom: 1px solid rgba(39,174,96,0.2);
+      border-bottom: 1px solid rgba(39, 174, 96, 0.2);
       grid-column: 1 / -1;
     }
+
     .ep-readonly-note {
       font-size: 0.75rem;
-      color: rgba(255,255,255,0.3);
+      color: rgba(255, 255, 255, 0.3);
       font-style: italic;
       margin-top: 2px;
+    }
+
+    /* ---- NOTIFICATIONS ---- */
+    .notif-item {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .notif-item:hover {
+      background: #f0f4f2;
+      transform: translateY(-1px);
+    }
+
+    .notif-item.unread {
+      border-left: 4px solid var(--green-mid);
+      background: #f7fdf9;
+    }
+
+    .notif-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .notif-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .notif-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .notif-item.unread .notif-title {
+      color: var(--green-dark);
+    }
+
+    .notif-msg {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .notif-time {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    #notif-badge {
+      background: #e74c3c;
+      color: #fff;
+      border-radius: 10px;
+      padding: 1px 7px;
+      font-size: 0.72rem;
+      margin-left: 4px;
+      display: none;
+      font-weight: 700;
+      vertical-align: middle;
     }
   </style>
 </head>
@@ -949,6 +1114,11 @@
         <a onclick="showPanel('profile', this)">
           <span class="nav-icon">👤</span>
           <span class="nav-label">Profile</span>
+        </a>
+        <a onclick="showPanel('notifications', this)">
+          <span class="nav-icon">🔔</span>
+          <span class="nav-label">Notifications <span id="notif-badge"
+              style="background:#e74c3c;color:#fff;border-radius:10px;padding:1px 7px;font-size:0.72rem;margin-left:4px;display:none;">0</span></span>
         </a>
         <a onclick="showPanel('settings', this)">
           <span class="nav-icon">⚙️</span>
@@ -1063,7 +1233,20 @@
         </div>
         <button class="edit-profile-btn" onclick="openEditProfileModal()">✏️ Edit Profile</button>
       </div>
-
+      <!-- NOTIFICATIONS -->
+      <div class="dash-panel" id="panel-notifications">
+        <div class="dash-greeting">
+          <h2>Notifications 🔔</h2>
+          <p>আপনার সব notification এখানে।</p>
+        </div>
+        <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+          <button onclick="markAllRead()"
+            style="background:var(--green-dark);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:0.85rem;font-weight:600;cursor:pointer;">
+            ✅ সব পড়া হয়েছে
+          </button>
+        </div>
+        <div id="notif-list"></div>
+      </div>
       <!-- SETTINGS -->
       <div class="dash-panel" id="panel-settings">
         <div class="dash-greeting">
@@ -1104,7 +1287,8 @@
     <div class="modal-box">
       <button class="modal-close" onclick="closeApplyModal()">✕</button>
       <h3>🪪 নতুন কার্ডের জন্য আবেদন</h3>
-      <p class="modal-sub">যে কার্ডটি চান সেটি বেছে নিন এবং আবেদন করুন। Admin অনুমোদন করলে আপনি download করতে পারবেন।</p>
+      <p class="modal-sub">যে কার্ডটি চান সেটি বেছে নিন এবং আবেদন করুন। Admin অনুমোদন করলে আপনি download করতে পারবেন।
+      </p>
 
       <div class="card-type-grid" id="cardTypeGrid"></div>
 
@@ -1367,12 +1551,15 @@
       document.getElementById('profileNid').textContent = nid;
       document.getElementById('profileDob').textContent = dob;
       document.getElementById('profilePhone').textContent = phone;
-      document.getElementById('profileEmail').textContent   = currentUser.email || '—';
-      document.getElementById('profileBlood').textContent   = currentUser.blood_group || currentUser.blood || '—';
+      document.getElementById('profileEmail').textContent = currentUser.email || '—';
+      document.getElementById('profileBlood').textContent = currentUser.blood_group || currentUser.blood || '—';
       document.getElementById('profileAddress').textContent = currentUser.address || '—';
-      document.getElementById('profileCard').textContent    = userCards.map(c => c.card_type).join(', ') || '—';
-    });
+      document.getElementById('profileCard').textContent = userCards.map(c => c.card_type).join(', ') || '—';
 
+      // ✅ Step 5: Notifications load
+      loadNotifications();
+      setInterval(loadNotifications, 30000);
+    });
     /* ---- CHANGE PASSWORD ---- */
     async function changePassword() {
       const current = document.getElementById('currentPass').value.trim();
@@ -1437,27 +1624,27 @@
     async function downloadCardPDF(cardId) {
       const card = userCards.find(c => c.id === cardId);
       if (!card) return;
-      
+
       const cardTypeUpper = card.card_type.toUpperCase();
       const cardNo = card.card_number || 'PENDING';
-      
+
       const template = document.getElementById('card-pdf-template');
-      
+
       // Populate Details
       document.getElementById('pdf-card-type').textContent = cardTypeUpper;
       document.getElementById('pdf-card-number').textContent = cardNo;
       document.getElementById('pdf-card-name').textContent = currentUser.full_name;
       document.getElementById('pdf-card-nid').textContent = currentUser.nid_number;
       document.getElementById('pdf-card-phone').textContent = currentUser.phone || '—';
-      
+
       const dobFormatted = currentUser.date_of_birth ? currentUser.date_of_birth.split('T')[0] : '—';
       document.getElementById('pdf-card-dob').textContent = dobFormatted;
-      
+
       // Dynamic Issue Date formatting (applied_at to DD/MM/YYYY)
       const issueDateRaw = card.applied_at ? new Date(card.applied_at) : new Date();
       const issueDateFormatted = `${String(issueDateRaw.getDate()).padStart(2, '0')}/${String(issueDateRaw.getMonth() + 1).padStart(2, '0')}/${issueDateRaw.getFullYear()}`;
       document.getElementById('pdf-card-issue-date').textContent = issueDateFormatted;
-      
+
       // Check if user has a real blood group from profile, otherwise fallback to NID-based hashing
       let bloodGroup = currentUser.blood_group || currentUser.blood;
       if (!bloodGroup) {
@@ -1466,31 +1653,31 @@
         bloodGroup = bloodGroups[lastDigit % bloodGroups.length];
       }
       document.getElementById('pdf-card-blood').textContent = bloodGroup;
-      
+
       // Dynamic QR Code link — embed all card details for public verification
       const qrData = `https://tanviryestehad0096.github.io/dbms_project/verify.html?card_no=${encodeURIComponent(cardNo)}&name=${encodeURIComponent(currentUser.full_name)}&nid=${encodeURIComponent(currentUser.nid_number)}&blood=${encodeURIComponent(bloodGroup)}&dob=${encodeURIComponent(dobFormatted)}&phone=${encodeURIComponent(currentUser.phone || '')}&type=${encodeURIComponent(card.card_type)}`;
       document.getElementById('pdf-card-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
-      
+
       // Wait for QR image to load, then generate PDF
       setTimeout(() => {
         const opt = {
-          margin:       0,
-          filename:     `Citizen_Card_${cardNo}.pdf`,
-          image:        { type: 'jpeg', quality: 0.99 },
-          html2canvas:  { scale: 2, useCORS: true, logging: false, allowTaint: true },
-          jsPDF:        { unit: 'in', format: [6.67, 4.21], orientation: 'landscape' }
+          margin: 0,
+          filename: `Citizen_Card_${cardNo}.pdf`,
+          image: { type: 'jpeg', quality: 0.99 },
+          html2canvas: { scale: 2, useCORS: true, logging: false, allowTaint: true },
+          jsPDF: { unit: 'in', format: [6.67, 4.21], orientation: 'landscape' }
         };
-        
+
         html2pdf().set(opt).from(template).save();
       }, 800);
     }
 
     /* ── APPLY NEW CARD MODAL LOGIC ─────────────────── */
     const ALL_CARD_TYPES = [
-      { value: 'family',      label: 'Family',      icon: '👨‍👩‍👧‍👦' },
-      { value: 'business',    label: 'Business',    icon: '💼' },
-      { value: 'student',     label: 'Student',     icon: '🎓' },
-      { value: 'vehicle',     label: 'Vehicle',     icon: '🚗' },
+      { value: 'family', label: 'Family', icon: '👨‍👩‍👧‍👦' },
+      { value: 'business', label: 'Business', icon: '💼' },
+      { value: 'student', label: 'Student', icon: '🎓' },
+      { value: 'vehicle', label: 'Vehicle', icon: '🚗' },
       { value: 'agriculture', label: 'Agriculture', icon: '🌾' },
     ];
     let selectedApplyType = null;
@@ -1498,8 +1685,8 @@
     function openApplyModal() {
       selectedApplyType = null;
       const grid = document.getElementById('cardTypeGrid');
-      const btn  = document.getElementById('applyCardBtn');
-      const msg  = document.getElementById('applyModalMsg');
+      const btn = document.getElementById('applyCardBtn');
+      const msg = document.getElementById('applyModalMsg');
 
       // Already applied card types (any status)
       const appliedTypes = new Set(userCards.map(c => c.card_type.toLowerCase()));
@@ -1589,18 +1776,18 @@
     }
 
     // Close modal on overlay click
-    document.getElementById('applyCardModal').addEventListener('click', function(e) {
+    document.getElementById('applyCardModal').addEventListener('click', function (e) {
       if (e.target === this) closeApplyModal();
     });
 
     /* ── EDIT PROFILE MODAL LOGIC ─────────────────── */
     function openEditProfileModal() {
       // Pre-fill editable fields
-      document.getElementById('epFullName').value   = currentUser.full_name  || '';
-      document.getElementById('epPhone').value      = currentUser.phone       || '';
-      document.getElementById('epEmail').value      = currentUser.email       || '';
+      document.getElementById('epFullName').value = currentUser.full_name || '';
+      document.getElementById('epPhone').value = currentUser.phone || '';
+      document.getElementById('epEmail').value = currentUser.email || '';
       document.getElementById('epBloodGroup').value = currentUser.blood_group || currentUser.blood || '';
-      document.getElementById('epAddress').value    = currentUser.address     || '';
+      document.getElementById('epAddress').value = currentUser.address || '';
       // Pre-fill readonly fields
       document.getElementById('epNidReadonly').value = currentUser.nid_number || '—';
       document.getElementById('epDobReadonly').value = currentUser.date_of_birth
@@ -1620,12 +1807,12 @@
 
     async function saveEditProfile() {
       const fullName = document.getElementById('epFullName').value.trim();
-      const phone    = document.getElementById('epPhone').value.trim();
-      const email    = document.getElementById('epEmail').value.trim();
-      const blood    = document.getElementById('epBloodGroup').value.trim();
-      const address  = document.getElementById('epAddress').value.trim();
-      const btn      = document.getElementById('saveProfileBtn');
-      const msg      = document.getElementById('editProfileMsg');
+      const phone = document.getElementById('epPhone').value.trim();
+      const email = document.getElementById('epEmail').value.trim();
+      const blood = document.getElementById('epBloodGroup').value.trim();
+      const address = document.getElementById('epAddress').value.trim();
+      const btn = document.getElementById('saveProfileBtn');
+      const msg = document.getElementById('editProfileMsg');
 
       // Validation
       if (!fullName && !phone && !email && !blood && !address) {
@@ -1651,11 +1838,11 @@
 
       // Build payload — only include changed fields
       const payload = {};
-      if (fullName && fullName !== currentUser.full_name)   payload.full_name   = fullName;
-      if (phone    && phone    !== currentUser.phone)       payload.phone       = phone;
-      if (email    && email    !== currentUser.email)       payload.email       = email;
-      if (blood    && blood    !== (currentUser.blood_group || currentUser.blood)) payload.blood_group = blood;
-      if (address  && address  !== currentUser.address)     payload.address     = address;
+      if (fullName && fullName !== currentUser.full_name) payload.full_name = fullName;
+      if (phone && phone !== currentUser.phone) payload.phone = phone;
+      if (email && email !== currentUser.email) payload.email = email;
+      if (blood && blood !== (currentUser.blood_group || currentUser.blood)) payload.blood_group = blood;
+      if (address && address !== currentUser.address) payload.address = address;
 
       if (Object.keys(payload).length === 0) {
         msg.className = 'modal-msg error';
@@ -1669,21 +1856,21 @@
 
       if (res.success) {
         // Update local currentUser object
-        if (payload.full_name)   currentUser.full_name   = fullName;
-        if (payload.phone)       currentUser.phone       = phone;
-        if (payload.email)       currentUser.email       = email;
+        if (payload.full_name) currentUser.full_name = fullName;
+        if (payload.phone) currentUser.phone = phone;
+        if (payload.email) currentUser.email = email;
         if (payload.blood_group) { currentUser.blood_group = blood; currentUser.blood = blood; }
-        if (payload.address)     currentUser.address     = address;
+        if (payload.address) currentUser.address = address;
 
         // Refresh profile display panel
-        document.getElementById('profileFullname').textContent = currentUser.full_name  || '—';
-        document.getElementById('profilePhone').textContent    = currentUser.phone      || '—';
-        document.getElementById('profileEmail').textContent    = currentUser.email      || '—';
-        document.getElementById('profileBlood').textContent    = currentUser.blood_group || '—';
-        document.getElementById('profileAddress').textContent  = currentUser.address    || '—';
+        document.getElementById('profileFullname').textContent = currentUser.full_name || '—';
+        document.getElementById('profilePhone').textContent = currentUser.phone || '—';
+        document.getElementById('profileEmail').textContent = currentUser.email || '—';
+        document.getElementById('profileBlood').textContent = currentUser.blood_group || '—';
+        document.getElementById('profileAddress').textContent = currentUser.address || '—';
         // Update sidebar name too
-        document.getElementById('sidebarName').textContent     = currentUser.full_name  || '—';
-        document.getElementById('greetingName').textContent    = (currentUser.full_name || '').split(' ')[0] || '—';
+        document.getElementById('sidebarName').textContent = currentUser.full_name || '—';
+        document.getElementById('greetingName').textContent = (currentUser.full_name || '').split(' ')[0] || '—';
 
         msg.className = 'modal-msg success';
         msg.textContent = '✅ Profile সফলভাবে আপডেট হয়েছে!';
@@ -1698,9 +1885,86 @@
     }
 
     // Close edit profile modal on overlay click
-    document.getElementById('editProfileModal').addEventListener('click', function(e) {
+    document.getElementById('editProfileModal').addEventListener('click', function (e) {
       if (e.target === this) closeEditProfileModal();
     });
+    /* ── NOTIFICATIONS ───────────────────────── */
+    async function loadNotifications() {
+      const token = localStorage.getItem('token');
+      try {
+        const res = await fetch('https://citizen-card-backend-production.up.railway.app/api/user/notifications', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (!data.success) return;
+
+        const { notifications, unread } = data;
+
+        // Badge update
+        const badge = document.getElementById('notif-badge');
+        if (badge) {
+          if (unread > 0) {
+            badge.textContent = unread;
+            badge.style.display = 'inline';
+          } else {
+            badge.style.display = 'none';
+          }
+        }
+
+        // List render
+        const list = document.getElementById('notif-list');
+        if (!list) return;
+
+        if (notifications.length === 0) {
+          list.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🔔</div>
+          <p>কোনো notification নেই।</p>
+        </div>`;
+          return;
+        }
+
+        list.innerHTML = notifications.map(n => `
+      <div class="notif-item ${!n.is_read ? 'unread' : ''}" onclick="markRead(${n.id})">
+        <div class="notif-icon">${!n.is_read ? '🔔' : '🔕'}</div>
+        <div class="notif-content">
+          <div class="notif-title">${n.title}</div>
+          <div class="notif-msg">${n.message}</div>
+          <div class="notif-time">${new Date(n.created_at).toLocaleString('en-BD')}</div>
+        </div>
+      </div>
+    `).join('');
+
+      } catch (err) {
+        console.error('Load notifications error:', err);
+      }
+    }
+
+    async function markRead(notifId) {
+      const token = localStorage.getItem('token');
+      try {
+        await fetch(`https://citizen-card-backend-production.up.railway.app/api/user/notifications/${notifId}/read`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        loadNotifications();
+      } catch (err) {
+        console.error('Mark read error:', err);
+      }
+    }
+
+    async function markAllRead() {
+      const token = localStorage.getItem('token');
+      try {
+        await fetch('https://citizen-card-backend-production.up.railway.app/api/user/notifications/read-all', {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        loadNotifications();
+      } catch (err) {
+        console.error('Mark all read error:', err);
+      }
+    }
   </script>
 
 </body>
