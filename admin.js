@@ -348,7 +348,7 @@ async function updateUserStatus(userId, status) {
 
 /* ── Delete User ─────────────────────────────────── */
 async function deleteUser(userId, userName) {
-  if (!confirm(`⚠️ "${userName}" এর সব তথ্য মুছে যাবে! নিশ্চিত?`)) return;
+  if (!confirm(`⚠️ "${userName}" এর সব তথ্য এবং সব cards মুছে যাবে! নিশ্চিত?`)) return;
   try {
     const res = await fetch(`${API_BASE}/admin/users/${userId}`, {
       method: 'DELETE',
@@ -356,9 +356,18 @@ async function deleteUser(userId, userName) {
     });
     const data = await res.json();
     if (data.success) {
+      // ✅ allUsers থেকে remove
       allUsers = allUsers.filter(u => u.id !== userId);
+      // ✅ allCards থেকেও সেই user এর সব cards remove
+      allCards = allCards.filter(c => c.user_id !== userId);
+
       filterAndRenderUsers();
+      filterAndRenderApplications();
+      // Overview table ও refresh
+      const pending = allCards.filter(c => ['applied','processing'].includes((c.status||'').toLowerCase()));
+      renderTable('overview-table', pending.slice(0, 5));
       loadStats();
+      alert('✅ User এবং তার সব cards সফলভাবে delete হয়েছে।');
     } else {
       alert('❌ ' + (data.message || 'Delete ব্যর্থ।'));
     }
