@@ -432,7 +432,6 @@ async function sendNotification() {
     if (btn) { btn.disabled = false; btn.textContent = '📤 Send Notification'; }
   }
 }
-
 /* ── Change Admin Password ───────────────────────── */
 async function changeAdminPassword() {
   const current = document.getElementById('adminCurrentPass').value.trim();
