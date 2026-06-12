@@ -6,10 +6,10 @@
 const API_BASE = 'https://citizen-card-backend-production.up.railway.app/api';
 
 /* ── Global State ────────────────────────────────── */
-let allUsers              = [];
-let allCards              = [];
-let chartTypeInstance     = null;
-let chartStatusInstance   = null;
+let allUsers = [];
+let allCards = [];
+let chartTypeInstance = null;
+let chartStatusInstance = null;
 
 /* ── Token Helper ────────────────────────────────── */
 function getAdminToken() {
@@ -19,12 +19,12 @@ function getAdminToken() {
 /* ── Badges ──────────────────────────────────────── */
 function statusBadge(status) {
   const map = {
-    approved:   '<span class="badge badge-approved">✅ Approved</span>',
-    issued:     '<span class="badge badge-approved">🪪 Issued</span>',
-    applied:    '<span class="badge badge-pending">⏳ Applied</span>',
-    pending:    '<span class="badge badge-pending">⏳ Applied</span>',
+    approved: '<span class="badge badge-approved">✅ Approved</span>',
+    issued: '<span class="badge badge-approved">🪪 Issued</span>',
+    applied: '<span class="badge badge-pending">⏳ Applied</span>',
+    pending: '<span class="badge badge-pending">⏳ Applied</span>',
     processing: '<span class="badge badge-pending">🔄 Processing</span>',
-    rejected:   '<span class="badge badge-rejected">❌ Rejected</span>',
+    rejected: '<span class="badge badge-rejected">❌ Rejected</span>',
   };
   return map[(status || '').toLowerCase()]
     || `<span class="badge badge-pending">${status || '—'}</span>`;
@@ -39,8 +39,8 @@ function userStatusBadge(status) {
   return status === 'active'
     ? '<span class="badge badge-approved">Active</span>'
     : status === 'suspended'
-    ? '<span class="badge badge-rejected">Suspended</span>'
-    : '<span class="badge badge-pending">Pending</span>';
+      ? '<span class="badge badge-rejected">Suspended</span>'
+      : '<span class="badge badge-pending">Pending</span>';
 }
 
 /* ── Card Action Buttons ─────────────────────────── */
@@ -88,16 +88,16 @@ async function loadStats() {
       headers: { 'Authorization': `Bearer ${getAdminToken()}` }
     });
     if (res.status === 401 || res.status === 403) { adminLogout(); return; }
-    if (!res.ok) { setEl('stat-total-users','—'); return; }
+    if (!res.ok) { setEl('stat-total-users', '—'); return; }
 
     const data = await res.json();
     if (!data.success) return;
 
     const s = data.stats;
-    setEl('stat-total-users',   s.total_users   ?? 0);
-    setEl('stat-issued-cards',  s.issued_cards  ?? 0);
+    setEl('stat-total-users', s.total_users ?? 0);
+    setEl('stat-issued-cards', s.issued_cards ?? 0);
     setEl('stat-pending-cards', s.pending_cards ?? 0);
-    setEl('stat-total-cards',   s.total_cards   ?? 0);
+    setEl('stat-total-cards', s.total_cards ?? 0);
     renderCharts(s);
   } catch (err) {
     console.warn('Stats load failed:', err.message);
@@ -107,10 +107,10 @@ async function loadStats() {
 /* ── Render Charts ───────────────────────────────── */
 function renderCharts(stats) {
   // Donut: Cards by type
-  const typeData   = stats.cards_by_type || [];
+  const typeData = stats.cards_by_type || [];
   const typeLabels = typeData.map(r => r.type_name.charAt(0).toUpperCase() + r.type_name.slice(1));
   const typeCounts = typeData.map(r => Number(r.count));
-  const typeColors = ['#006a4e','#c9a84c','#3498db','#8e44ad','#e67e22'];
+  const typeColors = ['#006a4e', '#c9a84c', '#3498db', '#8e44ad', '#e67e22'];
 
   const ctxType = document.getElementById('chartCardType')?.getContext('2d');
   if (ctxType) {
@@ -138,11 +138,11 @@ function renderCharts(stats) {
     chartStatusInstance = new Chart(ctxStatus, {
       type: 'bar',
       data: {
-        labels: ['Applied','Processing','Approved','Issued','Rejected'],
+        labels: ['Applied', 'Processing', 'Approved', 'Issued', 'Rejected'],
         datasets: [{
           label: 'Applications',
           data: [statusMap.applied, statusMap.processing, statusMap.approved, statusMap.issued, statusMap.rejected],
-          backgroundColor: ['#e67e22','#3498db','#c9a84c','#006a4e','#e74c3c'],
+          backgroundColor: ['#e67e22', '#3498db', '#c9a84c', '#006a4e', '#e74c3c'],
           borderRadius: 8, borderSkipped: false
         }]
       },
@@ -161,12 +161,12 @@ function renderCharts(stats) {
 /* ── Load Applications (FIXED) ───────────────────── */
 // ✅ FIX: /api/admin/cards থেকে real card data load করছে
 async function loadApplications() {
-  const ovTbody  = document.getElementById('overview-table');
+  const ovTbody = document.getElementById('overview-table');
   const appTbody = document.getElementById('applications-table');
   const loadingRow = `<tr><td colspan="9" style="text-align:center;padding:20px;color:#888;">⏳ লোড হচ্ছে...</td></tr>`;
-  const errorRow   = `<tr><td colspan="9" style="text-align:center;padding:20px;color:#e74c3c;">⚠️ লোড ব্যর্থ। <button onclick="loadApplications()" style="margin-left:8px;background:#e74c3c;color:#fff;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.8rem;">🔄 Retry</button></td></tr>`;
+  const errorRow = `<tr><td colspan="9" style="text-align:center;padding:20px;color:#e74c3c;">⚠️ লোড ব্যর্থ। <button onclick="loadApplications()" style="margin-left:8px;background:#e74c3c;color:#fff;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.8rem;">🔄 Retry</button></td></tr>`;
 
-  if (ovTbody)  ovTbody.innerHTML  = loadingRow;
+  if (ovTbody) ovTbody.innerHTML = loadingRow;
   if (appTbody) appTbody.innerHTML = loadingRow;
 
   try {
@@ -183,11 +183,11 @@ async function loadApplications() {
 
     if (allCards.length === 0) {
       const emptyRow = '<tr><td colspan="9" style="text-align:center;padding:24px;color:#888;">কোনো card application নেই।</td></tr>';
-      if (ovTbody)  ovTbody.innerHTML  = emptyRow;
+      if (ovTbody) ovTbody.innerHTML = emptyRow;
       if (appTbody) appTbody.innerHTML = emptyRow;
     } else {
       // Overview: শুধু applied/processing (নতুন/অপেক্ষমান) দেখাও
-      const pending = allCards.filter(c => ['applied','processing'].includes((c.status||'').toLowerCase()));
+      const pending = allCards.filter(c => ['applied', 'processing'].includes((c.status || '').toLowerCase()));
       renderTable('overview-table', pending.slice(0, 5));
       filterAndRenderApplications();
     }
@@ -197,25 +197,25 @@ async function loadApplications() {
 
   } catch (err) {
     console.error('loadApplications error:', err);
-    if (ovTbody)  ovTbody.innerHTML  = errorRow;
+    if (ovTbody) ovTbody.innerHTML = errorRow;
     if (appTbody) appTbody.innerHTML = errorRow;
   }
 }
 
 /* ── Filter & Render Applications (FIXED) ────────── */
 function filterAndRenderApplications() {
-  const query      = (document.getElementById('app-search')?.value        || '').toLowerCase().trim();
-  const typeFilter = (document.getElementById('app-filter-type')?.value   || '').toLowerCase();
+  const query = (document.getElementById('app-search')?.value || '').toLowerCase().trim();
+  const typeFilter = (document.getElementById('app-filter-type')?.value || '').toLowerCase();
   const statFilter = (document.getElementById('app-filter-status')?.value || '').toLowerCase();
 
   const filtered = allCards.filter(c => {
     const matchQuery = !query || (
       (c.user_name || '').toLowerCase().includes(query) ||
-      (c.nid       || '').toLowerCase().includes(query) ||
-      (c.phone     || '').toLowerCase().includes(query)
+      (c.nid || '').toLowerCase().includes(query) ||
+      (c.phone || '').toLowerCase().includes(query)
     );
-    const matchType   = !typeFilter || (c.card_type || '').toLowerCase() === typeFilter;
-    const matchStatus = !statFilter || (c.status    || '').toLowerCase() === statFilter;
+    const matchType = !typeFilter || (c.card_type || '').toLowerCase() === typeFilter;
+    const matchStatus = !statFilter || (c.status || '').toLowerCase() === statFilter;
     return matchQuery && matchType && matchStatus;
   });
 
@@ -247,7 +247,7 @@ async function updateCardStatus(cardId, status) {
       }
       filterAndRenderApplications();
       // Overview table ও refresh করো
-      const pending = allCards.filter(c => ['applied','processing'].includes((c.status||'').toLowerCase()));
+      const pending = allCards.filter(c => ['applied', 'processing'].includes((c.status || '').toLowerCase()));
       renderTable('overview-table', pending.slice(0, 5));
       loadStats();
     } else {
@@ -286,9 +286,9 @@ function filterAndRenderUsers() {
   const filtered = allUsers.filter(u => {
     if (!query) return true;
     return (
-      (u.full_name  || '').toLowerCase().includes(query) ||
+      (u.full_name || '').toLowerCase().includes(query) ||
       (u.nid_number || '').toLowerCase().includes(query) ||
-      (u.phone      || '').toLowerCase().includes(query)
+      (u.phone || '').toLowerCase().includes(query)
     );
   });
 
@@ -311,8 +311,13 @@ function filterAndRenderUsers() {
       <td>${u.created_at ? new Date(u.created_at).toLocaleDateString('en-BD') : '—'}</td>
       <td>${userStatusBadge(u.status)}</td>
       <td style="white-space:nowrap;">
-        ${u.status !== 'active'    ? `<button class="btn-approve" onclick="updateUserStatus(${u.id}, 'active')">✅ Activate</button>` : ''}
-        ${u.status !== 'suspended' ? `<button class="btn-reject"  onclick="updateUserStatus(${u.id}, 'suspended')">🚫 Suspend</button>` : ''}
+        ${u.status !== 'active' ? `<button class="btn-approve" onclick="updateUserStatus(${u.id}, 'active')">✅ Activate</button> ` : ''}
+        ${u.status !== 'suspended' ? `<button class="btn-reject"  onclick="updateUserStatus(${u.id}, 'suspended')">🚫 Suspend</button> ` : ''}
+       <button 
+          style="background:#c0392b; color:#fff; border:none; border-radius:6px; padding:5px 10px; font-size:0.78rem; font-weight:600; cursor:pointer; margin-left:4px;"
+         onclick="deleteUser(${u.id}, '${u.full_name}')">
+         🗑️ Delete
+       </button>
       </td>
     </tr>
   `).join('');
@@ -379,11 +384,11 @@ function adminLogout() {
 /* ── Send Notification ───────────────────────────── */
 function sendNotification() {
   const title = document.getElementById('notify-title').value.trim();
-  const msg   = document.getElementById('notify-msg').value.trim();
+  const msg = document.getElementById('notify-msg').value.trim();
   if (!title || !msg) { alert('⚠️ Title এবং Message দিন।'); return; }
   alert(`✅ Notification পাঠানো হয়েছে!\n\nTitle: ${title}\nMessage: ${msg}`);
   document.getElementById('notify-title').value = '';
-  document.getElementById('notify-msg').value   = '';
+  document.getElementById('notify-msg').value = '';
 }
 
 /* ── Change Admin Password ───────────────────────── */
@@ -391,7 +396,7 @@ async function changeAdminPassword() {
   const current = document.getElementById('adminCurrentPass').value.trim();
   const newPass = document.getElementById('adminNewPass').value.trim();
   const confirm = document.getElementById('adminConfirmPass').value.trim();
-  const msgEl   = document.getElementById('admin-pass-msg');
+  const msgEl = document.getElementById('admin-pass-msg');
   msgEl.textContent = '';
 
   if (!current || !newPass || !confirm) { msgEl.style.color = '#e74c3c'; msgEl.textContent = '⚠️ সব field পূরণ করুন।'; return; }
@@ -408,7 +413,7 @@ async function changeAdminPassword() {
     const data = await res.json();
     if (data.success) {
       msgEl.style.color = '#27ae60'; msgEl.textContent = '✅ Password সফলভাবে পরিবর্তন হয়েছে!';
-      ['adminCurrentPass','adminNewPass','adminConfirmPass'].forEach(id => document.getElementById(id).value = '');
+      ['adminCurrentPass', 'adminNewPass', 'adminConfirmPass'].forEach(id => document.getElementById(id).value = '');
     } else {
       msgEl.style.color = '#e74c3c'; msgEl.textContent = '❌ ' + (data.message || 'Failed');
     }
