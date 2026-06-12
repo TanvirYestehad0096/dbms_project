@@ -391,13 +391,46 @@ function adminLogout() {
 }
 
 /* ── Send Notification ───────────────────────────── */
-function sendNotification() {
+async function sendNotification() {
+  const to    = document.getElementById('notify-to').value;
+  const nid   = document.getElementById('notify-nid')?.value.trim();
   const title = document.getElementById('notify-title').value.trim();
-  const msg = document.getElementById('notify-msg').value.trim();
+  const msg   = document.getElementById('notify-msg').value.trim();
+
   if (!title || !msg) { alert('⚠️ Title এবং Message দিন।'); return; }
-  alert(`✅ Notification পাঠানো হয়েছে!\n\nTitle: ${title}\nMessage: ${msg}`);
-  document.getElementById('notify-title').value = '';
-  document.getElementById('notify-msg').value = '';
+  if (to === 'specific' && !nid) { alert('⚠️ User এর NID দিন।'); return; }
+
+  const btn = document.querySelector('#panel-notify .btn-login');
+  if (btn) { btn.disabled = true; btn.textContent = 'পাঠানো হচ্ছে...'; }
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/notifications`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getAdminToken()}`
+      },
+      body: JSON.stringify({
+        user_id: to === 'specific' ? nid : 'all',
+        title,
+        message: msg
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      alert(data.message);
+      document.getElementById('notify-title').value = '';
+      document.getElementById('notify-msg').value   = '';
+      if (document.getElementById('notify-nid'))
+        document.getElementById('notify-nid').value = '';
+    } else {
+      alert('❌ ' + (data.message || 'পাঠানো ব্যর্থ।'));
+    }
+  } catch {
+    alert('❌ সার্ভারের সাথে যোগাযোগ হয়নি।');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '📤 Send Notification'; }
+  }
 }
 
 /* ── Change Admin Password ───────────────────────── */
